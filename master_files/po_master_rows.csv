@@ -1,0 +1,855 @@
+route_id_site_id,parent_route,route_type,uid,po_no_cobuild,po_length_cobuild,po_no_ip1,po_length_ip1,route_routeLM_metroLM_LMCStandalone
+1000,Fibmax,"LMC routes (stand alone) ",MU-1000,10004699,90.0,,,LMC (Standalone)
+1008,Fibmax,"LMC routes (stand alone) ",MU-1008,10004709,67.0,,,LMC (Standalone)
+1027,Fibmax,"LMC routes (stand alone) ",MU-1027,10004864,146.0,,,LMC (Standalone)
+1029,MUM_Route_10,Route LM,MU-1029,,,,,Route LM
+1041,Mumbai_Coverage_Route30,Route LM,MU-1041,10004573,160.0,,,Route LM
+1046,Mumbai_Coverage_Route29,Route LM,MU-1046,10004519,10.0,,,Route LM
+109,MUM_Route_68,Route LM,MU-109,10004657,60.0,,,Route LM
+111,Fibmax,"LMC routes (stand alone) ",MU-111,,,,,LMC (Standalone)
+1135,MUM_Route_54,Route LM,MU-1135,10004637,60.0,,,Route LM
+1144,MUM_Route_99,Route LM,MU-1144,10004622,70.0,,,Route LM
+1148,MUM_Route_27,Route LM,MU-1148,10004594,480.0,,,Route LM
+1191,Mumbai_Coverage_Route35,Route LM,MU-1191,10004583,60.0,,,Route LM
+1251,Fibmax,"LMC routes (stand alone) ",MU-1251,10004763,168.0,,,LMC (Standalone)
+1256,Fibmax,"LMC routes (stand alone) ",MU-1256,,,,,LMC (Standalone)
+1262,Mumbai_Coverage_Route21,Route LM,MU-1262,10004548,400.0,,,Route LM
+1264,Fibmax,"LMC routes (stand alone) ",MU-1264,10004784,30.0,,,LMC (Standalone)
+1277,MUM_Route_90,Route LM,MU-1277,,,,,Route LM
+1297,Fibmax,"LMC routes (stand alone) ",MU-1297,10004760,422.0,,,LMC (Standalone)
+1303,MUM_Route_123,Route LM,MU-1303,10004664,170.0,,,Route LM
+1308,Fibmax,"LMC routes (stand alone) ",MU-1308,10004808,78.0,,,LMC (Standalone)
+1342,Fibmax,"LMC routes (stand alone) ",MU-1342,10004703,56.0,,,LMC (Standalone)
+1365,Fibmax,"LMC routes (stand alone) ",MU-1365,10004888,134.0,,,LMC (Standalone)
+1371,Fibmax,"LMC routes (stand alone) ",MU-1371,10004832,66.0,,,LMC (Standalone)
+1387,Fibmax,"LMC routes (stand alone) ",MU-1387,10004863,78.0,,,LMC (Standalone)
+139,MUM_Route_27,Route LM,MU-139,10004594,210.0,,,Route LM
+1392,MUM_Route_81,Route LM,MU-1392,10004680,180.0,,,Route LM
+141,MUM_Route_23,Route LM,MU-141,10004959,80.0,,,Route LM
+142,Fibmax,"LMC routes (stand alone) ",MU-142,10004705,146.0,,,LMC (Standalone)
+1420,Fibmax,"LMC routes (stand alone) ",MU-1420,,,,,LMC (Standalone)
+1455,MUM_Route_115,Route LM,MU-1455,10004538,10.0,,,Route LM
+1456,MUM_Route_54,Route LM,MU-1456,10004637,230.0,,,Route LM
+1467,Fibmax,"LMC routes (stand alone) ",MU-1467,,,,,LMC (Standalone)
+1471,Fibmax,"LMC routes (stand alone) ",MU-1471,,,,,LMC (Standalone)
+1474,Fibmax,"LMC routes (stand alone) ",MU-1474,10004770,33.0,,,LMC (Standalone)
+148,Fibmax,"LMC routes (stand alone) ",MU-148,10004692,67.0,,,LMC (Standalone)
+1490,Fibmax,"LMC routes (stand alone) ",MU-1490,10004888,280.0,,,LMC (Standalone)
+1508,Mumbai_Coverage_Route23,Route LM,MU-1508,10004556,40.0,,,Route LM
+1532,MUM_Route_97,Route LM,MU-1532,10004672,70.0,,,Route LM
+1536,MUM_Route_97,Route LM,MU-1536,10004672,70.0,,,Route LM
+1550,Fibmax,"LMC routes (stand alone) ",MU-1550,,,,,LMC (Standalone)
+1562,MUM_Route_23,Route LM,MU-1562,10004959,50.0,,,Route LM
+1640,Fibmax,"LMC routes (stand alone) ",MU-1640,10004888,168.0,,,LMC (Standalone)
+1641,MUM_Route_90,Route LM,MU-1641,10004960,300.0,,,Route LM
+1659,Fibmax,"LMC routes (stand alone) ",MU-1659,10004696,224.0,,,LMC (Standalone)
+1670,Fibmax,"LMC routes (stand alone) ",MU-1670,10004770,104.0,,,LMC (Standalone)
+1677,MUM_Route_45,Route LM,MU-1677,10004670,220.0,,,Route LM
+1694,MUM_Route_68,Route LM,MU-1694,10004657,200.0,,,Route LM
+1734,Fibmax,"LMC routes (stand alone) ",MU-1734,10004811,302.0,,,LMC (Standalone)
+174,Fibmax,"LMC routes (stand alone) ",MU-174,10004711,190.0,,,LMC (Standalone)
+1742,Mumbai_Coverage_Route29,Route LM,MU-1742,10004519,30.0,,,Route LM
+175,Mumbai_Coverage_Route13,Route LM,MU-175,10004559,800.0,,,Route LM
+1777,MUM_Route_160,Route LM,MU-1777,10004654,110.0,,,Route LM
+1788,Fibmax,"LMC routes (stand alone) ",MU-1788,10004700,168.0,,,LMC (Standalone)
+1797,Fibmax,"LMC routes (stand alone) ",MU-1797,10004888,460.0,,,LMC (Standalone)
+1831,Mumbai_Coverage_Route29,Route LM,MU-1831,10004519,100.0,,,Route LM
+1852,Fibmax,"LMC routes (stand alone) ",MU-1852,,,,,LMC (Standalone)
+1863,MUM_Route_68,Route LM,MU-1863,,,,,Route LM
+1924,Fibmax,"LMC routes (stand alone) ",MU-1924,10005005,280.0,,,LMC (Standalone)
+194,Fibmax,"LMC routes (stand alone) ",MU-194,10004770,99.0,,,LMC (Standalone)
+1949,MUM_Route_112,Route LM,MU-1949,10004539,90.0,,,Route LM
+1955,Mumbai_Coverage_Route3,Route LM,MU-1955,10004549,170.0,,,Route LM
+1956,Mumbai_Coverage_Route35,Route LM,MU-1956,10004583,310.0,,,Route LM
+2 Africa 0001,MUM_Route_501,DC Route,MUM_Route_501,,,20202020,200.0,Route LM
+2010,Fibmax,"LMC routes (stand alone) ",MU-2010,10004779,251.0,,,LMC (Standalone)
+2074,MUM_Route_122,Route LM,MU-2074,10004534,70.0,,,Route LM
+2122,Fibmax,"LMC routes (stand alone) ",MU-2122,10004759,112.0,,,LMC (Standalone)
+2161,MUM_Route_62,Route LM,MU-2161,10004595,100.0,,,Route LM
+2213,MUM_Route_45,Route LM,MU-2213,10004670,350.0,,,Route LM
+2234,MUM_Route_81,Route LM,MU-2234,10004680,610.0,,,Route LM
+2245,Fibmax,"LMC routes (stand alone) ",MU-2245,,,,,LMC (Standalone)
+2253,MUM_Route_81,Route LM,MU-2253,10004680,60.0,,,Route LM
+2257,MUM_Route_142,Route LM,MU-MUM_Route_142,10004528,70.0,,,Route LM
+2263,MUM_Route_25,Route LM,MU-2263,10004651,170.0,,,Route LM
+2283,MUM_Route_27,Route LM,MU-2283,10004594,150.0,,,Route LM
+2309,Mumbai_Coverage_Route1,Route LM,MU-2309,10004966,150.0,,,Route LM
+2317,Fibmax,"LMC routes (stand alone) ",MU-2317,10004847,157.0,,,LMC (Standalone)
+2322,Fibmax,"LMC routes (stand alone) ",MU-2322,10004710,101.0,,,LMC (Standalone)
+2342,MUM_Route_81,Route LM,MU-2342,10004680,110.0,,,Route LM
+2351,MUM_Route_23,Route LM,MU-2351,10004959,50.0,,,Route LM
+2359,MUM_Route_109,Route LM,MU-2359,10004597,130.0,,,Route LM
+2366,Fibmax,"LMC routes (stand alone) ",MU-2366,,,,,LMC (Standalone)
+2367,Fibmax,"LMC routes (stand alone) ",MU-2367,,,,,LMC (Standalone)
+2369,Mumbai_Coverage_Route17,Route LM,MU-2369,10004547,250.0,,,Route LM
+2372,Fibmax,"LMC routes (stand alone) ",MU-2372,10004816,360.0,,,LMC (Standalone)
+2452,Mumbai_Coverage_Route31,Route LM,MU-2452,10004580,30.0,,,Route LM
+2460,Mumbai_Coverage_Route25,Route LM,MU-2460,10004582,300.0,,,Route LM
+247,Fibmax,"LMC routes (stand alone) ",MU-MM247,10004888,112.0,,,LMC (Standalone)
+2475,MUM_Route_90,Route LM,MU-2475,10004960,60.0,,,Route LM
+2477,Fibmax,"LMC routes (stand alone) ",MU-2477,10004820,134.0,,,LMC (Standalone)
+2510,Fibmax,"LMC routes (stand alone) ",MU-2510,10004694,134.0,,,LMC (Standalone)
+2587,MUM_Route_42,Route LM,MU-2587,10004961,120.0,,,Route LM
+2610,Fibmax,"LMC routes (stand alone) ",MU-2610,10004769,168.0,,,LMC (Standalone)
+2628,Fibmax,"LMC routes (stand alone) ",MU-2628,10004713,168.0,,,LMC (Standalone)
+2643,Fibmax,"LMC routes (stand alone) ",MU-2643,10004770,16.0,,,LMC (Standalone)
+273,Fibmax,"LMC routes (stand alone) ",MU-273,10004888,448.0,,,LMC (Standalone)
+2730,MUM_Route_97,Route LM,MU-2730,10004672,70.0,,,Route LM
+2731,MUM_Route_19,Route LM,MU-2731,10004663,220.0,,,Route LM
+274,Fibmax,"LMC routes (stand alone) ",MU-274,10004742,224.0,,,LMC (Standalone)
+2763,MUM_Route_10,Route LM,MU-2763,10004641,50.0,,,Route LM
+278,MUM_Route_35,Route LM,MU-278,10004671,70.0,,,Route LM
+2798,Fibmax,"LMC routes (stand alone) ",MU-2798,10004753,168.0,,,LMC (Standalone)
+2825,MUM_Route_122,Route LM,MU-2825,10004534,170.0,,,Route LM
+2895,MUM_Route_13,Route LM,MU-2895,10004600,130.0,,,Route LM
+2910,Mumbai_Coverage_Route9,Route LM,MU-2910,,,,,Route LM
+2931,Fibmax,"LMC routes (stand alone) ",MU-2931,10004855,372.0,,,LMC (Standalone)
+2946,MUM_Route_115,Route LM,MU-2946,10004538,250.0,,,Route LM
+2958,Fibmax,"LMC routes (stand alone) ",MU-2958,10004801,224.0,,,LMC (Standalone)
+297,MUM_Route_4,Route LM,MU-297,10004541,170.0,,,Route LM
+2996,Fibmax,"LMC routes (stand alone) ",MU-2996,,,,,LMC (Standalone)
+3019,Mumbai_Coverage_Route28,Route LM,MU-3019,10004512,60.0,,,Route LM
+3023,MUM_Route_23,Route LM,MU-3023,10004959,110.0,,,Route LM
+304,Mumbai_Coverage_Route3,Route LM,MU-304,10004549,100.0,,,Route LM
+3054,MUM_Route_10,Route LM,MU-3054,10004641,30.0,,,Route LM
+3058,MUM_Route_8,Route LM,MU-3058,10004619,70.0,,,Route LM
+306,Fibmax,"LMC routes (stand alone) ",MU-306,,,,,LMC (Standalone)
+3068,Mumbai_Coverage_Route29,Route LM,MU-3068,10004523,10.0,,,Route LM
+3071,Fibmax,"LMC routes (stand alone) ",MU-3071,10004848,157.0,,,LMC (Standalone)
+3075,MUM_Route_38,Route LM,MU-3075,10004674,260.0,,,Route LM
+3090,MUM_Route_99,Route LM,MU-3090,10004624,10.0,,,Route LM
+3099,Fibmax,"LMC routes (stand alone) ",MU-3099,10004760,517.0,,,LMC (Standalone)
+3107,Fibmax,"LMC routes (stand alone) ",MU-3107,10004724,291.0,,,LMC (Standalone)
+3120,MUM_Route_55,Route LM,MU-3120,10004628,110.0,,,Route LM
+3123,Fibmax,"LMC routes (stand alone) ",MU-3123,10004825,280.0,,,LMC (Standalone)
+3128,Fibmax,"LMC routes (stand alone) ",MU-3128,10004760,165.0,,,LMC (Standalone)
+3144,Fibmax,"LMC routes (stand alone) ",MU-3144,10004888,460.0,,,LMC (Standalone)
+3151,Fibmax,"LMC routes (stand alone) ",MU-3151,10004729,78.0,,,LMC (Standalone)
+3166,Fibmax,"LMC routes (stand alone) ",MU-3166,10004781,67.0,,,LMC (Standalone)
+3170,MUM_Route_110,Route LM,MU-3170,10004593,220.0,,,Route LM
+3177,MUM_Route_55,Route LM,MU-3177,10004628,20.0,,,Route LM
+319,Fibmax,"LMC routes (stand alone) ",MU-319,,,,,LMC (Standalone)
+3258,MUM_Route_55,Route LM,MU-3258,10004628,160.0,,,Route LM
+3273,Fibmax,"LMC routes (stand alone) ",MU-3273,10004888,480.0,,,LMC (Standalone)
+3292,Fibmax,"LMC routes (stand alone) ",MU-3292,,,,,LMC (Standalone)
+3310,MUM_Route_99,Route LM,MU-3310,10004624,120.0,,,Route LM
+333,Fibmax,"LMC routes (stand alone) ",MU-333,,,,,LMC (Standalone)
+3330,Fibmax,"LMC routes (stand alone) ",MU-3330,10004874,45.0,,,LMC (Standalone)
+334,Fibmax,"LMC routes (stand alone) ",MU-334,10004804,112.0,,,LMC (Standalone)
+3354,MUM_Route_42,Route LM,MU-3354,10004961,110.0,,,Route LM
+3386,Fibmax,"LMC routes (stand alone) ",MU-3386,10004879,280.0,,,LMC (Standalone)
+3389,Mumbai_Coverage_Route17,Route LM,MU-3389,10004547,20.0,,,Route LM
+3398,Fibmax,"LMC routes (stand alone) ",MU-3398,10004862,134.0,,,LMC (Standalone)
+341,Fibmax,"LMC routes (stand alone) ",MU-341,10004721,121.0,,,LMC (Standalone)
+3411,Fibmax,"LMC routes (stand alone) ",MU-3411,10004831,17.0,,,LMC (Standalone)
+3463,Fibmax,"LMC routes (stand alone) ",MU-3463,,,,,LMC (Standalone)
+3511,Mumbai_Coverage_Route5,Route LM,MU-3511,10004514,30.0,,,Route LM
+356,Fibmax,"LMC routes (stand alone) ",MU-356,10004728,123.0,,,LMC (Standalone)
+358,MUM_Route_55,Route LM,MU-358,10004628,160.0,,,Route LM
+3589,Fibmax,"LMC routes (stand alone) ",MU-3589,10004782,280.0,,,LMC (Standalone)
+3604,Fibmax,"LMC routes (stand alone) ",MU-3604,10004707,56.0,,,LMC (Standalone)
+3625,MUM_Route_90,Route LM,MU-3625,10004960,50.0,,,Route LM
+3645,Fibmax,"LMC routes (stand alone) ",MU-3645,10004790,476.0,,,LMC (Standalone)
+370,Fibmax,"LMC routes (stand alone) ",MU-370,10004760,66.0,,,LMC (Standalone)
+3700,Mumbai_Coverage_Route25,Route LM,MU-3700,10004582,300.0,,,Route LM
+379,Fibmax,"LMC routes (stand alone) ",MU-379,10004813,190.0,,,LMC (Standalone)
+3817,MUM_Route_45,Route LM,MU-3817,10004670,150.0,,,Route LM
+3879,MUM_Route_8,Route LM,MU-3879,10004619,180.0,,,Route LM
+3901,Fibmax,"LMC routes (stand alone) ",MU-3901,10004755,280.0,,,LMC (Standalone)
+3989,Fibmax,"LMC routes (stand alone) ",MU-3989,,,,,LMC (Standalone)
+400,Fibmax,"LMC routes (stand alone) ",MU-400,10004795,157.0,,,LMC (Standalone)
+4004,Mumbai_Coverage_Route10,Route LM,MU-4004,10004558,50.0,,,Route LM
+4014,Fibmax,"LMC routes (stand alone) ",MU-4014,10004737,168.0,,,LMC (Standalone)
+4019,Fibmax,"LMC routes (stand alone) ",MU-4019,,,,,LMC (Standalone)
+403,Fibmax,"LMC routes (stand alone) ",MU-403,,,,,LMC (Standalone)
+4070,MUM_Route_110,Route LM,MU-4070,10004593,220.0,,,Route LM
+4081,Fibmax,"LMC routes (stand alone) ",MU-4081,10004760,165.0,,,LMC (Standalone)
+4088,Fibmax,"LMC routes (stand alone) ",MU-4088,10004770,253.0,,,LMC (Standalone)
+4093,Fibmax,"LMC routes (stand alone) ",MU-4093,10004770,165.0,,,LMC (Standalone)
+4131,Fibmax,"LMC routes (stand alone) ",MU-4131,,,,,LMC (Standalone)
+4139,MUM_Route_81,Route LM,MU-4139,,,,,Route LM
+4198,Fibmax,"LMC routes (stand alone) ",MU-4198,10004806,168.0,,,LMC (Standalone)
+4207,MUM_Route_8,Route LM,MU-4207,10004619,280.0,,,Route LM
+4213,MUM_Route_19,Route LM,MU-4213,10004663,150.0,,,Route LM
+423,Fibmax,"LMC routes (stand alone) ",MU-423,,,,,LMC (Standalone)
+4234,Fibmax,"LMC routes (stand alone) ",MU-4234,10004714,56.0,,,LMC (Standalone)
+4295,Fibmax,"LMC routes (stand alone) ",MU-4295,,,,,LMC (Standalone)
+4324,MUM_Route_106,Route LM,MU-4324,10004621,80.0,,,Route LM
+4337,Fibmax,"LMC routes (stand alone) ",MU-4337,10004883,133.0,,,LMC (Standalone)
+434,Fibmax,"LMC routes (stand alone) ",MU-434,10004725,56.0,,,LMC (Standalone)
+4378,MUM_Route_42,Route LM,MU-4378,10004961,60.0,,,Route LM
+4381,Fibmax,"LMC routes (stand alone) ",MU-4381,10004777,56.0,,,LMC (Standalone)
+4409,Fibmax,"LMC routes (stand alone) ",MU-4409,10004841,110.0,,,LMC (Standalone)
+4427,Mumbai_Coverage_Route3,Route LM,MU-4427,10004549,20.0,,,Route LM
+4436,Mumbai_Coverage_Route37,Route LM,MU-4436,10004574,60.0,,,Route LM
+4449,Fibmax,"LMC routes (stand alone) ",MU-4449,10004818,1202.0,,,LMC (Standalone)
+4474,MUM_Route_19,Route LM,MU-4474,10004663,80.0,,,Route LM
+4485,Fibmax,"LMC routes (stand alone) ",MU-4485,10004854,20.0,,,LMC (Standalone)
+4488,Mumbai_Coverage_Route10,Route LM,MU-4488,10004558,50.0,,,Route LM
+4495,Fibmax,"LMC routes (stand alone) ",MU-4495,10004743,134.0,,,LMC (Standalone)
+4501,Fibmax,"LMC routes (stand alone) ",MU-4501,10004837,64.0,,,LMC (Standalone)
+4506,MUM_Route_19,Route LM,MU-4506,10004663,80.0,,,Route LM
+4509,Mumbai_Coverage_Route29,Route LM,MU-4509,10004519,190.0,,,Route LM
+4525,Mumbai_Coverage_Route17,Route LM,MU-4525,,,,,Route LM
+4534,Fibmax,"LMC routes (stand alone) ",MU-4534,10004807,220.0,,,LMC (Standalone)
+4545,MUM_Route_8,Route LM,MU-4545,10004619,280.0,,,Route LM
+4546,Fibmax,"LMC routes (stand alone) ",MU-4546,10004770,200.0,,,LMC (Standalone)
+4553,Mumbai_Coverage_Route9,Route LM,MU-4553,10004537,60.0,,,Route LM
+4558,Mumbai_Coverage_Route3,Route LM,MU-4558,10004549,10.0,,,Route LM
+4609,Fibmax,"LMC routes (stand alone) ",MU-4609,10004810,224.0,,,LMC (Standalone)
+4634,Mumbai_Coverage_Route28,Route LM,MU-4634,10004512,10.0,,,Route LM
+4670,MUM_Route_110,Route LM,MU-4670,10004593,150.0,,,Route LM
+4690,Fibmax,"LMC routes (stand alone) ",MU-4690,10004760,11.0,,,LMC (Standalone)
+4719,Fibmax,"LMC routes (stand alone) ",MU-4719,10004773,112.0,,,LMC (Standalone)
+4750,MUM_Route_58,Route LM,MU-4750,10004658,330.0,,,Route LM
+4779,MUM_Route_4,Route LM,MU-4779,10004541,110.0,,,Route LM
+4794,Mumbai_Coverage_Route9,Route LM,MU-4794,10004537,220.0,,,Route LM
+4847,MUM_Route_10,Route LM,MU-4847,10004641,10.0,,,Route LM
+4858,Fibmax,"LMC routes (stand alone) ",MU-4858,,,,,LMC (Standalone)
+4859,MUM_Route_10,Route LM,MU-4859,10004641,50.0,,,Route LM
+4871,Mumbai_Coverage_Route15,Route LM,MU-4871,10004562,20.0,,,Route LM
+4880,Fibmax,"LMC routes (stand alone) ",MU-4880,,,,,LMC (Standalone)
+4883,Fibmax,"LMC routes (stand alone) ",MU-4883,10004778,50.0,,,LMC (Standalone)
+4913,MUM_Route_55,Route LM,MU-4913,10004628,50.0,,,Route LM
+4917,Fibmax,"LMC routes (stand alone) ",MU-4917,10004766,11.0,,,LMC (Standalone)
+4919,Mumbai_Coverage_Route5,Route LM,MU-4919,10004514,120.0,,,Route LM
+4929,MUM_Route_55,Route LM,MU-4929,,,,,Route LM
+4932,MUM_Route_55,Route LM,MU-4932,10004628,120.0,,,Route LM
+4936,Fibmax,"LMC routes (stand alone) ",MU-4936,10004760,25.0,,,LMC (Standalone)
+4941,MUM_Route_123,Route LM,MU-4941,10004664,150.0,,,Route LM
+4952,MUM_Route_123,Route LM,MU-4952,,,,,Route LM
+496,MUM_Route_45,Route LM,MU-496,10004670,50.0,,,Route LM
+4971,Fibmax,"LMC routes (stand alone) ",MU-4971,10004888,100.0,,,LMC (Standalone)
+4973,MUM_Route_81,Route LM,MU-4973,10004680,380.0,,,Route LM
+4981,MUM_Route_10,Route LM,MU-4981,10004641,30.0,,,Route LM
+4986,MUM_Route_55,Route LM,MU-4986,10004628,60.0,,,Route LM
+4991,Mumbai_Coverage_Route31,Route LM,MU-4991,10004580,50.0,,,Route LM
+4997,Fibmax,"LMC routes (stand alone) ",MU-4997,,,,,LMC (Standalone)
+4998,Fibmax,"LMC routes (stand alone) ",MU-4998,10004770,300.0,,,LMC (Standalone)
+5029,MUM_Route_10,Route LM,MU-5029,10004641,70.0,,,Route LM
+5032,MUM_Route_99,Route LM,MU-5032,10004622,80.0,,,Route LM
+5055,MUM_Route_10,Route LM,MU-5055,10004641,10.0,,,Route LM
+5095,Fibmax,"LMC routes (stand alone) ",MU-5095,,,,,LMC (Standalone)
+5154,MUM_Route_122,Route LM,MU-5154,10004534,170.0,,,Route LM
+5155,Fibmax,"LMC routes (stand alone) ",MU-5155,,,,,LMC (Standalone)
+5158,Fibmax,"LMC routes (stand alone) ",MU-5158,10004770,253.0,,,LMC (Standalone)
+5181,Mumbai_Coverage_Route5,Route LM,MU-5181,10004514,50.0,,,Route LM
+5225,Fibmax,"LMC routes (stand alone) ",MU-5225,10004760,100.0,,,LMC (Standalone)
+5235,MUM_Route_23,Route LM,MU-5235,10004959,50.0,,,Route LM
+5237,Fibmax,"LMC routes (stand alone) ",MU-5237,10004840,11.0,,,LMC (Standalone)
+5256,MUM_Route_10,Route LM,MU-5256,10004641,150.0,,,Route LM
+5274,MUM_Route_4,Route LM,MU-5274,10004541,60.0,,,Route LM
+5286,Fibmax,"LMC routes (stand alone) ",MU-5286,10004702,56.0,,,LMC (Standalone)
+5294,MUM_Route_114,Route LM,MU-5294,10004516,30.0,,,Route LM
+5307,MUM_Route_90,Route LM,MU-5307,10004960,300.0,,,Route LM
+5331,Fibmax,"LMC routes (stand alone) ",MU-5331,,,,,LMC (Standalone)
+5339,MUM_Route_112,Route LM,MU-5339,10004539,140.0,,,Route LM
+5342,MUM_Route_107,Route LM,MU-5342,10004626,20.0,,,Route LM
+5357,MUM_Route_42,Route LM,MU-5357,10004961,360.0,,,Route LM
+5372,MUM_Route_106,Route LM,MU-5372,10004621,60.0,,,Route LM
+5385,MUM_Route_8,Route LM,MU-5385,10004619,70.0,,,Route LM
+5387,Fibmax,"LMC routes (stand alone) ",MU-5387,,,,,LMC (Standalone)
+5392,Mumbai_Coverage_Route4,Route LM,MU-5392,10004546,100.0,,,Route LM
+5395,Fibmax,"LMC routes (stand alone) ",MU-5395,10004760,38.0,,,LMC (Standalone)
+5436,Fibmax,"LMC routes (stand alone) ",MU-5436,10004780,106.0,,,LMC (Standalone)
+5451,MUM_Route_10,Route LM,MU-5451,10004641,120.0,,,Route LM
+5504,Fibmax,"LMC routes (stand alone) ",MU-5504,10004851,25.0,,,LMC (Standalone)
+5508,Fibmax,"LMC routes (stand alone) ",MU-5508,10004760,435.0,,,LMC (Standalone)
+5525,Fibmax,"LMC routes (stand alone) ",MU-5525,10004776,338.0,,,LMC (Standalone)
+5541,Fibmax,"LMC routes (stand alone) ",MU-5541,10004701,235.0,,,LMC (Standalone)
+5568,Tamil Sangham to Guru Teg Bahadur Nagar Station,Route LM,MU-5568,10004971,60.0,,,Route LM
+5579,MUM_Route_33,Route LM,MU-5579,10004523,100.0,,,Route LM
+5590,Fibmax,"LMC routes (stand alone) ",MU-5590,10004800,224.0,,,LMC (Standalone)
+5592,Fibmax,"LMC routes (stand alone) ",MU-5592,10004748,280.0,,,LMC (Standalone)
+5604,MUM_Route_55,Route LM,MU-5604,10004628,70.0,,,Route LM
+5606,MUM_Route_10,Route LM,MU-5606,,,,,Route LM
+5618,MUM_Route_68,Route LM,MU-5618,10004657,50.0,,,Route LM
+5619,Mumbai_Coverage_Route25,Route LM,MU-5619,10004582,230.0,,,Route LM
+5627,Fibmax,"LMC routes (stand alone) ",MU-5627,10004861,161.0,,,LMC (Standalone)
+5665,MUM_Route_114,Route LM,MU-5665,10004516,70.0,,,Route LM
+5682,Fibmax,"LMC routes (stand alone) ",MU-5682,10004758,224.0,,,LMC (Standalone)
+5687,Fibmax,"LMC routes (stand alone) ",MU-5687,10004793,280.0,,,LMC (Standalone)
+5709,Fibmax,"LMC routes (stand alone) ",MU-5709,10004767,112.0,,,LMC (Standalone)
+5741,Mumbai_Coverage_Route35,Route LM,MU-5741,10004583,100.0,,,Route LM
+5761,Mumbai_Coverage_Route35,Route LM,MU-5761,10004583,120.0,,,Route LM
+5767,Fibmax,"LMC routes (stand alone) ",MU-5767,,,,,LMC (Standalone)
+5768,MUM_Route_33,Route LM,MU-5768,10004523,300.0,,,Route LM
+5769,MUM_Route_25,Route LM,MU-5769,10004651,280.0,,,Route LM
+5814,MUM_Route_90,Route LM,MU-5814,10004960,180.0,,,Route LM
+5827,MUM_Route_109,Route LM,MU-5827,10004597,140.0,,,Route LM
+583,MUM_Route_90,Route LM,MU-583,10004960,60.0,,,Route LM
+5831,Fibmax,"LMC routes (stand alone) ",MU-5831,10004791,67.0,,,LMC (Standalone)
+5856,MUM_Route_142,Route LM,MU-MM5856,10004528,10.0,,,Route LM
+5886,Fibmax,"LMC routes (stand alone) ",MU-5886,10004815,140.0,,,LMC (Standalone)
+5898,Fibmax,"LMC routes (stand alone) ",MU-5898,,,,,LMC (Standalone)
+5959,MUM_Route_10,Route LM,MU-5959,10005003,100.0,,,Route LM
+596,Fibmax,"LMC routes (stand alone) ",MU-596,10004695,134.0,,,LMC (Standalone)
+5979,Fibmax,"LMC routes (stand alone) ",MU-5979,10004744,280.0,,,LMC (Standalone)
+5980,Fibmax,"LMC routes (stand alone) ",MU-5980,10004762,45.0,,,LMC (Standalone)
+5987,MUM_Route_68,Route LM,MU-5987,,,,,Route LM
+5995,Mumbai_Coverage_Route6,Route LM,MU-5995,10004550,100.0,,,Route LM
+6006,Fibmax,"LMC routes (stand alone) ",MU-6006,10005004,150.0,,,LMC (Standalone)
+6015,Fibmax,"LMC routes (stand alone) ",MU-6015,,,,,LMC (Standalone)
+6021,Fibmax,"LMC routes (stand alone) ",MU-6021,10004827,112.0,,,LMC (Standalone)
+6027,Tamil Sangham to Guru Teg Bahadur Nagar Station,Route LM,MU-6027,10004971,100.0,,,Route LM
+6033,MUM_Route_36,Route LM,MU-6033,,,,,Route LM
+6056,MUM_Route_23,Route LM,MU-6056,10004959,80.0,,,Route LM
+6062,Mumbai_Coverage_Route38,Route LM,MU-6062,10004967,80.0,,,Route LM
+6087,Fibmax,"LMC routes (stand alone) ",MU-MM6087,10004888,112.0,,,LMC (Standalone)
+6094,MUM_Route_42,Route LM,MU-6094,10004961,170.0,,,Route LM
+6102,MUM_Route_8,Route LM,MU-6102,10004619,110.0,,,Route LM
+6138,Fibmax,"LMC routes (stand alone) ",MU-6138,,,,,LMC (Standalone)
+6154,Fibmax,"LMC routes (stand alone) ",MU-6154,10004760,246.0,,,LMC (Standalone)
+6164,Mumbai_Coverage_Route12,Route LM,MU-6164,10004561,30.0,,,Route LM
+6169,Fibmax,"LMC routes (stand alone) ",MU-6169,10004745,280.0,,,LMC (Standalone)
+6172,Fibmax,"LMC routes (stand alone) ",MU-6172,,,,,LMC (Standalone)
+6177,Fibmax,"LMC routes (stand alone) ",MU-6177,,,,,LMC (Standalone)
+6179,Mumbai_Coverage_Route30,Route LM,MU-6179,10004573,30.0,,,Route LM
+6180,Mumbai_Coverage_Route6,Route LM,MU-6180,10004550,70.0,,,Route LM
+6194,Mumbai_Coverage_Route12,Route LM,MU-6194,10004561,60.0,,,Route LM
+6195,Fibmax,"LMC routes (stand alone) ",MU-6195,10004835,242.0,,,LMC (Standalone)
+6213,Fibmax,"LMC routes (stand alone) ",MU-6213,,,,,LMC (Standalone)
+6224,MUM_Route_81,Route LM,MU-6224,10004680,150.0,,,Route LM
+6239,MUM_Route_8,Route LM,MU-6239,10004619,60.0,,,Route LM
+6279,Fibmax,"LMC routes (stand alone) ",MU-6279,,,,,LMC (Standalone)
+6281,Fibmax,"LMC routes (stand alone) ",MU-6281,10004760,165.0,,,LMC (Standalone)
+6323,Fibmax,"LMC routes (stand alone) ",MU-6323,10004785,224.0,,,LMC (Standalone)
+6359,MUM_Route_19,Route LM,MU-6359,10004663,130.0,,,Route LM
+636,Fibmax,"LMC routes (stand alone) ",MU-636,10004770,253.0,,,LMC (Standalone)
+6369,MUM_Route_99,Route LM,MU-6369,10004624,40.0,,,Route LM
+6394,Mumbai_Coverage_Route21,Route LM,MU-6394,10004548,30.0,,,Route LM
+6407,Mumbai_Coverage_Route35,Route LM,MU-6407,10004583,50.0,,,Route LM
+6463,MUM_Route_8,Route LM,MU-6463,10004619,280.0,,,Route LM
+6479,Fibmax,"LMC routes (stand alone) ",MU-6479,10004888,190.0,,,LMC (Standalone)
+6502,MUM_Route_30,Route LM,MU-6502,10004669,260.0,,,Route LM
+6518,MUM_Route_110,Route LM,MU-6518,,,,,Route LM
+6520,Fibmax,"LMC routes (stand alone) ",MU-6520,10004774,224.0,,,LMC (Standalone)
+660,Fibmax,"LMC routes (stand alone) ",MU-660,,,,,LMC (Standalone)
+679,Fibmax,"LMC routes (stand alone) ",MU-679,,,,,LMC (Standalone)
+686,Mumbai_Coverage_Route32,Route LM,MU-686,10004555,20.0,,,Route LM
+721,Fibmax,"LMC routes (stand alone) ",MU-721,10004799,112.0,,,LMC (Standalone)
+744,Fibmax,"LMC routes (stand alone) ",MU-744,10004708,112.0,,,LMC (Standalone)
+8,Fibmax,"LMC routes (stand alone) ",MU-8,10004809,171.0,,,LMC (Standalone)
+810,MUM_Route_8,Route LM,MU-810,10004619,230.0,,,Route LM
+855,Fibmax,"LMC routes (stand alone) ",MU-855,10004888,168.0,,,LMC (Standalone)
+859,Mumbai_Coverage_Route39,Route LM,MU-859,10004571,70.0,,,Route LM
+879,MUM_Route_122,Route LM,MU-879,10004534,60.0,,,Route LM
+880,Fibmax,"LMC routes (stand alone) ",MU-880,10004760,420.0,,,LMC (Standalone)
+907,MUM_Route_99,Route LM,MU-907,10004624,100.0,,,Route LM
+999,MUM_Route_117,Route LM,MU-999,10004590,120.0,,,Route LM
+AGG BSN 903,MUM_Route_115,Additional Route,MUM_Route_115,10004538,125.0,,,Route
+AGG_TVL_903,MUM_Route_142,Additional Route,MUM_Route_142,10004528,100.0,,,Route
+BSE India_LM,MUM_Route_99,Additional Route,MUM_Route_99,10004624,1000.0,,,Route
+CapitaLand Data Centre (CDC)_LM,MUM_Route_68,Additional Route,MUM_Route_68,10004657,180.0,,,Route
+Center Point to Mint Colony Station,Center Point to Mint Colony Station,Mono Rail Additional Route,Center Point to Mint Colony Station,10004973,200.0,10004973,550.0,Route
+Gopi Cinema_AGG_LM,Mumbai_Coverage_Route32,Additional Route,Mumbai_Coverage_Route32,10004555,380.0,,,Route
+Jairamdas to VNP & RC Marg Junction Station,Jairamdas to VNP & RC Marg Junction Station,Mono Rail Additional Route,Jairamdas to VNP & RC Marg Junction Station,10004972,1000.0,,,Route
+MA1036,MUM_Route_42,Route LM,MU-MA1036,10004961,280.0,,,Route LM
+MA1044,Fibmax,"LMC routes (stand alone) ",MU-MA1044,10004866,168.0,,,LMC (Standalone)
+MA1048,Fibmax,"LMC routes (stand alone) ",MU-MA1048,10004830,280.0,,,LMC (Standalone)
+MA1056,Fibmax,"LMC routes (stand alone) ",MU-MA1056,,,,,LMC (Standalone)
+MA1059,MUM_Route_10,Route LM,MU-MA1059,10004641,80.0,,,Route LM
+MA1119,MUM_Route_55,Route LM,MU-MA1119,10005007,350.0,,,Route LM
+MA1156,Fibmax,"LMC routes (stand alone) ",MU-MA1156,10004760,50.0,,,LMC (Standalone)
+MA1165,MUM_Route_19,Route LM,MU-MA1165,10004663,290.0,,,Route LM
+MA118,MUM_Route_115,Route LM,MU-MA118,10004538,20.0,,,Route LM
+MA1227,Fibmax,"LMC routes (stand alone) ",MU-MA1227,,,,,LMC (Standalone)
+MA1260,Mumbai_Coverage_Route25,Route LM,MU-MA1260,10004582,400.0,,,Route LM
+MA1265,Mumbai_Coverage_Route37,Route LM,MU-MA1265,10004574,40.0,,,Route LM
+MA129,Fibmax,"LMC routes (stand alone) ",MU-MA129,10004803,28.0,,,LMC (Standalone)
+MA13,MUM_Route_108,Route LM,MU-MA13,,,,,Route LM
+MA1336,Fibmax,"LMC routes (stand alone) ",MU-MA1336,10004760,11.0,,,LMC (Standalone)
+MA1352,Mumbai_Coverage_Route17,Route LM,MU-MA1352,10004547,40.0,,,Route LM
+MA1356,Mumbai_Coverage_Route2,Route LM,MU-MA1356,10004557,10.0,,,Route LM
+MA138,Mumbai_Coverage_Route30,Route LM,MU-MA138,10004573,30.0,,,Route LM
+MA1400,Mumbai_Coverage_Route31,Route LM,MU-MA1400,10004580,180.0,,,Route LM
+MA1436,Fibmax,"LMC routes (stand alone) ",MU-MA1436,,,,,LMC (Standalone)
+MA1484,MUM_Route_33,Route LM,MU-MA1484,10004523,140.0,,,Route LM
+MA1542,MUM_Route_54,Route LM,MU-MA1542,10004637,220.0,,,Route LM
+MA1621,Fibmax,"LMC routes (stand alone) ",MU-MA1621,10004882,165.0,,,LMC (Standalone)
+MA1669,MUM_Route_16,Route LM,MU-MA1669,10004588,220.0,,,Route LM
+MA1730,Fibmax,"LMC routes (stand alone) ",MU-MA1730,,,,,LMC (Standalone)
+MA1751,MUM_Route_42,Route LM,MU-MA1751,10004961,180.0,,,Route LM
+MA1794,Fibmax,"LMC routes (stand alone) ",MU-MA1794,10004824,187.0,,,LMC (Standalone)
+MA18,Fibmax,"LMC routes (stand alone) ",MU-MA18,10004730,123.0,,,LMC (Standalone)
+MA1806,MUM_Route_115,Route LM,MU-MA1806,10004538,170.0,,,Route LM
+MA1811,Fibmax,"LMC routes (stand alone) ",MU-MA1811,10004697,78.0,,,LMC (Standalone)
+MA1813,Fibmax,"LMC routes (stand alone) ",MU-MA1813,10004888,100.0,,,LMC (Standalone)
+MA183,Fibmax,"LMC routes (stand alone) ",MU-MA183,10004693,106.0,,,LMC (Standalone)
+MA184,Fibmax,"LMC routes (stand alone) ",MU-MA184,10004698,291.0,,,LMC (Standalone)
+MA1840,Fibmax,"LMC routes (stand alone) ",MU-MA1840,10004770,253.0,,,LMC (Standalone)
+MA1855,Fibmax,"LMC routes (stand alone) ",MU-MA1855,10004760,110.0,,,LMC (Standalone)
+MA1878,MUM_Route_30,Route LM,MU-MUM_Route_30,10004669,60.0,,,Route LM
+MA1885,MUM_Route_10,Route LM,MU-MA1885,10004641,40.0,,,Route LM
+MA1907,MUM_Route_45,Route LM,MU-MA1907,10004670,20.0,,,Route LM
+MA1934,Mumbai_Coverage_Route6,Route LM,MU-MA1934,,,,,Route LM
+MA1939,Fibmax,"LMC routes (stand alone) ",MU-MA1939,,,,,LMC (Standalone)
+MA2,Fibmax,"LMC routes (stand alone) ",MU-MA2,10004770,78.0,,,LMC (Standalone)
+MA2014,MUM_Route_80,Route LM,MU-MA2014,10004627,520.0,,,Route LM
+MA2028,Mumbai_Coverage_Route33,Route LM,MU-MA2028,10004572,60.0,,,Route LM
+MA2049,Fibmax,"LMC routes (stand alone) ",MU-MA2049,10004754,224.0,,,LMC (Standalone)
+MA2088,Fibmax,"LMC routes (stand alone) ",MU-MA2088,10004770,58.0,,,LMC (Standalone)
+MA2096,Fibmax,"LMC routes (stand alone) ",MU-MA2096,,,,,LMC (Standalone)
+MA2115,Fibmax,"LMC routes (stand alone) ",MU-MA2115,10004833,34.0,,,LMC (Standalone)
+MA2131,MUM_Route_25,Route LM,MU-MA2131,10004651,60.0,,,Route LM
+MA2152,MUM_Route_42,Route LM,MU-MA2152,10004961,110.0,,,Route LM
+MA2181,MUM_Route_50,Route LM,MU-MA2181,10004765,400.0,,,Route LM
+MA2194,Fibmax,"LMC routes (stand alone) ",MU-MA2194,10004760,517.0,,,LMC (Standalone)
+MA2218,Mumbai_Coverage_Route7,Route LM,MU-MA2218,10004531,20.0,,,Route LM
+MA2221,Mumbai_Coverage_Route25,Route LM,MU-MA2221,,,,,Route LM
+MA2281,MUM_Route_110,Route LM,MU-MA2281,10004593,170.0,,,Route LM
+MA2282,Fibmax,"LMC routes (stand alone) ",MU-MA2282,10004823,90.0,,,LMC (Standalone)
+MA2370,Fibmax,"LMC routes (stand alone) ",MU-MA2370,10004872,224.0,,,LMC (Standalone)
+MA2383,MUM_Route_55,Route LM,MU-MA2383,10004628,170.0,,,Route LM
+MA2398,Fibmax,"LMC routes (stand alone) ",MU-MA2398,10004787,346.0,,,LMC (Standalone)
+MA241,Fibmax,"LMC routes (stand alone) ",MU-MA241,10004857,297.0,,,LMC (Standalone)
+MA2463,Mumbai_Coverage_Route33,Route LM,MU-MA2463,10004572,100.0,,,Route LM
+MA25,MUM_Route_105,Route LM,MU-MA25,10004638,60.0,,,Route LM
+MA2512,Fibmax,"LMC routes (stand alone) ",MU-MA2512,10004727,56.0,,,LMC (Standalone)
+MA2545,Fibmax,"LMC routes (stand alone) ",MU-MA2545,10004858,113.0,,,LMC (Standalone)
+MA2559,Mumbai_Coverage_Route33,Route LM,MU-MA2559,10004572,100.0,,,Route LM
+MA256,MUM_Route_8,Route LM,MU-MA256,10004619,110.0,,,Route LM
+MA2576,Fibmax,"LMC routes (stand alone) ",MU-MA2576,10004884,39.0,,,LMC (Standalone)
+MA2578,MUM_Route_97,Route LM,MU-MA2578,10004672,40.0,,,Route LM
+MA2586,MUM_Route_19,Route LM,MU-MA2586,10004663,110.0,,,Route LM
+MA2619,MUM_Route_81,Route LM,MU-MA2619,10004680,170.0,,,Route LM
+MA2726,Mumbai_Coverage_Route39,Route LM,MU-MA2726,10004571,660.0,,,Route LM
+MA2736,Fibmax,"LMC routes (stand alone) ",MU-MA2736,10004770,22.0,,,LMC (Standalone)
+MA28,Fibmax,"LMC routes (stand alone) ",MU-MA28,10004783,168.0,,,LMC (Standalone)
+MA2816,Fibmax,"LMC routes (stand alone) ",MU-MA2816,10004706,112.0,,,LMC (Standalone)
+MA2824,MUM_Route_45,Route LM,MU-MA2824,10004670,150.0,,,Route LM
+MA285,Mumbai_Coverage_Route31,Route LM,MU-MA285,10004580,70.0,,,Route LM
+MA2866,Fibmax,"LMC routes (stand alone) ",MU-MA2866,10004738,246.0,,,LMC (Standalone)
+MA2877,Fibmax,"LMC routes (stand alone) ",MU-MA2877,10004821,78.0,,,LMC (Standalone)
+MA2903,MUM_Route_8,Route LM,MU-MA2903,,,,,Route LM
+MA2915,MUM_Route_4,Route LM,MU-MA2915,10004541,110.0,,,Route LM
+MA2917,MUM_Route_4,Route LM,MU-MA2917,10004541,240.0,,,Route LM
+MA2938,MUM_Route_4,Route LM,MU-MA2938,10004541,170.0,,,Route LM
+MA2979,Mumbai_Coverage_Route34,Route LM,MU-MA2979,10004968,70.0,,,Route LM
+MA3052,Fibmax,"LMC routes (stand alone) ",MU-MA3052,,,,,LMC (Standalone)
+MA3055,Fibmax,"LMC routes (stand alone) ",MU-MA3055,10004752,280.0,,,LMC (Standalone)
+MA312,Fibmax,"LMC routes (stand alone) ",MU-MA312,10004690,112.0,,,LMC (Standalone)
+MA3132,Fibmax,"LMC routes (stand alone) ",MU-MA3132,10004760,100.0,,,LMC (Standalone)
+MA3180,Fibmax,"LMC routes (stand alone) ",MU-MA3180,,,,,LMC (Standalone)
+MA3332,Mumbai_Coverage_Route23,Route LM,MU-MA3332,10004556,50.0,,,Route LM
+MA3372,Fibmax,"LMC routes (stand alone) ",MU-MA3372,10004865,45.0,,,LMC (Standalone)
+MA3407,MUM_Route_48,Route LM,MU-MA3407,,,,,Route LM
+MA3417,MUM_Route_110,Route LM,MU-MA3417,10004593,140.0,,,Route LM
+MA3428,Fibmax,"LMC routes (stand alone) ",MU-MA3428,10004817,55.0,,,LMC (Standalone)
+MA3429,Mumbai_Coverage_Route12,Route LM,MU-MA3429,10004561,40.0,,,Route LM
+MA3442,Fibmax,"LMC routes (stand alone) ",MU-MA3442,10004826,168.0,,,LMC (Standalone)
+MA3485,MUM_Route_57,Route LM,MU-MA3485,10004659,130.0,,,Route LM
+MA3495,MUM_Route_42,Route LM,MU-MA3495,10004961,110.0,,,Route LM
+MA3548,MUM_Route_10,Route LM,MU-MA3548,,,,,Route LM
+MA3567,Fibmax,"LMC routes (stand alone) ",MU-MA3567,10004888,280.0,,,LMC (Standalone)
+MA3580,Fibmax,"LMC routes (stand alone) ",MU-MA3580,10004798,190.0,,,LMC (Standalone)
+MA3597,MUM_Route_23,Route LM,MU-MA3597,10004959,110.0,,,Route LM
+MA3601,Fibmax,"LMC routes (stand alone) ",MU-MA3601,,,,,LMC (Standalone)
+MA3616,MUM_Route_115,Route LM,MU-MA3616,10004538,280.0,,,Route LM
+MA3631,MUM_Route_36,Route LM,MU-MA3631,,,,,Route LM
+MA3655,MUM_Route_106,Route LM,MU-MA3655,10004997,50.0,,,Route LM
+MA366,Fibmax,"LMC routes (stand alone) ",MU-MA366,10004722,224.0,,,LMC (Standalone)
+MA3668,MUM_Route_8,Route LM,MU-MA3668,10004619,50.0,,,Route LM
+MA3670,Fibmax,"LMC routes (stand alone) ",MU-MA3670,10004876,67.0,,,LMC (Standalone)
+MA3675,Fibmax,"LMC routes (stand alone) ",MU-MA3675,10004770,187.0,,,LMC (Standalone)
+MA3683,Fibmax,"LMC routes (stand alone) ",MU-MA3683,,,,,LMC (Standalone)
+MA3718,Mumbai_Coverage_Route28,Route LM,MU-MA3718,,,,,Route LM
+MA3759,Fibmax,"LMC routes (stand alone) ",MU-MA3759,10004870,450.0,,,LMC (Standalone)
+MA3795,Fibmax,"LMC routes (stand alone) ",MU-MA3795,,,,,LMC (Standalone)
+MA3827,Fibmax,"LMC routes (stand alone) ",MU-MA3827,10004760,22.0,,,LMC (Standalone)
+MA3828,Fibmax,"LMC routes (stand alone) ",MU-MA3828,10004760,682.0,,,LMC (Standalone)
+MA3832,Fibmax,"LMC routes (stand alone) ",MU-MA3832,10004736,112.0,,,LMC (Standalone)
+MA3841,Fibmax,"LMC routes (stand alone) ",MU-MA3841,,,,,LMC (Standalone)
+MA3897,Fibmax,"LMC routes (stand alone) ",MU-MA3897,10004888,224.0,,,LMC (Standalone)
+MA3916,Fibmax,"LMC routes (stand alone) ",MU-MA3916,10004746,280.0,,,LMC (Standalone)
+MA3984,Mumbai_Coverage_Route6,Route LM,MU-MA3984,10004550,30.0,,,Route LM
+MA3996,MUM_Route_19,Route LM,MU-MA3996,10004663,280.0,,,Route LM
+MA4005,Mumbai_Coverage_Route38,Route LM,MU-MA4005,10004967,150.0,,,Route LM
+MA4011,Fibmax,"LMC routes (stand alone) ",MU-MA4011,10004828,224.0,,,LMC (Standalone)
+MA4012,Fibmax,"LMC routes (stand alone) ",MU-MA4012,10004846,112.0,,,LMC (Standalone)
+MA4021,MUM_Route_54,Route LM,MU-MA4021,10004637,70.0,,,Route LM
+MA4035,MUM_Route_36,Route LM,MU-MA4035,10004962,90.0,,,Route LM
+MA4076,Fibmax,"LMC routes (stand alone) ",MU-MA4076,10004814,90.0,,,LMC (Standalone)
+MA4100,Fibmax,"LMC routes (stand alone) ",MU-MA4100,10004691,280.0,,,LMC (Standalone)
+MA4114,Fibmax,"LMC routes (stand alone) ",MU-MA4114,10004819,726.0,,,LMC (Standalone)
+MA4127,Fibmax,"LMC routes (stand alone) ",MU-MA4127,10004868,146.0,,,LMC (Standalone)
+MA4138,MUM_Route_42,Route LM,MU-MA4138,10004961,50.0,,,Route LM
+MA4147,MUM_Route_68,Route LM,MU-MA4147,10004657,50.0,,,Route LM
+MA4210,Fibmax,"LMC routes (stand alone) ",MU-MA4210,10004881,11.0,,,LMC (Standalone)
+MA4226,MUM_Route_10,Route LM,MU-MA4226,10004641,20.0,,,Route LM
+MA4247,Fibmax,"LMC routes (stand alone) ",MU-MA4247,10004719,179.0,,,LMC (Standalone)
+MA4248,MUM_Route_38,Route LM,MU-MA4248,10004674,250.0,,,Route LM
+MA4315,MUM_Route_97,Route LM,MU-MA4315,10004672,100.0,,,Route LM
+MA4376,Mumbai_Coverage_Route37,Route LM,MU-MA4376,10004574,100.0,,,Route LM
+MA4382,MUM_Route_122,Route LM,MU-MA4382,10004534,220.0,,,Route LM
+MA4416,Fibmax,"LMC routes (stand alone) ",MU-MA4416,10004792,280.0,,,LMC (Standalone)
+MA4450,MUM_Route_157,Route LM,MU-MA4450,10004656,20.0,,,Route LM
+MA4466,MUM_Route_55,Route LM,MU-MA4466,10004628,60.0,,,Route LM
+MA4523,MUM_Route_81,Route LM,MU-MA4523,,,,,Route LM
+MA4535,Fibmax,"LMC routes (stand alone) ",MU-MA4535,10004768,280.0,,,LMC (Standalone)
+MA4570,MUM_Route_55,Route LM,MU-MA4570,,,,,Route LM
+MA4575,Fibmax,"LMC routes (stand alone) ",MU-MA4575,10004760,286.0,,,LMC (Standalone)
+MA4606,Mumbai_Coverage_Route3,Route LM,MU-MA4606,10004549,10.0,,,Route LM
+MA4620,MUM_Route_157,Route LM,MU-MA4620,10004656,70.0,,,Route LM
+MA4632,Fibmax,"LMC routes (stand alone) ",MU-MA4632,10004704,291.0,,,LMC (Standalone)
+MA4640,MUM_Route_90,Route LM,MU-MA4640,10004960,70.0,,,Route LM
+MA4659,Fibmax,"LMC routes (stand alone) ",MU-MA4659,10004822,67.0,,,LMC (Standalone)
+MA4669,Mumbai_Coverage_Route12,Route LM,MU-MA4669,10004561,40.0,,,Route LM
+MA4735,Fibmax,"LMC routes (stand alone) ",MU-MA4735,10004871,858.0,,,LMC (Standalone)
+MA4786,Fibmax,"LMC routes (stand alone) ",MU-MA4786,10004720,291.0,,,LMC (Standalone)
+MA4828,Fibmax,"LMC routes (stand alone) ",MU-MA4828,10004723,231.0,,,LMC (Standalone)
+MA4846,MUM_Route_38,Route LM,MU-MA4846,10004674,120.0,,,Route LM
+MA4901,MUM_Route_27,Route LM,MU-MA4901,10004594,250.0,,,Route LM
+MA4977,Fibmax,"LMC routes (stand alone) ",MU-MA4977,10004747,258.0,,,LMC (Standalone)
+MA5034,Fibmax,"LMC routes (stand alone) ",MU-MA5034,10004770,110.0,,,LMC (Standalone)
+MA5051,Mumbai_Coverage_Route7,Route LM,MU-MA5051,10004531,20.0,,,Route LM
+MA5091,Fibmax,"LMC routes (stand alone) ",MU-MA5091,,,,,LMC (Standalone)
+MA5099,Fibmax,"LMC routes (stand alone) ",MU-MA5099,10004842,224.0,,,LMC (Standalone)
+MA5118,MUM_Route_80,Route LM,MU-MA5118,10004627,60.0,,,Route LM
+MA5138,Mumbai_Coverage_Route13,Route LM,MU-MA5138,10004559,190.0,,,Route LM
+MA5147,Mumbai_Coverage_Route7,Route LM,MU-MA5147,10004531,140.0,,,Route LM
+MA5153,Mumbai_Coverage_Route13,Route LM,MU-MA5153,10004559,280.0,,,Route LM
+MA5208,Mumbai_Coverage_Route21,Route LM,MU-MA5208,10004548,120.0,,,Route LM
+MA5212,MUM_Route_42,Route LM,MU-MA5212,10004961,280.0,,,Route LM
+MA5223,MUM_Route_25,Route LM,MU-MA5223,10004656,200.0,,,Route LM
+MA5231,Mumbai_Coverage_Route23,Route LM,MU-MA5231,10004556,40.0,,,Route LM
+MA5238,Fibmax,"LMC routes (stand alone) ",MU-MA5238,10004716,90.0,,,LMC (Standalone)
+MA5269,MUM_Route_8,Route LM,MU-MA5269,10004619,170.0,,,Route LM
+MA5287,MUM_Route_36,Route LM,MU-MA5287,10004962,150.0,,,Route LM
+MA5407,Fibmax,"LMC routes (stand alone) ",MU-MA5407,10004770,11.0,,,LMC (Standalone)
+MA5495,Fibmax,"LMC routes (stand alone) ",MU-MA5495,10004751,134.0,,,LMC (Standalone)
+MA5500,MUM_Route_110,Route LM,MU-MA5500,10004593,170.0,,,Route LM
+MA5523,Mumbai_Coverage_Route13,Route LM,MU-MA5523,10004559,60.0,,,Route LM
+MA5557,MUM_Route_38,Route LM,MU-MA5557,10004674,150.0,,,Route LM
+MA5656,MUM_Route_68,Route LM,MU-MA5656,10004657,20.0,,,Route LM
+MA5673,MUM_Route_97,Route LM,MU-MA5673,10004672,40.0,,,Route LM
+MA5707,Mumbai_Coverage_Route17,Route LM,MU-MA5707,10004547,50.0,,,Route LM
+MA5750,Fibmax,"LMC routes (stand alone) ",MU-MA5750,10004888,168.0,,,LMC (Standalone)
+MA5851,Mumbai_Coverage_Route10,Route LM,MU-MA5851,10004558,190.0,,,Route LM
+MA5877,MUM_Route_58,Route LM,MU-MA5877,,,,,Route LM
+MA5982,Fibmax,"LMC routes (stand alone) ",MU-MA5982,10004770,11.0,,,LMC (Standalone)
+MA599,Mumbai_Coverage_Route13,Route LM,MU-MA599,10004559,450.0,,,Route LM
+MA6019,Fibmax,"LMC routes (stand alone) ",MU-MA6019,10004867,280.0,,,LMC (Standalone)
+MA6036,MUM_Route_113,Route LM,MU-MA6036,10004598,150.0,,,Route LM
+MA6080,Mumbai_Coverage_Route29,Route LM,MU-MA6080,10004519,300.0,,,Route LM
+MA609,MUM_Route_37,Route LM,MU-MA609,10004525,110.0,,,Route LM
+MA6103,Fibmax,"LMC routes (stand alone) ",MU-MA6103,,,,,LMC (Standalone)
+MA6116,MUM_Route_113,Route LM,MU-MA6116,10004598,150.0,,,Route LM
+MA6156,MUM_Route_23,Route LM,MU-MA6156,10004959,80.0,,,Route LM
+MA6227,Fibmax,"LMC routes (stand alone) ",MU-MA6227,10004850,154.0,,,LMC (Standalone)
+MA6274,Fibmax,"LMC routes (stand alone) ",MU-MA6274,10004712,157.0,,,LMC (Standalone)
+MA6295,MUM_Route_10,Route LM,MU-MA6295,10004641,30.0,,,Route LM
+MA6340,Fibmax,"LMC routes (stand alone) ",MU-MA6340,,,,,LMC (Standalone)
+MA6341,MUM_Route_33,Route LM,MU-MA6341,10004523,20.0,,,Route LM
+MA638,MUM_Route_45,Route LM,MU-MA638,10004670,200.0,,,Route LM
+MA6472,Mumbai_Coverage_Route3,Route LM,MU-MA6472,,,,,Route LM
+MA649,Fibmax,"LMC routes (stand alone) ",MU-MA649,10004802,542.0,,,LMC (Standalone)
+MA6498,Fibmax,"LMC routes (stand alone) ",MU-MA6498,10004878,168.0,,,LMC (Standalone)
+MA6505,Fibmax,"LMC routes (stand alone) ",MU-MA6505,,,,,LMC (Standalone)
+MA6540,MUM_Route_10,Route LM,MU-MA6540,10004641,270.0,,,Route LM
+MA6546,Fibmax,"LMC routes (stand alone) ",MU-MA6546,,,,,LMC (Standalone)
+MA658,Fibmax,"LMC routes (stand alone) ",MU-MA658,,,,,LMC (Standalone)
+MA699,Fibmax,"LMC routes (stand alone) ",MU-MA699,,,,,LMC (Standalone)
+MA701,Fibmax,"LMC routes (stand alone) ",MU-MA701,,,,,LMC (Standalone)
+MA72,Fibmax,"LMC routes (stand alone) ",MU-MA72,10004844,112.0,,,LMC (Standalone)
+MA728,MUM_Route_55,Route LM,MU-MA728,10004628,100.0,,,Route LM
+MA73,Fibmax,"LMC routes (stand alone) ",MU-MA73,10004740,280.0,,,LMC (Standalone)
+MA742,MUM_Route_8,Route LM,MU-MA742,10004619,280.0,,,Route LM
+MA751,Fibmax,"LMC routes (stand alone) ",MU-MA751,,,,,LMC (Standalone)
+MA769,Fibmax,"LMC routes (stand alone) ",MU-MA769,,,,,LMC (Standalone)
+MA818,Mumbai_Coverage_Route3,Route LM,MU-MA818,10004549,50.0,,,Route LM
+MA882,Fibmax,"LMC routes (stand alone) ",MU-MA882,10004760,11.0,,,LMC (Standalone)
+MA928,Fibmax,"LMC routes (stand alone) ",MU-MA928,10004856,368.0,,,LMC (Standalone)
+MA943,Fibmax,"LMC routes (stand alone) ",MU-MA943,10004757,168.0,,,LMC (Standalone)
+MA954,Mumbai_Coverage_Route31,Route LM,MU-MA954,10004580,100.0,,,Route LM
+MA960,Fibmax,"LMC routes (stand alone) ",MU-MA960,10004888,235.0,,,LMC (Standalone)
+MA981,Fibmax,"LMC routes (stand alone) ",MU-MA981,10004770,110.0,,,LMC (Standalone)
+MB1084,Fibmax,"LMC routes (stand alone) ",MU-MB1084,10004853,220.0,,,LMC (Standalone)
+MB1103,MUM_Route_38,Route LM,MU-MB1103,10004674,70.0,,,Route LM
+MB1134,Fibmax,"LMC routes (stand alone) ",MU-MB1134,,,,,LMC (Standalone)
+MB1155,Fibmax,"LMC routes (stand alone) ",MU-MB1155,10004843,78.0,,,LMC (Standalone)
+MB1179,MUM_Route_23,Route LM,MU-MB1179,10004959,50.0,,,Route LM
+MB1187,Mumbai_Coverage_Route13,Route LM,MU-MB1187,10004559,100.0,,,Route LM
+MB1250,MUM_Route_27,Route LM,MU-MB1250,10004594,200.0,,,Route LM
+MB1259,Mumbai_Coverage_Route7,Route LM,MU-MB1259,10004531,30.0,,,Route LM
+MB1266,MUM_Route_81,Route LM,MU-MB1266,10004680,150.0,,,Route LM
+MB1311,Fibmax,"LMC routes (stand alone) ",MU-MB1311,10004877,373.0,,,LMC (Standalone)
+MB1348,MUM_Route_23,Route LM,MU-MB1348,10004959,110.0,,,Route LM
+MB1349,Mumbai_Coverage_Route3,Route LM,MU-MB1349,10004549,10.0,,,Route LM
+MB1435,MUM_Route_115,Route LM,MU-MB1435,10004538,110.0,,,Route LM
+MB1450,Mumbai_Coverage_Route39,Route LM,MU-MB1450,,,,,Route LM
+MB1466,Mumbai_Coverage_Route3,Route LM,MU-MB1466,10004549,10.0,,,Route LM
+MB1474,Fibmax,"LMC routes (stand alone) ",MU-MB1474,,,,,LMC (Standalone)
+MB1481,Fibmax,"LMC routes (stand alone) ",MU-MB1481,10004756,280.0,,,LMC (Standalone)
+MB1504,MUM_Route_99,Route LM,MU-MB1504,,,,,Route LM
+MB1581,Mumbai_Coverage_Route31,Route LM,MU-MB1581,10004580,40.0,,,Route LM
+MB1584,Fibmax,"LMC routes (stand alone) ",MU-MB1584,10004888,112.0,,,LMC (Standalone)
+MB1585,Fibmax,"LMC routes (stand alone) ",MU-MB1585,10004873,112.0,,,LMC (Standalone)
+MB1589,Mumbai_Coverage_Route7,Route LM,MU-MB1589,10004531,90.0,,,Route LM
+MB1591,Fibmax,"LMC routes (stand alone) ",MU-MB1591,10004880,280.0,,,LMC (Standalone)
+MB1595,MUM_Route_19,Route LM,MU-MB1595,10004663,130.0,,,Route LM
+MB1608,Fibmax,"LMC routes (stand alone) ",MU-MB1608,10004869,56.0,,,LMC (Standalone)
+MB1615,Fibmax,"LMC routes (stand alone) ",MU-MB1615,10004834,482.0,,,LMC (Standalone)
+MB1626,Mumbai_Coverage_Route36,Route LM,MU-MB1626,10004568,30.0,,,Route LM
+MB1703,MUM_Route_114,Route LM,MU-MB1703,10004516,10.0,,,Route LM
+MB1711,MUM_Route_45,Route LM,MU-MB1711,10004670,150.0,,,Route LM
+MB1714,MUM_Route_152,Route LM,MU-MB1714,10004959,60.0,,,Route LM
+MB1718,MUM_Route_57,Route LM,MU-MB1718,10004659,160.0,,,Route LM
+MB1723,Fibmax,"LMC routes (stand alone) ",MU-MB1723,,,,,LMC (Standalone)
+MB1727,Mumbai_Coverage_Route38,Route LM,MU-MB1727,10004967,40.0,,,Route LM
+MB1728,Fibmax,"LMC routes (stand alone) ",MU-MB1728,10004805,112.0,,,LMC (Standalone)
+MB1785,Fibmax,"LMC routes (stand alone) ",MU-MB1785,10004888,163.0,,,LMC (Standalone)
+MB1795,MUM_Route_81,Route LM,MU-MB1795,10004680,170.0,,,Route LM
+MB1882,MUM_Route_19,Route LM,MU-MB1882,10004663,60.0,,,Route LM
+MB1917,Mumbai_Coverage_Route39,Route LM,MU-MB1917,10004571,60.0,,,Route LM
+MB1935,Fibmax,"LMC routes (stand alone) ",MU-MB1935,,,,,LMC (Standalone)
+MB2148,Fibmax,"LMC routes (stand alone) ",MU-MB2148,10004849,45.0,,,LMC (Standalone)
+MB2153,Mumbai_Coverage_Route32,Route LM,MU-MB2153,10004555,110.0,,,Route LM
+MB2213,Mumbai_Coverage_Route21,Route LM,MU-MB2213,10004548,130.0,,,Route LM
+MB2224,MUM_Route_19,Route LM,MU-MB2224,10004663,60.0,,,Route LM
+MB2225,MUM_Route_10,Route LM,MU-MB2225,,,,,Route LM
+MB2229,Fibmax,"LMC routes (stand alone) ",MU-MB2229,,,,,LMC (Standalone)
+MB2230,MUM_Route_97,Route LM,MU-MB2230,,,,,Route LM
+MB2233,MUM_Route_97,Route LM,MU-MB2233,,,,,Route LM
+MB2236,MUM_Route_25,Route LM,MU-MB2236,10004651,80.0,,,Route LM
+MB2238,MUM_Route_23,Route LM,MU-MB2238,,,,,Route LM
+MB2239,MUM_Route_97,Route LM,MU-MB2239,,,,,Route LM
+MB2245,MUM_Route_23,Route LM,MU-MB2245,,,,,Route LM
+MB2246,MUM_Route_68,Route LM,MU-MB2246,10004657,80.0,,,Route LM
+MB2248,MUM_Route_80,Route LM,MU-MB2248,,,,,Route LM
+MB2250,MUM_Route_13,Route LM,MU-MB2250,,,,,Route LM
+MB2282,MUM_Route_49,Route LM,MU-MB2282,10004665,60.0,,,Route LM
+MB2355,Fibmax,"LMC routes (stand alone) ",MU-MB2355,10004836,102.0,,,LMC (Standalone)
+MB2367,Fibmax,"LMC routes (stand alone) ",MU-MB2367,10004760,143.0,,,LMC (Standalone)
+MB2378,MUM_Route_108,Route LM,MU-MB2378,10004634,250.0,,,Route LM
+MB2459,MUM_Route_81,Route LM,MU-MB2459,10004680,150.0,,,Route LM
+MB2460,Fibmax,"LMC routes (stand alone) ",MU-MB2460,10004739,168.0,,,LMC (Standalone)
+MB2462,MUM_Route_19,Route LM,MU-MB2462,10004663,80.0,,,Route LM
+MB2466,Fibmax,"LMC routes (stand alone) ",MU-MB2466,10004770,110.0,,,LMC (Standalone)
+MB2484,Fibmax,"LMC routes (stand alone) ",MU-MB2484,10004794,30.0,,,LMC (Standalone)
+MB2489,Fibmax,"LMC routes (stand alone) ",MU-MB2489,10004789,34.0,,,LMC (Standalone)
+MB2495,Fibmax,"LMC routes (stand alone) ",MU-MB2495,10004717,224.0,,,LMC (Standalone)
+MB2505,Fibmax,"LMC routes (stand alone) ",MU-MB2505,10004750,257.0,,,LMC (Standalone)
+MB2509,Fibmax,"LMC routes (stand alone) ",MU-MB2509,10004839,102.0,,,LMC (Standalone)
+MB2619,Fibmax,"LMC routes (stand alone) ",MU-MB2619,,,,,LMC (Standalone)
+MB2632,Fibmax,"LMC routes (stand alone) ",MU-MB2632,10004760,123.0,,,LMC (Standalone)
+MB2649,MUM_Route_97,Route LM,MU-MB2649,10004672,220.0,,,Route LM
+MB2693,Fibmax,"LMC routes (stand alone) ",MU-MB2693,,,,,LMC (Standalone)
+MB2765,Fibmax,"LMC routes (stand alone) ",MU-MB2765,10004786,560.0,,,LMC (Standalone)
+MB2815,MUM_Route_45,Route LM,MU-MB2815,10004670,180.0,,,Route LM
+MB2836,Mumbai_Coverage_Route21,Route LM,MU-MB2836,10004548,180.0,,,Route LM
+MB2863,Fibmax,"LMC routes (stand alone) ",MU-MB2863,10004726,112.0,,,LMC (Standalone)
+MB2875,MUM_Route_27,Route LM,MU-MB2875,10004594,60.0,,,Route LM
+MB2903,MUM_Route_81,Route LM,MU-MB2903,10004680,190.0,,,Route LM
+MB2965,Mumbai_Coverage_Route9,Route LM,MU-MB2965,10004537,120.0,,,Route LM
+MB2981,Fibmax,"LMC routes (stand alone) ",MU-MB2981,10004845,258.0,,,LMC (Standalone)
+MB2983,Fibmax,"LMC routes (stand alone) ",MU-MB2983,10004888,112.0,,,LMC (Standalone)
+MB3106,Fibmax,"LMC routes (stand alone) ",MU-MB3106,10004689,190.0,,,LMC (Standalone)
+MB3135,MUM_Route_10,Route LM,MU-MB3135,10004641,130.0,,,Route LM
+MB3183,Fibmax,"LMC routes (stand alone) ",MU-MB3183,10004788,40.0,,,LMC (Standalone)
+MB3220,MUM_Route_81,Route LM,MU-MB3220,10004680,110.0,,,Route LM
+MB3226,Fibmax,"LMC routes (stand alone) ",MU-MB3226,10004875,168.0,,,LMC (Standalone)
+MB3249,MUM_Route_23,Route LM,MU-MB3249,10004959,90.0,,,Route LM
+MB3271,MUM_Route_81,Route LM,MU-MB3271,10004680,100.0,,,Route LM
+MB328,Fibmax,"LMC routes (stand alone) ",MU-MB328,,,,,LMC (Standalone)
+MB3309,Mumbai_Coverage_Route9,Route LM,MU-MB3309,10004537,140.0,,,Route LM
+MB3311,Fibmax,"LMC routes (stand alone) ",MU-MB3311,10004761,224.0,,,LMC (Standalone)
+MB3372,MUM_Route_27,Route LM,MU-MB3372,10004594,90.0,,,Route LM
+MB3457,Fibmax,"LMC routes (stand alone) ",MU-MB3457,10004812,78.0,,,LMC (Standalone)
+MB3478,Fibmax,"LMC routes (stand alone) ",MU-MB3478,10004718,112.0,,,LMC (Standalone)
+MB3502,Fibmax,"LMC routes (stand alone) ",MU-MB3502,10004888,224.0,,,LMC (Standalone)
+MB3510,Fibmax,"LMC routes (stand alone) ",MU-MB3510,10004760,110.0,,,LMC (Standalone)
+MB3514,Tamil Sangham to Guru Teg Bahadur Nagar Station,Route LM,MU-MB3514,10004971,250.0,,,Route LM
+MB36,Fibmax,"LMC routes (stand alone) ",MU-MB36,,,,,LMC (Standalone)
+MB3667,MUM_Route_50,Route LM,MU-MB3667,10004765,280.0,,,Route LM
+MB3864,MUM_Route_113,Route LM,MU-MB3864,10004598,260.0,,,Route LM
+MB3890,Fibmax,"LMC routes (stand alone) ",MU-MB3890,,,,,LMC (Standalone)
+MB3940,MUM_Route_106,Route LM,MU-MB3940,10005007,350.0,,,Route LM
+MB3948,MUM_Route_10,Route LM,MU-MB3948,,,,,Route LM
+MB4276,Mumbai_Coverage_Route34,Route LM,MU-MB4276,10004968,100.0,,,Route LM
+MB4281,Fibmax,"LMC routes (stand alone) ",MU-MB4281,10004852,220.0,,,LMC (Standalone)
+MB4330,Fibmax,"LMC routes (stand alone) ",MU-MB4330,10004796,228.0,,,LMC (Standalone)
+MB4458,MUM_Route_80,Route LM,MU-MB4458,,,,,Route LM
+MB4464,MUM_Route_80,Route LM,MU-MB4464,,,,,Route LM
+MB4482,Fibmax,"LMC routes (stand alone) ",MU-MB4482,10004749,112.0,,,LMC (Standalone)
+MB4699,Fibmax,"LMC routes (stand alone) ",MU-MB4699,10004715,134.0,,,LMC (Standalone)
+MB4811,MUM_Route_109,Route LM,MU-MB4811,10004597,30.0,,,Route LM
+MB5402,MUM_Route_109,Route LM,MU-MB5402,10004597,220.0,,,Route LM
+MB5491,Fibmax,"LMC routes (stand alone) ",MU-MB5491,10004797,224.0,,,LMC (Standalone)
+MB5740,MUM_Route_107,Route LM,MU-MB5740,,,,,Route LM
+MB5951,Mumbai_Coverage_Route23,Route LM,MU-MB5951,10004556,50.0,,,Route LM
+MB5991,MUM_Route_81,Route LM,MU-MB5991,10004680,200.0,,,Route LM
+MB5997,MUM_Route_8,Route LM,MU-MB5997,10004619,60.0,,,Route LM
+MB6015,MUM_Route_99,Route LM,MU-MB6015,10004624,30.0,,,Route LM
+MB6017,MUM_Route_99,Route LM,MU-MB6017,10004624,70.0,,,Route LM
+MB6122,MUM_Route_122,Route LM,MU-MB6122,10004534,280.0,,,Route LM
+MB6174,Mumbai_Coverage_Route39,Route LM,MU-MB6174,10004571,90.0,,,Route LM
+MB6370,Fibmax,"LMC routes (stand alone) ",MU-MB6370,10004838,33.0,,,LMC (Standalone)
+MB6371,MUM_Route_57,Route LM,MU-MB6371,10004659,100.0,,,Route LM
+MB640,Fibmax,"LMC routes (stand alone) ",MU-MB640,10004829,112.0,,,LMC (Standalone)
+MB6417,MUM_Route_42,Route LM,MU-MB6417,10004961,220.0,,,Route LM
+MB6428,MUM_Route_122,Route LM,MU-MB6428,10004534,280.0,,,Route LM
+MB6431,Mumbai_Coverage_Route15,Route LM,MU-MB6431,10004562,170.0,,,Route LM
+MB6434,MUM_Route_27,Route LM,MU-MB6434,10004594,60.0,,,Route LM
+MB6450,MUM_Route_4,Route LM,MU-MB6450,10004541,60.0,,,Route LM
+MB817,Fibmax,"LMC routes (stand alone) ",MU-MB817,,,,,LMC (Standalone)
+Mercury Tower AGG_LM,MUM_Route_68,Additional Route,MUM_Route_68,10004657,1200.0,,,Route
+MU-Metro Rail LM,Mumbai_Coverage_Route28,Route LM,MU-3019,10004512,60.0,,,Route LM
+MU-Metro Rail LM_1,,Metro_LM,MU-Metro Rail LM,10004981,100.0,,,Metro_LM
+MU-Metro Rail LM_10,,Metro_LM,MU-Metro Rail LM,10004984,120.0,,,Metro_LM
+MU-Metro Rail LM_2,,Metro_LM,MU-Metro Rail LM,10004980,120.0,,,Metro_LM
+MU-Metro Rail LM_3,,Metro_LM,MU-Metro Rail LM,10004979,90.0,,,Metro_LM
+MU-Metro Rail LM_4,,Metro_LM,MU-Metro Rail LM,10004978,290.0,,,Metro_LM
+MU-Metro Rail LM_5,,Metro_LM,MU-Metro Rail LM,10004976,160.0,,,Metro_LM
+MU-Metro Rail LM_6,,Metro_LM,MU-Metro Rail LM,10004975,100.0,,,Metro_LM
+MU-Metro Rail LM_7,,Metro_LM,MU-Metro Rail LM,10004977,200.0,,,Metro_LM
+MU-Metro Rail LM_8,,Metro_LM,MU-Metro Rail LM,10004983,200.0,,,Metro_LM
+MU-Metro Rail LM_9,,Metro_LM,MU-Metro Rail LM,10004982,110.0,,,Metro_LM
+MUM_AND_933_LM,MUM_Route_113,Additional Route,MUM_Route_113,10004598,100.0,,,Route
+MUM_BKC_906_LM,MUM_Route_108,Additional Route,MUM_Route_108,10004634,480.0,,,Route
+MUM_KAI_901_LM,MUM_Route_109,DC Route,MUM_Route_109,10004597,100.0,,,Route
+MUM_LBS_906_LM,MUM_Route_117,Additional Route,MUM_Route_117,10004590,120.0,,,Route
+MUM_Route_10,MUM_Route_10,DC Route,MUM_Route_10,,,10004633,10280.0,Route
+MUM_Route_101,MUM_Route_101,Additional Route,MUM_Route_101,,,10004640,800.0,Route
+MUM_Route_102,MUM_Route_102,Additional Route,MUM_Route_102,,,,,Route
+MUM_Route_103,MUM_Route_10,DC Route,MUM_Route_10,10004641,190.0,,,Route
+MUM_Route_104,MUM_Route_10,DC Route,MUM_Route_10,10004641,190.0,,,Route
+MUM_Route_105,MUM_Route_105,Additional Route,MUM_Route_105,,,10004630,1000.0,Route
+MUM_Route_106,MUM_Route_106,Additional Route,MUM_Route_106,,,10004997,3490.0,Route
+MUM_Route_107,MUM_Route_107,Additional Route,MUM_Route_107,10004623,650.0,10004626,1768.0,Route
+MUM_Route_108,MUM_Route_108,Additional Route,MUM_Route_108,10004634,600.0,10004643,2787.0,Route
+MUM_Route_109,MUM_Route_109,DC Route,MUM_Route_109,10004585,2900.0,,,Route
+MUM_Route_11,MUM_Route_11,Additional Route,MUM_Route_11,10004625,1000.0,10004642,390.0,Route
+MUM_Route_110,MUM_Route_110,Additional Route,MUM_Route_110,10004589,6220.0,,,Route
+MUM_Route_111,MUM_Route_111,Additional Route,MUM_Route_111,10004515,841.0,,,Route
+MUM_Route_112,MUM_Route_112,Additional Route,MUM_Route_112,10004515,1020.0,,,Route
+MUM_Route_113,MUM_Route_113,Additional Route,MUM_Route_113,10004596,1890.0,,,Route
+MUM_Route_114,MUM_Route_114,Additional Route,MUM_Route_114,10004526,3720.0,,,Route
+MUM_Route_115,MUM_Route_115,Additional Route,MUM_Route_115,10004533,4550.0,,,Route
+MUM_Route_116,MUM_Route_116,Additional Route,MUM_Route_116,10004579,940.0,,,Route
+MUM_Route_117,MUM_Route_117,Additional Route,MUM_Route_117,10004591,1760.0,,,Route
+MUM_Route_118,MUM_Route_68,Additional Route,MUM_Route_68,10004657,720.0,,,Route
+MUM_Route_121,MUM_Route_122,Additional Route,MUM_Route_122,10004530,2080.0,,,Route
+MUM_Route_122,MUM_Route_122,Additional Route,MUM_Route_122,10004530,2670.0,,,Route
+MUM_Route_123,MUM_Route_123,Additional Route,MUM_Route_123,10004664,1500.0,,,Route
+MUM_Route_124,MUM_Route_123,Additional Route,MUM_Route_123,10004664,200.0,,,Route
+MUM_Route_125,MUM_Route_125,Additional Route,MUM_Route_125,10004684,190.0,,,Route
+MUM_Route_126,MUM_Route_126,Additional Route,MUM_Route_126,,,,,Route
+MUM_Route_127,MUM_Route_127,Additional Route,MUM_Route_127,10004577,1190.0,,,Route
+MUM_Route_13,MUM_Route_13,DC Route,MUM_Route_13,10004586,3030.0,,,Route
+MUM_Route_131,MUM_Route_10,DC Route,MUM_Route_131,10004641,200.0,,,Route
+MUM_Route_133,MUM_Route_133,Additional Route,MUM_Route_133,10004686,120.0,,,Route
+MUM_Route_134,MUM_Route_134,Additional Route,MUM_Route_134,10004679,1370.0,,,Route
+MUM_Route_135,MUM_Route_113,Additional Route,MUM_Route_113,10004596,440.0,,,Route
+MUM_Route_136,MUM_Route_113,Additional Route,MUM_Route_113,10004596,140.0,,,Route
+MUM_Route_137,MUM_Route_38,DC Route,MUM_Route_38,10004674,300.0,,,Route
+MUM_Route_138,MUM_Route_139,Additional Route,MUM_Route_139,10004653,50.0,,,Route
+MUM_Route_139,MUM_Route_139,Additional Route,MUM_Route_139,10004653,50.0,,,Route
+MUM_Route_140,MUM_Route_140,Additional Route,MUM_Route_140,10004655,70.0,,,Route
+MUM_Route_141,MUM_Route_141,Additional Route,MUM_Route_141,10004513,2280.0,,,Route
+MUM_Route_142,MUM_Route_142,Additional Route,MUM_Route_142,10004517,2760.0,,,Route
+MUM_Route_143,MUM_Route_4,DC Route,MUM_Route_4,10004541,110.0,,,Route
+MUM_Route_144,MUM_Route_4,DC Route,MUM_Route_4,10004541,100.0,,,Route
+MUM_Route_145,MUM_Route_4,DC Route,MUM_Route_4,10004541,200.0,,,Route
+MUM_Route_146,MUM_Route_4,DC Route,MUM_Route_4,10004541,500.0,,,Route
+MUM_Route_147,MUM_Route_147,Additional Route,MUM_Route_147,10004676,180.0,,,Route
+MUM_Route_148,MUM_Route_23,DC Route,MUM_Route_23,10004959,280.0,,,Route
+MUM_Route_149,MUM_Route_23,DC Route,MUM_Route_23,10004959,400.0,,,Route
+MUM_Route_150 & 151,MUM_Route_150 & 151,Additional Route,MUM_Route_150 & 151,10004667,420.0,,,Route
+MUM_Route_152,MUM_Route_23,DC Route,MUM_Route_23,10004959,500.0,,,Route
+MUM_Route_153,MUM_Route_23,DC Route,MUM_Route_23,10004959,520.0,,,Route
+MUM_Route_155,MUM_Route_155,Additional Route,MUM_Route_155,10004683,1500.0,,,Route
+MUM_Route_156,MUM_Route_156,Additional Route,MUM_Route_156,10004673,500.0,,,Route
+MUM_Route_157,MUM_Route_157,Additional Route,MUM_Route_157,10004668,1930.0,,,Route
+MUM_Route_158,MUM_Route_25,DC Route,MUM_Route_25,10004650,220.0,,,Route
+MUM_Route_159,MUM_Route_25,DC Route,MUM_Route_25,10004650,390.0,,,Route
+MUM_Route_16,MUM_Route_16,DC Route,MUM_Route_16,10004592,1830.0,,,Route
+MUM_Route_160,MUM_Route_160,Additional Route,MUM_Route_160,10004654,1430.0,,,Route
+MUM_Route_161,MUM_Route_161,Additional Route,MUM_Route_161,10004685,300.0,,,Route
+MUM_Route_162,MUM_Route_161,Additional Route,MUM_Route_161,10004685,180.0,,,Route
+MUM_Route_163,MUM_Route_48,DC Route,MUM_Route_48,10004682,231.0,,,Route
+MUM_Route_164 & 165,MUM_Route_48,DC Route,MUM_Route_48,10004682,560.0,,,Route
+MUM_Route_166,MUM_Route_90,DC Route,MUM_Route_90,10004960,1684.0,,,Route
+MUM_Route_167,MUM_Route_48,DC Route,MUM_Route_48,10004681,110.0,,,Route
+MUM_Route_168,MUM_Route_48,DC Route,MUM_Route_48,10004681,110.0,,,Route
+MUM_Route_169,MUM_Route_169,Additional Route,MUM_Route_169,10004666,1110.0,,,Route
+MUM_Route_170,MUM_Route_170,Additional Route,MUM_Route_170,10004652,1110.0,,,Route
+MUM_Route_171 & 172,MUM_Route_171 & 172,Additional Route,MUM_Route_171 & 172,10004660,220.0,,,Route
+MUM_Route_173,MUM_Route_23,DC Route,MUM_Route_23,10004959,550.0,,,Route
+MUM_Route_19,MUM_Route_19,DC Route,MUM_Route_19,10004663,5920.0,,,Route
+MUM_Route_23,MUM_Route_23,DC Route,MUM_Route_23,10004959,12500.0,10004631,6420.0,Route
+MUM_Route_24,MUM_Route_45,DC Route,MUM_Route_45,10004670,960.0,,,Route
+MUM_Route_25,MUM_Route_25,DC Route,MUM_Route_25,10004650,8500.0,,,Route
+MUM_Route_27,MUM_Route_27,DC Route,MUM_Route_27,10004587,9230.0,,,Route
+MUM_Route_30,MUM_Route_30,DC Route,MUM_Route_30,10004669,1150.0,,,Route
+MUM_Route_31,MUM_Route_31,DC Route,MUM_Route_31,10004662,970.0,,,Route
+MUM_Route_33,MUM_Route_33,DC Route,MUM_Route_33,10004524,4230.0,,,Route
+MUM_Route_35,MUM_Route_35,DC Route,MUM_Route_35,10004671,360.0,,,Route
+MUM_Route_36,MUM_Route_36,DC Route,MUM_Route_36,10004962,3600.0,,,Route
+MUM_Route_37,MUM_Route_37,DC Route,MUM_Route_37,10004535,2620.0,,,Route
+MUM_Route_38,MUM_Route_38,DC Route,MUM_Route_38,10004674,3080.0,,,Route
+MUM_Route_4,MUM_Route_4,DC Route,MUM_Route_4,10004522,6820.0,,,Route
+MUM_Route_42,MUM_Route_42,DC Route,MUM_Route_42,10004961,7770.0,,,Route
+MUM_Route_45,MUM_Route_45,DC Route,MUM_Route_45,10004670,6432.0,10004678,11930.0,Route
+MUM_Route_46,MUM_Route_81,DC Route,MUM_Route_81,10004680,480.0,,,Route
+MUM_Route_48,MUM_Route_48,DC Route,MUM_Route_48,,,10004681,3300.0,Route
+MUM_Route_49,MUM_Route_49,DC Route,MUM_Route_49,10004665,2800.0,,,Route
+MUM_Route_50,MUM_Route_50,DC Route,MUM_Route_50,,,10004765,6030.0,Route
+MUM_Route_54,MUM_Route_54,DC Route,MUM_Route_54,,,10004637,5060.0,Route
+MUM_Route_55,MUM_Route_55,DC Route,MUM_Route_55,10005002,2040.0,10004629,11962.0,Route
+MUM_Route_57,MUM_Route_57,DC Route,MUM_Route_57,10004659,4860.0,,,Route
+MUM_Route_58,MUM_Route_58,DC Route,MUM_Route_58,10004658,4790.0,,,Route
+MUM_Route_62,MUM_Route_62,DC Route,MUM_Route_62,10004599,900.0,,,Route
+MUM_Route_68,MUM_Route_68,Additional Route,MUM_Route_68,10004657,3950.0,,,Route
+MUM_Route_74,MUM_Route_68,Additional Route,MUM_Route_68,10004657,390.0,,,Route
+MUM_Route_75,MUM_Route_68,Additional Route,MUM_Route_68,10004657,563.0,,,Route
+MUM_Route_8,MUM_Route_8,DC Route,MUM_Route_8,10004619,2424.0,10004632,11771.0,Route
+MUM_Route_80,MUM_Route_80,DC Route,MUM_Route_80,,,10004639,5070.0,Route
+MUM_Route_81,MUM_Route_81,DC Route,MUM_Route_81,10004680,12010.0,,,Route
+MUM_Route_89,MUM_Route_89,DC Route,MUM_Route_89,10004675,4890.0,,,Route
+MUM_Route_90,MUM_Route_90,DC Route,MUM_Route_90,10004960,14270.0,10004771,4900.0,Route
+MUM_Route_97,MUM_Route_97,DC Route,MUM_Route_97,10004672,12000.0,,,Route
+MUM_Route_99,MUM_Route_99,Additional Route,MUM_Route_99,,,10004622,1970.0,Route
+MUM_STS_901 AGG,MUM_Route_45,DC Route,MUM_Route_45,10004670,150.0,,,Route
+MUM_VRL_901_LM,MUM_Route_27,DC Route,MUM_Route_27,10004594,200.0,,,Route
+MUM_XNQ_901_LM,MUM_Route_55,DC Route,MUM_Route_55,10004628,100.0,,,Route
+MUM/FTB/915_LM,MUM_Route_25,DC Route,MUM_Route_25,10004651,150.0,,,Route
+MUM/GOE/908_LM,MUM_Route_114,Additional Route,MUM_Route_114,10004516,50.0,,,Route
+MUM/LBS/904_LM,MUM_Route_157,Additional Route,MUM_Route_157,,,,,Route
+Mumbai_Coverage_Route1,Mumbai_Coverage_Route1,Additional Route,Mumbai_Coverage_Route1,10004966,1210.0,,,Route
+Mumbai_Coverage_Route10,Mumbai_Coverage_Route10,Additional Route,Mumbai_Coverage_Route10,10004527,1430.0,,,Route
+Mumbai_Coverage_Route12,Mumbai_Coverage_Route12,Additional Route,Mumbai_Coverage_Route12,10004542,4400.0,,,Route
+Mumbai_Coverage_Route13,Mumbai_Coverage_Route13,Additional Route,Mumbai_Coverage_Route13,10004545,3030.0,,,Route
+Mumbai_Coverage_Route15,Mumbai_Coverage_Route15,Additional Route,Mumbai_Coverage_Route15,10004551,1580.0,,,Route
+Mumbai_Coverage_Route17,Mumbai_Coverage_Route17,Additional Route,Mumbai_Coverage_Route17,10004552,1320.0,,,Route
+Mumbai_Coverage_Route2,Mumbai_Coverage_Route2,Additional Route,Mumbai_Coverage_Route2,10004553,910.0,,,Route
+Mumbai_Coverage_Route21,Mumbai_Coverage_Route21,Additional Route,Mumbai_Coverage_Route21,10004564,2000.0,,,Route
+Mumbai_Coverage_Route23,Mumbai_Coverage_Route23,Additional Route,Mumbai_Coverage_Route23,10004554,1760.0,,,Route
+Mumbai_Coverage_Route25,Mumbai_Coverage_Route25,Additional Route,Mumbai_Coverage_Route25,10004569,1650.0,,,Route
+Mumbai_Coverage_Route28,Mumbai_Coverage_Route28,Additional Route,Mumbai_Coverage_Route28,10004511,1860.0,,,Route
+Mumbai_Coverage_Route29,Mumbai_Coverage_Route29,Additional Route,Mumbai_Coverage_Route29,10004540,2400.0,,,Route
+Mumbai_Coverage_Route3,Mumbai_Coverage_Route3,Additional Route,Mumbai_Coverage_Route3,10004544,2200.0,,,Route
+Mumbai_Coverage_Route30,Mumbai_Coverage_Route30,Additional Route,Mumbai_Coverage_Route30,10004566,2050.0,,,Route
+Mumbai_Coverage_Route31,Mumbai_Coverage_Route31,Additional Route,Mumbai_Coverage_Route31,10004578,2200.0,,,Route
+Mumbai_Coverage_Route32,Mumbai_Coverage_Route32,Additional Route,Mumbai_Coverage_Route32,10004543,6750.0,,,Route
+Mumbai_Coverage_Route33,Mumbai_Coverage_Route33,Additional Route,Mumbai_Coverage_Route33,10004565,4860.0,,,Route
+Mumbai_Coverage_Route34,Mumbai_Coverage_Route34,Additional Route,Mumbai_Coverage_Route34,10004968,1600.0,,,Route
+Mumbai_Coverage_Route35,Mumbai_Coverage_Route35,Additional Route,Mumbai_Coverage_Route35,10004963,4070.0,,,Route
+Mumbai_Coverage_Route36,Mumbai_Coverage_Route36,Additional Route,Mumbai_Coverage_Route36,10004584,870.0,,,Route
+Mumbai_Coverage_Route37,Mumbai_Coverage_Route37,Additional Route,Mumbai_Coverage_Route37,10004575,1900.0,,,Route
+Mumbai_Coverage_Route38,Mumbai_Coverage_Route38,Additional Route,Mumbai_Coverage_Route38,10004967,2300.0,,,Route
+Mumbai_Coverage_Route39,Mumbai_Coverage_Route39,Additional Route,Mumbai_Coverage_Route39,10004570,2310.0,,,Route
+Mumbai_Coverage_Route4,Mumbai_Coverage_Route4,Additional Route,Mumbai_Coverage_Route4,10004560,1500.0,,,Route
+Mumbai_Coverage_Route5,Mumbai_Coverage_Route5,Additional Route,Mumbai_Coverage_Route5,10004529,1900.0,,,Route
+Mumbai_Coverage_Route6,Mumbai_Coverage_Route6,Additional Route,Mumbai_Coverage_Route6,10004563,1980.0,,,Route
+Mumbai_Coverage_Route7,Mumbai_Coverage_Route7,Additional Route,Mumbai_Coverage_Route7,10004531,2590.0,,,Route
+Mumbai_Coverage_Route9,Mumbai_Coverage_Route9,Additional Route,Mumbai_Coverage_Route9,10004532,3770.0,,,Route
+Netmagic DC7_LM,MUM_Route_23,DC Route,MUM_Route_23,10004959,100.0,,,Route
+NSE Mumbai_LM,MUM_Route_55,DC Route,MUM_Route_55,10004628,500.0,,,Route
+ROM1533,Fibmax,"LMC routes (stand alone) ",MH-ROM1533,,,,,LMC (Standalone)
+"Route55 to Route 107 ","Route55 to Route 107 ",Additional Route,"Route55 to Route 107 ",,,10004623,600.0,Route
+Sant Gadge Maharaj Chowk to NM Joshi Marg,Sant Gadge Maharaj Chowk to NM Joshi Marg,Mono Rail Additional Route,Sant Gadge Maharaj Chowk to NM Joshi Marg,,,10004974,880.0,Route
+Sapata Sangam_LM,MUM_Route_90,DC Route,MUM_Route_90,10004960,1200.0,,,Route
+Satyam Agg_LM,MUM_Route_19,DC Route,MUM_Route_19,10004663,200.0,,,Route
+Supreme Chamber_LM,MUM_Route_23,DC Route,MUM_Route_23,10004959,800.0,,,Route
+Tamil Sangham to Guru Teg Bahadur Nagar Station,Tamil Sangham to Guru Teg Bahadur Nagar Station,Mono Rail Additional Route,Tamil Sangham to Guru Teg Bahadur Nagar Station,,,10004971,2273.0,Route

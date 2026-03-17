@@ -1,0 +1,136 @@
+INFO:     Started server process [74286]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52278 - "GET /api/download-master-budget HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52280 - "GET /api/download-master-po HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52290 - "GET /api/download-master-dn HTTP/1.1" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/download-master-budget HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/download-master-budget HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/download-master-dn HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/download-master-dn HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA2181 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA4226 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA4226 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA6295 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA6295 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA6295 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA6295 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA4226 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.23:0 - "GET /api/health/db HTTP/1.0" 404 Not Found
+INFO:     10.28.30.23:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.23:0 - "GET /api/route-analysis?route_id_site_id=MA2181 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.31.89:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.31.89:0 - "GET /api/route-analysis?route_id_site_id=MA4226 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.31.89:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.31.89:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.30.216:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.216:0 - "GET /api/route-analysis?route_id_site_id=MU-MB6370 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.216:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.216:0 - "GET /api/route-analysis?route_id_site_id=MA2181 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.216:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.216:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/download-master-po HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-analysis?route_id_site_id=MA2181 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-po HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-application HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "POST /api/parse-dn HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-analysis?route_id_site_id=MA4226 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.141:0 - "GET /api/route-analysis?route_id_site_id=MU-MB1585 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-analysis?route_id_site_id=MU-MA928 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.141:0 - "GET /api/route-analysis?route_id_site_id=MU-MB6370 HTTP/1.0" 500 Internal Server Error
+INFO:     10.28.30.141:0 - "GET /api/client-parser-v2/authorities HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:0 - "GET /api/client-parser-v2/dn-numbers HTTP/1.0" 404 Not Found
+INFO:     10.28.30.141:53584 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:51844 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     127.0.0.1:43594 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     127.0.0.1:43598 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:0 - "GET /api/route-ids HTTP/1.0" 200 OK
+INFO:     10.28.30.141:65157 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:53672 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:55891 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53484 - "GET /docs HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:48582 - "GET /api/ HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:48596 - "GET /openapi.json HTTP/1.1" 404 Not Found
+WARNING:  Invalid HTTP request received.
+WARNING:  Invalid HTTP request received.
+INFO:     10.28.30.141:52551 - "GET / HTTP/1.1" 404 Not Found
+INFO:     10.28.30.141:52551 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     10.28.30.141:52551 - "GET / HTTP/1.1" 404 Not Found
+INFO:     10.28.30.141:58663 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:52240 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:52240 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:61964 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:59184 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:59184 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:57067 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     10.28.30.141:57618 - "GET /api/route-ids HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41258 - "GET /api/db/po-master/site-ids HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:41264 - "GET /api/db/dn-master/site-ids HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [74286]

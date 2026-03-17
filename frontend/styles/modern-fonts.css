@@ -1,0 +1,25 @@
+/* Import a modern SaaS font (Inter, plus fallback) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body, input, button, textarea, select, .modern-saas-font {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  letter-spacing: 0.01em;
+  font-feature-settings: "ss01" on, "cv01" on;
+}
+
+h1, h2, h3, h4, h5, h6, .modern-saas-heading {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+label, .modern-saas-label {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  font-weight: 500;
+}
+
+::placeholder {
+  font-family: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif !important;
+  color: #b0b8c9;
+  opacity: 1;
+}

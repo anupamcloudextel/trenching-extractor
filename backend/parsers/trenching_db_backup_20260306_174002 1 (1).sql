@@ -1,0 +1,2296 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict nuDeHdYRa182Ap6IA8X9QWpa44wDUXGa9VLzBLIRRlXLDax4Qyy5L47F37sMGMx
+
+-- Dumped from database version 16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)
+-- Dumped by pg_dump version 16.13 (Ubuntu 16.13-0ubuntu0.24.04.1)
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: public; Type: SCHEMA; Schema: -; Owner: -
+--
+
+-- *not* creating schema, since initdb creates it
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: budget_master; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.budget_master (
+    id bigint NOT NULL,
+    source_id text,
+    route_id_site_id text,
+    ce_length_mtr text,
+    ri_cost_per_meter text,
+    material_cost_per_meter text,
+    build_cost_per_meter text,
+    total_ri_amount text,
+    material_cost text,
+    execution_cost_including_hh text,
+    total_cost_without_deposit text,
+    route_type text,
+    build_type text,
+    category_type text,
+    survey_id text,
+    existing_new text
+);
+
+
+--
+-- Name: budget_master_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.budget_master_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: budget_master_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.budget_master_id_seq OWNED BY public.budget_master.id;
+
+
+--
+-- Name: dn_master; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.dn_master (
+    id bigint NOT NULL,
+    sr_no text,
+    route_type text,
+    ip1_co_built text,
+    dn_recipient text,
+    project_name text,
+    route_id_site_id text,
+    uid text,
+    build_type text,
+    category_type text,
+    survey_id text,
+    po_number text,
+    po_length text,
+    parent_route text,
+    ce_route_lmc_id text,
+    route_lmc_section_id text,
+    route_lmc_subsection_id text,
+    application_number text,
+    application_length_mtr text,
+    application_date text,
+    from_location text,
+    to_location text,
+    authority text,
+    ward text,
+    dn_number text,
+    dn_length_mtr text,
+    dn_received_date text,
+    trench_type text,
+    ot_length text,
+    surface text,
+    surface_wise_ri_amount text,
+    dn_ri_amount text,
+    surface_wise_multiplication_factor text,
+    ground_rent text,
+    administrative_charge text,
+    supervision_charges text,
+    chamber_fee text,
+    gst text,
+    ri_budget_amount_per_meter text,
+    projected_budget_ri_amount_dn text,
+    actual_total_non_refundable text,
+    non_refundable_amount_per_mtr text,
+    proj_non_refundable_savings_per_mtr text,
+    deposit text,
+    total_dn_amount text,
+    new_revised_dn_number text,
+    new_revised_dn_against text,
+    internal_approval_start text,
+    internal_approval_end text,
+    ticket_raised_date text,
+    dn_payment_date text,
+    tat_days text,
+    civil_completion_date text,
+    hdd_length text,
+    no_of_pits text,
+    pit_ri_rate text,
+    proj_savings_per_dn text,
+    surface_wise_length text,
+    road_name text,
+    permission_receipt_date text,
+    permit_no text,
+    permit_start_date text,
+    permit_end_date text,
+    permitted_length_by_ward_mts text
+);
+
+
+--
+-- Name: dn_master_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.dn_master_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: dn_master_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.dn_master_id_seq OWNED BY public.dn_master.id;
+
+
+--
+-- Name: master_tracker; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.master_tracker (
+    id bigint NOT NULL,
+    source_id text,
+    dn_number text,
+    circle text,
+    state text,
+    city text,
+    area text,
+    type_of_build text,
+    financial_year text,
+    link_name text,
+    ce_route_id text,
+    ce_section_id text,
+    ce_subsection_id text,
+    municipal_authority text,
+    ward text,
+    road_name text,
+    start_point text,
+    end_point text,
+    authority_application_date text,
+    authority_application_number text,
+    authority_new_application_number text,
+    dn_received_date text,
+    dn_length text,
+    ri_amount text,
+    sd_amount text,
+    supervision_charge_amt text,
+    additional_charge_amt text,
+    land_length_mtrs text,
+    land_rent_start_date text,
+    land_rent_end_date text,
+    land_rent_tenure text,
+    ground_rent text,
+    access_charge text,
+    admin_charges text,
+    chamber_fee text,
+    gst text,
+    dn_amount_without_gst text,
+    dn_amount_with_gst text,
+    dn_payment_date text,
+    differential_dn_number text,
+    differential_dn_amount text,
+    differential_dn_sd text,
+    permission_receipt_date text,
+    permit_no text,
+    permit_start_date text,
+    permit_end_date text,
+    permitted_length_by_ward_mts text,
+    permitted_no_of_ducts text,
+    work_status text,
+    date_of_refund_application text,
+    refund_application_no text,
+    sd_refund_amount text,
+    sd_deductions text,
+    remarks_for_deductions text,
+    sd_check text,
+    sd_refund_date text,
+    sd_refund_ack_no text,
+    date_of_refund_application_ri text,
+    refund_application_no_ri text,
+    ri_refund_amount text,
+    penalty_deductions text,
+    remarks_for_deductions_ri text,
+    ri_refund_date text,
+    ri_refund_ack_no text
+);
+
+
+--
+-- Name: master_tracker_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.master_tracker_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: master_tracker_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.master_tracker_id_seq OWNED BY public.master_tracker.id;
+
+
+--
+-- Name: po_master; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.po_master (
+    id bigint NOT NULL,
+    route_id_site_id text,
+    parent_route text,
+    route_type text,
+    uid text,
+    po_no_cobuild text,
+    po_length_cobuild text,
+    po_no_ip1 text,
+    po_length_ip1 text,
+    route_routelm_metrolm_lmcstandalone text,
+    "route_routeLM_metroLM_LMCStandalone" text
+);
+
+
+--
+-- Name: po_master_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.po_master_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: po_master_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.po_master_id_seq OWNED BY public.po_master.id;
+
+
+--
+-- Name: budget_master id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.budget_master ALTER COLUMN id SET DEFAULT nextval('public.budget_master_id_seq'::regclass);
+
+
+--
+-- Name: dn_master id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dn_master ALTER COLUMN id SET DEFAULT nextval('public.dn_master_id_seq'::regclass);
+
+
+--
+-- Name: master_tracker id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.master_tracker ALTER COLUMN id SET DEFAULT nextval('public.master_tracker_id_seq'::regclass);
+
+
+--
+-- Name: po_master id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.po_master ALTER COLUMN id SET DEFAULT nextval('public.po_master_id_seq'::regclass);
+
+
+--
+-- Data for Name: budget_master; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.budget_master (id, source_id, route_id_site_id, ce_length_mtr, ri_cost_per_meter, material_cost_per_meter, build_cost_per_meter, total_ri_amount, material_cost, execution_cost_including_hh, total_cost_without_deposit, route_type, build_type, category_type, survey_id, existing_new) FROM stdin;
+1	39360	MUM_Route_10	10274.0	124.69	187.2	450.0	1281065.06	1923292.8	4623300.0	7827657.859999999	DC Route	\N	\N	\N	\N
+2	39361	MUM_Route_101	711.7	3368.995363214838	205.5100463678516	741.7310664605875	2397714.0	146261.5	527890.0000000001	3071865.5	Additional Route	\N	\N	\N	\N
+3	39362	MUM_Route_102	421.3	1500.0	145.0	700.0	631950.0	61088.5	294910.0	987948.5	Additional Route	\N	\N	\N	\N
+4	39363	MUM_Route_105	990.0	8964.444444444445	386.6666666666667	866.6666666666666	8874800.0	382800.0	858000.0	10115600.0	Additional Route	\N	\N	\N	\N
+5	39364	MUM_Route_106	1942.6	7099.601359003399	326.2910532276331	825.0283125707815	13791685.6	633853.0	1602700.0	16028238.6	Additional Route	\N	\N	\N	\N
+6	39365	MUM_Route_107	2420.0	7816.635454545453	462.7477272727273	919.1363636363636	18916257.8	1119849.5	2224310.0	22260417.3	Additional Route	\N	\N	\N	\N
+7	39366	MUM_Route_108	2787.4	8416.80820836622	383.9581689029202	864.7987371744277	23461011.2	1070245.0	2410540.0	26941796.2	Additional Route	\N	\N	\N	\N
+8	39367	MUM_Route_109	4015.0	15009.10136986301	623.3972602739726	1000.0	60261542.0	2502940.0	4015000.0	66779482.0	DC Route	\N	\N	\N	\N
+9	39368	MUM_Route_11	1812.8	10046.2354368932	177.8791262135923	505.2184466019418	18211815.6	322459.28	915860.0	19450134.88	Additional Route	\N	\N	\N	\N
+10	39369	MUM_Route_110	6215.0	15875.33185840708	580.0	1000.0	98665187.5	3604700.0	6215000.0	108484887.5	Additional Route	\N	\N	\N	\N
+11	39370	MUM_Route_111	841.5	17151.1294117647	580.0	1000.0	14432675.4	488070.0	841500.0	15762245.4	Additional Route	\N	\N	\N	\N
+12	39371	MUM_Route_112	1018.6	22885.75377969762	580.0	1000.0	23311428.8	590788.0	1018600.0	24920816.8	Additional Route	\N	\N	\N	\N
+13	39372	MUM_Route_113	1886.5	41231.78921282799	580.0000000000001	1000.0	77783770.35	1094170.0	1886500.0	80764440.35	Additional Route	\N	\N	\N	\N
+14	39373	MUM_Route_114	3715.8	18679.89046773239	580.0	1000.0	69410737.0	2155164.0	3715800.0	75281701.0	Additional Route	\N	\N	\N	\N
+15	39374	MUM_Route_115	4551.8	17458.74311261479	580.0	1000.0	79468706.9	2640044.0	4551800.0	86660550.9	Additional Route	\N	\N	\N	\N
+16	39375	MUM_Route_116	935.0	8518.0	580.0	1000.0	7964330.0	542300.0	935000.0	9441630.0	Additional Route	\N	\N	\N	\N
+17	39376	MUM_Route_117	1756.7	32091.0	580.0	1000.0	56374259.7	1018886.0	1756700.0	59149845.7	Additional Route	\N	\N	\N	\N
+18	39377	MUM_Route_118	646.8	\N	580.0	2500.0	\N	375144.0	1617000.0	1992144.0	Additional Route	\N	\N	\N	\N
+19	39378	MUM_Route_121	2083.4	9974.656810982047	580.0	1000.0	20781200.0	1208372.0	2083400.0	24072972.0	Additional Route	\N	\N	\N	\N
+20	39379	MUM_Route_122	2667.5	9666.185567010309	580.0	1000.0	25784550.0	1547150.0	2667500.0	29999200.0	Additional Route	\N	\N	\N	\N
+21	39380	MUM_Route_123	2218.7	9500.0	580.0	1000.0	21077650.0	1286846.0	2218700.0	24583196.0	Additional Route	\N	\N	\N	\N
+22	39381	MUM_Route_124	1366.2	9500.0	580.0	1000.0	12978900.0	792396.0	1366200.0	15137496.0	Additional Route	\N	\N	\N	\N
+23	39382	MUM_Route_126	318.93422	\N	580.0000000000001	2500.0	\N	184981.8476	797335.5499999999	982317.3975999999	Additional Route	\N	\N	\N	\N
+24	39383	MUM_Route_13	3027.2	12015.79324127907	652.0000000000001	1000.0	36374209.3	1973734.4	3027200.0	41375143.7	DC Route	\N	\N	\N	\N
+25	39384	MUM_Route_134	1371.7	21196.04410585405	454.4186046511628	913.3921411387329	29074613.7	623326.0	1252900.0	30950839.7	Additional Route	\N	\N	\N	\N
+26	39385	MUM_Route_135	440.0	\N	580.0	2500.0	\N	255200.0	1100000.0	1355200.0	Additional Route	\N	\N	\N	\N
+27	39386	MUM_Route_136	143.0	\N	580.0	2500.0	\N	82940.0	357500.0	440440.0	Additional Route	\N	\N	\N	\N
+28	39387	MUM_Route_141	2282.0	24648.64680105171	580.0	1000.0	56248212.0	1323560.0	2282000.0	59853772.0	Additional Route	\N	\N	\N	\N
+29	39388	MUM_Route_142	2762.1	14936.0	580.0	1000.0	41254725.6	1602018.0	2762100.0	45618843.6	Additional Route	\N	\N	\N	\N
+30	39389	MUM_Route_145	198.0	3500.0	580.0	1000.0	693000.0	114840.0	198000.0	1005840.0	DC Route	\N	\N	\N	\N
+31	39390	MUM_Route_146	495.0	3500.0	580.0	1000.0	1732500.0	287100.0	495000.0	2514600.0	DC Route	\N	\N	\N	\N
+32	39391	MUM_Route_148	200.0	11700.0	580.0	1000.0	2340000.0	116000.0	200000.0	2656000.0	DC Route	\N	\N	\N	\N
+33	39392	MUM_Route_149	288.2	11700.0	580.0	1000.0	3371940.0	167156.0	288200.0	3827296.0	DC Route	\N	\N	\N	\N
+34	39393	MUM_Route_150	204.6	1238.709677419355	580.0	2306.451612903226	253440.0	118668.0	471900.0	844008.0	Additional Route	\N	\N	\N	\N
+35	39394	MUM_Route_151	220.0	1200.0	580.0	2312.5	264000.0	127600.0	508750.0	900350.0	Additional Route	\N	\N	\N	\N
+36	39395	MUM_Route_152	495.0	11700.0	580.0	1000.0	5791500.0	287100.0	495000.0	6573600.0	DC Route	\N	\N	\N	\N
+37	39396	MUM_Route_153	517.0	11700.0	580.0	1000.0	6048900.0	299860.0	517000.0	6865760.0	DC Route	\N	\N	\N	\N
+38	39397	MUM_Route_155	597.3	9600.0	580.0	1000.0	5734080.0	346434.0	597300.0	6677814.0	Additional Route	\N	\N	\N	\N
+39	39398	MUM_Route_156	304.28838	\N	580.0	2500.0	\N	176487.2604	760720.9500000001	937208.2104000001	Additional Route	\N	\N	\N	\N
+40	39399	MUM_Route_157	1925.0	12158.85714285714	580.0	1000.0	23405800.0	1116500.0	1925000.0	26447300.0	Additional Route	\N	\N	\N	\N
+41	39400	MUM_Route_158	220.0	\N	580.0	2500.0	\N	127600.0	550000.0	677600.0	DC Route	\N	\N	\N	\N
+42	39401	MUM_Route_159	385.0	\N	580.0	2500.0	\N	223300.0	962500.0	1185800.0	DC Route	\N	\N	\N	\N
+43	39402	MUM_Route_16	1833.7	11010.28914217156	652.0000000000001	1000.0	20189567.2	1195572.4	1833700.0	23218839.6	DC Route	\N	\N	\N	\N
+44	39403	MUM_Route_160	1430.0	2995.384615384615	580.0	1000.0	4283400.0	829400.0	1430000.0	6542800.0	Additional Route	\N	\N	\N	\N
+45	39404	MUM_Route_161	302.5	4445.454545454545	580.0	1000.0	1344750.0	175450.0	302500.0	1822700.0	Additional Route	\N	\N	\N	\N
+46	39405	MUM_Route_162	176.0	1500.0	580.0	1000.0	264000.0	102080.0	176000.0	542080.0	Additional Route	\N	\N	\N	\N
+47	39406	MUM_Route_163	555.5	\N	580.0	2500.0	\N	322190.0	1388750.0	1710940.0	DC Route	\N	\N	\N	\N
+48	39407	MUM_Route_164	110.0	\N	580.0	2500.0	\N	63800.0	275000.0	338800.0	DC Route	\N	\N	\N	\N
+49	39408	MUM_Route_165	121.0	\N	580.0	2500.0	\N	70180.0	302500.0	372680.0	DC Route	\N	\N	\N	\N
+50	39409	MUM_Route_166	1684.1	4573.873285434357	580.0	1000.0	7702860.0	976778.0	1684100.0	10363738.0	DC Route	\N	\N	\N	\N
+51	39410	MUM_Route_167	110.0	9600.0	580.0	1000.0	1056000.0	63800.0	110000.0	1229800.0	DC Route	\N	\N	\N	\N
+52	39411	MUM_Route_168	110.0	9600.0	580.0	1000.0	1056000.0	63800.0	110000.0	1229800.0	DC Route	\N	\N	\N	\N
+53	39412	MUM_Route_169	561.0	\N	\N	\N	\N	\N	\N	\N	Additional Route	\N	\N	\N	\N
+54	39413	MUM_Route_170	1100.0	\N	\N	\N	\N	\N	\N	\N	Additional Route	\N	\N	\N	\N
+55	39414	MUM_Route_171	110.0	\N	580.0	2500.0	\N	63800.0	275000.0	338800.0	Additional Route	\N	\N	\N	\N
+56	39415	MUM_Route_172	110.0	\N	580.0	2500.0	\N	63800.0	275000.0	338800.0	Additional Route	\N	\N	\N	\N
+57	39416	MUM_Route_19	5924.6	13958.42666171556	652.0	2106.201262532491	82698094.6	3862839.2	12478400.0	99039333.8	DC Route	\N	\N	\N	\N
+58	39417	MUM_Route_23	22090.2	15419.95294293397	573.2181057663579	1609.799820734986	340629844.5	12662502.6	35560800.0	388853147.1	DC Route	\N	\N	\N	\N
+59	39418	MUM_Route_24	958.1	\N	580.0	2500.0	\N	555698.0	2395250.0	2950948.0	DC Route	\N	\N	\N	\N
+60	39419	MUM_Route_25	9537.0	16310.79238754325	652.0	1000.0	155556027.0	6218124.0	9537000.0	171311151.0	DC Route	\N	\N	\N	\N
+61	39420	MUM_Route_27	10192.6	23575.77379667602	652.0000000000001	1000.0	240298432.0	6645575.200000001	10192600.0	257136607.2	DC Route	\N	\N	\N	\N
+62	39421	MUM_Route_30	1145.1	13881.91642651297	651.9999999999999	999.9999999999999	15896182.5	746605.2	1145100.0	17787887.7	DC Route	\N	\N	\N	\N
+63	39422	MB1134	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+64	39423	MUM_Route_33	4229.5	31122.8088426528	652.0	1000.0	131633920.0	2757634.0	4229500.000000001	138621054.0	DC Route	\N	\N	\N	\N
+65	39424	MUM_Route_35	356.4	13439.0	652.0	1000.0	4789659.600000001	232372.8	356400.0000000001	5378432.4	DC Route	\N	\N	\N	\N
+66	39425	MUM_Route_36	6032.4	15904.25419401897	652.0	1000.0	95940823.00000001	3933124.8	6032400.0	105906347.8	DC Route	\N	\N	\N	\N
+67	39426	MUM_Route_37	2491.5	23210.79028697571	652.0000000000001	1000.0	57829684.0	1624458.0	2491500.0	61945642.0	DC Route	\N	\N	\N	\N
+68	39427	MUM_Route_38	3082.2	12598.64002984881	511.950392576731	1034.832262669522	38831528.3	1577933.5	3189560.0	43599021.8	DC Route	\N	\N	\N	\N
+69	39428	MUM_Route_4	6820.000000000001	219.941348973607	325.9999999999999	1200.0	1500000.0	2223320.0	8184000.000000001	11907320.0	DC Route	\N	\N	\N	\N
+70	39429	MUM_Route_42	7766.0	14844.13597733711	652.0	1000.0	115279560.0	5063432.0	7766000.0	128108992.0	DC Route	\N	\N	\N	\N
+71	39430	MUM_Route_45	18362.3	6422.126040855449	501.6861558737195	1000.0	117925005.0	9212111.7	18362300.0	145499416.7	DC Route	\N	\N	\N	\N
+72	39431	MUM_Route_46	482.9	1500.0	580.0	1943.052391799544	724350.0	280082.0	938300.0	1942732.0	DC Route	\N	\N	\N	\N
+73	39432	MUM_Route_48	3238.4	3000.0	651.9999999999999	884.1999999999999	9715200.0	2111436.8	2863393.28	14690030.08	DC Route	\N	\N	\N	\N
+74	39433	MUM_Route_49	4867.5	6951.694915254237	622.7118644067797	875.7062146892655	33837375.0	3031050.0	4262500.0	41130925.0	DC Route	\N	\N	\N	\N
+75	39434	MUM_Route_50	6033.500000000001	16902.16955332726	651.9999999999999	929.0793072014585	101979240.0	3933842.0	5605600.000000001	111518682.0	DC Route	\N	\N	\N	\N
+76	39435	MUM_Route_54	5060.0	249.38	187.2	450.0	1261862.8	947232.0	2277000.0	4486094.8	DC Route	\N	\N	\N	\N
+77	39436	MUM_Route_55	14006.3	4364.57692452682	187.2	450.0	61131573.778	2621979.36	6302835.0	70056388.138	DC Route	\N	\N	\N	\N
+78	39437	MUM_Route_57	4858.700000000001	7750.962191532713	652.0	980.1901743264658	37659600.0	3167872.4	4762450.0	45589922.4	DC Route	\N	\N	\N	\N
+79	39438	MUM_Route_58	4785.0	6075.862068965518	652.0	839.080459770115	29073000.0	3119820.0	4015000.0	36207820.0	DC Route	\N	\N	\N	\N
+80	39439	MUM_Route_62	311.3	13439.0	652.0	1000.0	4183560.7	202967.6	311300.0	4697828.3	DC Route	\N	\N	\N	\N
+81	39440	MUM_Route_64	2032.8	14263.56222943723	580.0	1000.0	28994969.3	1179024.0	2032800.0	32206793.3	Additional Route	\N	\N	\N	\N
+82	39441	MUM_Route_68	3949.0	1650.41782729805	580.0	2569.359331476323	6517500.0	2290420.0	10146400.0	18954320.0	Additional Route	\N	\N	\N	\N
+83	39442	MUM_Route_74	265.1	9600.0	580.0	999.9999999999999	2544960.0	153758.0	265100.0	2963818.0	Additional Route	\N	\N	\N	\N
+84	39443	MUM_Route_75	563.2	\N	580.0	2500.0	\N	326656.0	1408000.0	1734656.0	Additional Route	\N	\N	\N	\N
+85	39444	MUM_Route_76	459.8	\N	580.0	2500.0	\N	266684.0	1149500.0	1416184.0	Additional Route	\N	\N	\N	\N
+86	39445	MUM_Route_77	532.4	\N	580.0	2500.0	\N	308792.0	1331000.0	1639792.0	Additional Route	\N	\N	\N	\N
+87	39446	MUM_Route_8	14195.5	5570.903781480048	187.2	450.0	79081764.63000001	2657397.6	6387975.0	88127137.22999999	DC Route	\N	\N	\N	\N
+88	39447	MUM_Route_80	5067.7	3931.063401543106	447.5689168656393	1125.417842413718	19921450.0	2268145.0	5703280.0	27892875.0	DC Route	\N	\N	\N	\N
+89	39448	MUM_Route_81	11938.3	3472.34865935686	652.0	787.2016953837649	41453940.0	7783771.6	9397850.0	58635561.6	DC Route	\N	\N	\N	\N
+90	39449	MUM_Route_89	4892.8	13494.84375	652.0	1000.0	66027571.5	3190105.6	4892800.0	74110477.1	DC Route	\N	\N	\N	\N
+91	39450	MUM_Route_90	20170.7	8280.427332715275	652.0	998.5821017614659	167022015.6	13151296.4	20142100.0	200315412.0	DC Route	\N	\N	\N	\N
+92	39451	MUM_Route_97	15050.2	8024.14759936745	376.1795059201871	1363.265604443795	120765026.2	5661576.8	20517420.0	146944023.0	DC Route	\N	\N	\N	\N
+93	39452	MUM_Route_99	1970.1	1500.0	145.0	700.0	2955150.0	285664.5	1379070.0	4619884.5	Additional Route	\N	\N	\N	\N
+94	39453	Mumbai_Coverage_Route1	1208.9	3099.636032757051	492.9208371246588	939.9454049135577	3747150.0	595892.0	1136300.0	5479342.0	Additional Route	\N	\N	\N	\N
+95	39454	Mumbai_Coverage_Route10	1427.8	11700.0	580.0	1000.0	16705260.0	828124.0	1427800.0	18961184.0	Additional Route	\N	\N	\N	\N
+96	39455	Mumbai_Coverage_Route11	1980.0	32091.0	580.0	1000.0	63540180.0	1148400.0	1980000.0	66668580.0	Additional Route	\N	\N	\N	\N
+97	39456	Mumbai_Coverage_Route12	4400.0	11600.0	580.0	1000.0	51040000.0	2552000.0	4400000.0	57992000.0	Additional Route	\N	\N	\N	\N
+98	39457	Mumbai_Coverage_Route13	3029.4	11600.0	580.0	1000.0	35141040.0	1757052.0	3029400.0	39927492.0	Additional Route	\N	\N	\N	\N
+99	39458	Mumbai_Coverage_Route15	1575.2	6488.966480446928	580.0	1000.0	10221420.0	913616.0	1575200.0	12710236.0	Additional Route	\N	\N	\N	\N
+100	39459	Mumbai_Coverage_Route17	1320.0	17652.20833333333	580.0	1000.0	23300915.0	765600.0	1320000.0	25386515.0	Additional Route	\N	\N	\N	\N
+101	39460	Mumbai_Coverage_Route2	907.5	3500.0	580.0	1000.0	3176250.0	526350.0	907500.0	4610100.0	Additional Route	\N	\N	\N	\N
+102	39461	Mumbai_Coverage_Route21	2937.0	11600.0	580.0	1000.0	34069200.0	1703460.0	2937000.0	38709660.0	Additional Route	\N	\N	\N	\N
+103	39462	Mumbai_Coverage_Route23	1755.6	11600.0	580.0	1000.0	20364960.0	1018248.0	1755600.0	23138808.0	Additional Route	\N	\N	\N	\N
+104	39463	Mumbai_Coverage_Route25	1650.0	14936.0	580.0	1000.0	24644400.0	957000.0	1650000.0	27251400.0	Additional Route	\N	\N	\N	\N
+105	39464	Mumbai_Coverage_Route28	1862.3	19769.39338452451	580.0	1000.0	36816541.3	1080134.0	1862300.0	39758975.3	Additional Route	\N	\N	\N	\N
+106	39465	Mumbai_Coverage_Route29	2060.3	18716.14148424986	580.0	999.9999999999999	38560866.3	1194974.0	2060300.0	41816140.3	Additional Route	\N	\N	\N	\N
+107	39466	Mumbai_Coverage_Route3	2200.0	24800.125	580.0	1000.0	54560275.0	1276000.0	2200000.0	58036275.0	Additional Route	\N	\N	\N	\N
+108	39467	Mumbai_Coverage_Route30	2053.7	18106.04552758436	580.0	1000.0	37184385.7	1191146.0	2053700.0	40429231.70000001	Additional Route	\N	\N	\N	\N
+109	39468	Mumbai_Coverage_Route31	1776.5	11600.0	580.0	1000.0	20607400.0	1030370.0	1776500.0	23414270.0	Additional Route	\N	\N	\N	\N
+110	39469	Mumbai_Coverage_Route32	6745.200000000001	11600.0	579.9999999999999	999.9999999999999	78244320.0	3912216.0	6745200.0	88901736.0	Additional Route	\N	\N	\N	\N
+111	39470	Mumbai_Coverage_Route33	4856.5	11736.35334088335	580.0	1000.0	56997600.0	2816770.0	4856500.0	64670870.0	Additional Route	\N	\N	\N	\N
+112	39471	Mumbai_Coverage_Route34	1595.0	3500.0	580.0	1000.0	5582500.0	925100.0	1595000.0	8102600.0	Additional Route	\N	\N	\N	\N
+113	39472	Mumbai_Coverage_Route35	4070.0	11640.27027027027	580.0	1000.0	47375900.0	2360600.0	4070000.0	53806500.0	Additional Route	\N	\N	\N	\N
+114	39473	Mumbai_Coverage_Route36	869.0	14936.0	580.0	1000.0	12979384.0	504020.0	869000.0	14352404.0	Additional Route	\N	\N	\N	\N
+115	39474	Mumbai_Coverage_Route37	2029.5	13625.11761517615	438.5365853658537	902.439024390244	27652176.2	890010.0	1831500.0	30373686.2	Additional Route	\N	\N	\N	\N
+116	39475	Mumbai_Coverage_Route38	2057.0	25176.97860962567	580.0	1000.0	51789045.0	1193060.0	2057000.0	55039105.0	Additional Route	\N	\N	\N	\N
+117	39476	Mumbai_Coverage_Route39	2311.1	11600.0	580.0	1000.0	26808760.0	1340438.0	2311100.0	30460298.0	Additional Route	\N	\N	\N	\N
+118	39477	Mumbai_Coverage_Route4	2178.0	10398.0202020202	580.0	1000.0	22646888.0	1263240.0	2178000.0	26088128.0	Additional Route	\N	\N	\N	\N
+119	39478	Mumbai_Coverage_Route5	2321.0	29977.11374407583	580.0	1000.0	69576881.0	1346180.0	2321000.0	73244061.0	Additional Route	\N	\N	\N	\N
+120	39479	Mumbai_Coverage_Route6	1980.0	13605.80555555555	580.0	1000.0	26939495.0	1148400.0	1980000.0	30067895.0	Additional Route	\N	\N	\N	\N
+121	39480	Mumbai_Coverage_Route7	2587.2	11600.0	580.0	1000.0	30011520.0	1500576.0	2587200.0	34099296.0	Additional Route	\N	\N	\N	\N
+122	39481	Mumbai_Coverage_Route9	3771.9	11600.0	580.0	1000.0	43754040.0	2187702.0	3771900.0	49713642.0	Additional Route	\N	\N	\N	\N
+123	39482	403	429.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+124	39483	3099	682.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+125	39484	5331	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+126	39485	679	448.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+127	39486	1467	1428.67	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+128	39487	4019	418.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+129	39488	MA882	11.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+130	39489	3151	78.4	14936.0	270.0	1100.0	1170982.4	23284.8	94864.0	1289131.2	LMC routes (stand alone) 	\N	\N	\N	\N
+131	39490	MB3510	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+132	39491	5504	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+133	39492	2322	100.8	14936.0	270.0	1100.0	1505548.8	29937.6	121968.0	1657454.4	LMC routes (stand alone) 	\N	\N	\N	\N
+134	39493	MB817	165.0	\N	270.0	1100.0	\N	49005.00000000001	199650.0	248655.0	LMC routes (stand alone) 	\N	\N	\N	\N
+135	39494	MA3428	55.0	12469.0	270.0	1100.0	685795.0	16335.0	66550.0	768680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+136	39495	6195	242.0	14936.0	270.0	1100.0	3614512.0	71874.0	292820.0	3979206.0	LMC routes (stand alone) 	\N	\N	\N	\N
+137	39496	MB1474	11.0	14936.0	270.0	1100.0	164296.0	3267.0	13310.0	180873.0	LMC routes (stand alone) 	\N	\N	\N	\N
+138	39497	MA2736	22.0	8518.0	270.0	1100.0	187396.0	6534.000000000001	26620.0	220550.0	LMC routes (stand alone) 	\N	\N	\N	\N
+139	39498	MA5407	11.0	12469.0	270.0	1100.0	137159.0	3267.0	13310.0	153736.0	LMC routes (stand alone) 	\N	\N	\N	\N
+140	39499	MB2460	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	203280.0	2201976.0	LMC routes (stand alone) 	\N	\N	\N	\N
+141	39500	MA3795	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	271040.0	2935968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+142	39501	MA4535	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	338800.0	3669960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+143	39502	5592	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	338800.0	3669960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+144	39503	274	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	271040.0	2935968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+145	39504	855	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	203280.0	2201976.0	LMC routes (stand alone) 	\N	\N	\N	\N
+146	39505	MA6103	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	271040.0	2935968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+147	39506	MB3478	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	135520.0	1467984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+148	39507	5709	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	135520.0	1467984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+149	39508	6520	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	271040.0	2935968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+150	39509	1251	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	203280.0	2218776.0	LMC routes (stand alone) 	\N	\N	\N	\N
+151	39510	1256	896.0	11700.0	270.0	1100.0	10483200.0	266112.0	1084160.0	11833472.0	LMC routes (stand alone) 	\N	\N	\N	\N
+152	39511	MB4699	134.4	9600.0	270.0	1100.0	1290240.0	39916.8	162624.0	1492780.8	LMC routes (stand alone) 	\N	\N	\N	\N
+153	39512	MB1935	224.0	9600.0	270.0	1100.0	2150400.0	66528.0	271040.0	2487968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+154	39513	4719	112.0	1500.0	270.0	2800.0	168000.0	33264.0	344960.0	546224.0	LMC routes (stand alone) 	\N	\N	\N	\N
+155	39514	4971	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+156	39515	5979	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	338800.0	3697960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+157	39516	2610	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	203280.0	2218776.0	LMC routes (stand alone) 	\N	\N	\N	\N
+158	39517	MA1044	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	203280.0	2218776.0	LMC routes (stand alone) 	\N	\N	\N	\N
+159	39518	4234	56.0	8518.0	270.0	1100.0	477008.0	16632.0	67760.0	561400.0	LMC routes (stand alone) 	\N	\N	\N	\N
+160	39519	3123	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	338800.0	3697960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+161	39520	MA4012	112.0	11700.0	270.0	1100.0	1310400.0	33264.0	135520.0	1479184.0	LMC routes (stand alone) 	\N	\N	\N	\N
+162	39521	4381	56.0	12469.0	270.0	1100.0	698264.0	16632.0	67760.0	782656.0	LMC routes (stand alone) 	\N	\N	\N	\N
+163	39522	1342	56.0	12469.0	270.0	1100.0	698264.0	16632.0	67760.0	782656.0	LMC routes (stand alone) 	\N	\N	\N	\N
+164	39523	MA1811	78.4	7487.0	270.0	1100.0	586980.8	23284.8	94864.0	705129.6	LMC routes (stand alone) 	\N	\N	\N	\N
+165	39524	3463	67.2	12469.0	270.0	1100.0	837916.8	19958.4	81312.0	939187.2	LMC routes (stand alone) 	\N	\N	\N	\N
+166	39525	1420	33.6	14936.0	270.0	1100.0	501849.6	9979.2	40656.0	552484.8	LMC routes (stand alone) 	\N	\N	\N	\N
+167	39526	MB2148	44.8	4500.0	270.0	1100.0	201600.0	13305.6	54208.0	269113.6	LMC routes (stand alone) 	\N	\N	\N	\N
+168	39527	MA2816	112.0	4500.0	270.0	1100.0	504000.0	33264.0	135520.0	672784.0	LMC routes (stand alone) 	\N	\N	\N	\N
+169	39528	MA2877	78.4	8518.0	270.0	1100.0	667811.2	23284.8	94864.0	785960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+170	39529	MA18	123.2	14936.0	270.0	1100.0	1840115.2	36590.4	149072.0	2025777.6	LMC routes (stand alone) 	\N	\N	\N	\N
+171	39530	1000	89.6	14936.0	270.0	1100.0	1338265.6	26611.2	108416.0	1473292.8	LMC routes (stand alone) 	\N	\N	\N	\N
+172	39531	MA3372	44.8	12469.0	270.0	1100.0	558611.2	13305.6	54208.0	626124.8	LMC routes (stand alone) 	\N	\N	\N	\N
+173	39532	MB1155	78.4	8518.0	270.0	1100.0	667811.2	23284.8	94864.0	785960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+174	39533	6138	87.81	12676.0	270.0	1100.0	1113054.21	26079.57	106247.68	1245380.86	LMC routes (stand alone) 	\N	\N	\N	\N
+175	39534	6021	112.0	14936.0	270.0	1100.0	1672832.0	33264.0	135520.0	1841616.0	LMC routes (stand alone) 	\N	\N	\N	\N
+176	39535	5831	67.2	7487.0	270.0	1100.0	503126.4	19958.4	81312.0	604396.8	LMC routes (stand alone) 	\N	\N	\N	\N
+177	39536	3330	44.8	12469.0	270.0	1100.0	558611.2	13305.6	54208.0	626124.8	LMC routes (stand alone) 	\N	\N	\N	\N
+178	39537	MA751	78.4	12469.0	270.0	1100.0	977569.6	23284.8	94864.0	1095718.4	LMC routes (stand alone) 	\N	\N	\N	\N
+179	39538	3166	67.2	4500.0	270.0	1100.0	302400.0	19958.4	81312.0	403670.4	LMC routes (stand alone) 	\N	\N	\N	\N
+180	39539	4883	50.4	14936.0	270.0	1100.0	752774.4	14968.8	60984.0	828727.2	LMC routes (stand alone) 	\N	\N	\N	\N
+181	39540	2317	156.8	12676.0	270.0	1100.0	1987596.8	46569.60000000001	189728.0	2223894.4	LMC routes (stand alone) 	\N	\N	\N	\N
+182	39541	1308	78.4	12469.0	270.0	1100.0	977569.6	23284.8	94864.0	1095718.4	LMC routes (stand alone) 	\N	\N	\N	\N
+183	39542	MA4247	179.2	14936.0	270.0	1100.0	2676531.2	53222.4	216832.0	2946585.6	LMC routes (stand alone) 	\N	\N	\N	\N
+184	39543	MB1723	313.6	14936.0	270.0	1100.0	4683929.6	93139.20000000001	379456.0	5156524.8	LMC routes (stand alone) 	\N	\N	\N	\N
+185	39544	MA4127	145.6	14936.0	270.0	1100.0	2174681.6	43243.2	176176.0	2394100.8	LMC routes (stand alone) 	\N	\N	\N	\N
+186	39545	333	50.4	14936.0	270.0	1100.0	752774.4	14968.8	60984.0	828727.2	LMC routes (stand alone) 	\N	\N	\N	\N
+187	39546	MA183	106.4	14936.0	270.0	1100.0	1589190.4	31600.8	128744.0	1749535.2	LMC routes (stand alone) 	\N	\N	\N	\N
+188	39547	MA129	28.0	14936.0	270.0	1100.0	418208.0	8316.0	33880.0	460404.0	LMC routes (stand alone) 	\N	\N	\N	\N
+189	39548	3589	280.0	14936.0	270.0	1100.0	4182080.0	83160.0	338800.0	4604040.0	LMC routes (stand alone) 	\N	\N	\N	\N
+190	39549	MA5238	89.6	32091.0	270.0	1100.0	2875353.6	26611.2	108416.0	3010380.8	LMC routes (stand alone) 	\N	\N	\N	\N
+191	39550	MB3183	4.48	32091.0	270.0	1100.0	143767.68	1330.56	5420.8	150519.04	LMC routes (stand alone) 	\N	\N	\N	\N
+192	39551	1027	145.6	14936.0	270.0	1100.0	2174681.6	43243.2	176176.0	2394100.8	LMC routes (stand alone) 	\N	\N	\N	\N
+193	39552	1264	12.54	12676.0	270.0	1100.0	159007.74	3724.38	15178.24	177911.55	LMC routes (stand alone) 	\N	\N	\N	\N
+194	39553	5436	106.4	14936.0	270.0	1100.0	1589190.4	31600.8	128744.0	1749535.2	LMC routes (stand alone) 	\N	\N	\N	\N
+195	39554	5525	388.42	14936.0	270.0	1100.0	5801381.38	115360.74	469983.36	6386724.29	LMC routes (stand alone) 	\N	\N	\N	\N
+196	39555	MB4330	228.03	12469.0	270.0	1100.0	2843331.01	67724.91	275918.72	3186975.23	LMC routes (stand alone) 	\N	\N	\N	\N
+197	39556	MB1608	56.0	4500.0	270.0	1100.0	252000.0	16632.0	67760.0	336392.0	LMC routes (stand alone) 	\N	\N	\N	\N
+198	39557	MB1585	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	135520.0	1467984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+199	39558	MB1728	112.0	11700.0	270.0	1100.0	1310400.0	33264.0	135520.0	1479184.0	LMC routes (stand alone) 	\N	\N	\N	\N
+200	39559	MB2983	112.0	12469.0	270.0	1100.0	1396528.0	33264.0	135520.0	1565312.0	LMC routes (stand alone) 	\N	\N	\N	\N
+201	39560	4609	224.0	14936.0	270.0	1100.0	3345664.0	66528.0	271040.0	3683232.0	LMC routes (stand alone) 	\N	\N	\N	\N
+202	39561	174	190.4	14936.0	270.0	1100.0	2843814.4	56548.8	230384.0	3130747.2	LMC routes (stand alone) 	\N	\N	\N	\N
+203	39562	MB2484	22.4	32091.0	270.0	1100.0	718838.4	6652.8	27104.0	752595.2	LMC routes (stand alone) 	\N	\N	\N	\N
+204	39563	MB640	112.0	9600.0	270.0	1100.0	1075200.0	33264.0	135520.0	1243984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+205	39564	6087	112.0	11700.0	270.0	1100.0	1310400.0	33264.0	135520.0	1479184.0	LMC routes (stand alone) 	\N	\N	\N	\N
+206	39565	MA3670	67.2	8518.0	270.0	1100.0	572409.6	19958.4	81312.0	673680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+207	39566	247	112.0	12469.0	270.0	1100.0	1396528.0	33264.0	135520.0	1565312.0	LMC routes (stand alone) 	\N	\N	\N	\N
+208	39567	MB2489	33.6	4500.0	270.0	1100.0	151200.0	9979.2	40656.0	201835.2	LMC routes (stand alone) 	\N	\N	\N	\N
+209	39568	334	112.0	14936.0	270.0	1100.0	1672832.0	33264.0	135520.0	1841616.0	LMC routes (stand alone) 	\N	\N	\N	\N
+210	39569	MA2	78.4	14936.0	270.0	1100.0	1170982.4	23284.8	94864.0	1289131.2	LMC routes (stand alone) 	\N	\N	\N	\N
+211	39570	4295	112.0	32091.0	270.0	1100.0	3594192.0	33264.0	135520.0	3762976.0	LMC routes (stand alone) 	\N	\N	\N	\N
+212	39571	1387	78.4	14936.0	270.0	1100.0	1170982.4	23284.8	94864.0	1289131.2	LMC routes (stand alone) 	\N	\N	\N	\N
+213	39572	5387	33.6	14936.0	270.0	1100.0	501849.6	9979.2	40656.0	552484.8	LMC routes (stand alone) 	\N	\N	\N	\N
+214	39573	148	67.2	14936.0	270.0	1100.0	1003699.2	19958.4	81312.0	1104969.6	LMC routes (stand alone) 	\N	\N	\N	\N
+215	39574	MA4659	67.2	8518.0	270.0	1100.0	572409.6	19958.4	81312.0	673680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+216	39575	1008	67.2	7487.0	270.0	1100.0	503126.4	19958.4	81312.0	604396.8	LMC routes (stand alone) 	\N	\N	\N	\N
+217	39576	356	123.2	8518.0	270.0	1100.0	1049417.6	36590.4	149072.0	1235080.0	LMC routes (stand alone) 	\N	\N	\N	\N
+218	39577	6323	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	271040.0	2935968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+219	39578	4409	110.0	4500.0	270.0	1100.0	495000.0	32670.0	133100.0	660770.0	LMC routes (stand alone) 	\N	\N	\N	\N
+220	39579	273	448.0	1500.0	270.0	2800.0	672000.0	133056.0	1379840.0	2184896.0	LMC routes (stand alone) 	\N	\N	\N	\N
+221	39580	3292	560.0	11700.0	270.0	1100.0	6552000.0	166320.0	677600.0	7395920.0	LMC routes (stand alone) 	\N	\N	\N	\N
+222	39581	1371	66.0	14936.0	270.0	1100.0	985776.0	19602.0	79860.0	1085238.0	LMC routes (stand alone) 	\N	\N	\N	\N
+223	39582	4534	220.0	14936.0	270.0	1100.0	3285920.0	65340.00000000001	266200.0	3617460.0	LMC routes (stand alone) 	\N	\N	\N	\N
+224	39583	MB1311	373.0	14936.0	270.0	1100.0	5571128.0	110781.0	451330.0	6133239.0	LMC routes (stand alone) 	\N	\N	\N	\N
+225	39584	4998	330.0	12600.0	270.0	1100.0	4158000.0	98010.00000000001	399300.0	4655310.0	LMC routes (stand alone) 	\N	\N	\N	\N
+226	39585	MA3675	187.0	12600.0	270.0	1100.0	2356200.0	55539.00000000001	226270.0	2638009.0	LMC routes (stand alone) 	\N	\N	\N	\N
+227	39586	6177	220.0	12600.0	270.0	1100.0	2772000.0	65340.00000000001	266200.0	3103540.0	LMC routes (stand alone) 	\N	\N	\N	\N
+228	39587	MB4281	220.0	9600.0	270.0	1100.0	2112000.0	65340.00000000001	266200.0	2443540.0	LMC routes (stand alone) 	\N	\N	\N	\N
+229	39588	4546	200.0	11700.0	270.0	1100.0	2340000.0	59400.00000000001	242000.0	2641400.0	LMC routes (stand alone) 	\N	\N	\N	\N
+230	39589	1670	104.5	11700.0	270.0	1100.0	1222650.0	31036.5	126445.0	1380131.5	LMC routes (stand alone) 	\N	\N	\N	\N
+231	39590	MA5034	110.0	32019.0	270.0	1100.0	3522090.0	32670.0	133100.0	3687860.0	LMC routes (stand alone) 	\N	\N	\N	\N
+232	39591	MA2088	57.2	10187.0	270.0	1100.0	582696.4	16988.4	69212.0	668896.8	LMC routes (stand alone) 	\N	\N	\N	\N
+233	39592	4088	253.0	32019.0	270.0	1100.0	8100807.0	75141.0	306130.0	8482078.0	LMC routes (stand alone) 	\N	\N	\N	\N
+234	39593	2643	16.5	32019.0	270.0	1100.0	528313.5	4900.5	19965.0	553179.0	LMC routes (stand alone) 	\N	\N	\N	\N
+235	39594	194	99.0	14936.0	270.0	1100.0	1478664.0	29403.0	119790.0	1627857.0	LMC routes (stand alone) 	\N	\N	\N	\N
+236	39595	MA5982	11.0	14936.0	270.0	1100.0	164296.0	3267.0	13310.0	180873.0	LMC routes (stand alone) 	\N	\N	\N	\N
+237	39596	6213	297.0	14936.0	270.0	1100.0	4435992.0	88209.0	359370.0	4883571.0	LMC routes (stand alone) 	\N	\N	\N	\N
+238	39597	MA1056	297.0	11700.0	270.0	1100.0	3474900.0	88209.0	359370.0	3922479.0	LMC routes (stand alone) 	\N	\N	\N	\N
+239	39598	MB2466	110.0	14936.0	270.0	1100.0	1642960.0	32670.0	133100.0	1808730.0	LMC routes (stand alone) 	\N	\N	\N	\N
+240	39599	636	253.0	14936.0	270.0	1100.0	3778808.0	75141.0	306130.0	4160079.0	LMC routes (stand alone) 	\N	\N	\N	\N
+241	39600	MA981	110.0	14936.0	270.0	1100.0	1642960.0	32670.0	133100.0	1808730.0	LMC routes (stand alone) 	\N	\N	\N	\N
+242	39601	5158	253.0	14936.0	270.0	1100.0	3778808.0	75141.0	306130.0	4160079.0	LMC routes (stand alone) 	\N	\N	\N	\N
+243	39602	MA1840	253.0	9600.0	270.0	1100.0	2428800.0	75141.0	306130.0	2810071.0	LMC routes (stand alone) 	\N	\N	\N	\N
+244	39603	4093	165.0	1500.0	270.0	1100.0	247500.0	49005.00000000001	199650.0	496155.0	LMC routes (stand alone) 	\N	\N	\N	\N
+245	39604	1474	33.0	11700.0	270.0	1100.0	386100.0	9801.0	39930.0	435831.0	LMC routes (stand alone) 	\N	\N	\N	\N
+246	39605	4936	24.2	11700.0	270.0	1100.0	283140.0	7187.400000000001	29282.0	319609.4	LMC routes (stand alone) 	\N	\N	\N	\N
+247	39606	MA1436	11.0	11700.0	270.0	1100.0	128700.0	3267.0	13310.0	145277.0	LMC routes (stand alone) 	\N	\N	\N	\N
+248	39607	5395	38.5	11700.0	270.0	1100.0	450450.0	11434.5	46585.0	508469.5	LMC routes (stand alone) 	\N	\N	\N	\N
+249	39608	MA3827	22.0	11700.0	270.0	1100.0	257400.0	6534.000000000001	26620.0	290554.0	LMC routes (stand alone) 	\N	\N	\N	\N
+250	39609	MB1084	220.0	11700.0	270.0	1100.0	2574000.0	65340.00000000001	266200.0	2905540.0	LMC routes (stand alone) 	\N	\N	\N	\N
+251	39610	MA1156	50.0	11700.0	270.0	1100.0	585000.0	14850.0	60500.0	660350.0	LMC routes (stand alone) 	\N	\N	\N	\N
+252	39611	4485	20.0	14936.0	270.0	1100.0	298720.0	5940.000000000001	24200.0	328860.0	LMC routes (stand alone) 	\N	\N	\N	\N
+253	39612	MA2545	11.0	8518.0	270.0	1100.0	93698.0	3267.0	13310.0	110275.0	LMC routes (stand alone) 	\N	\N	\N	\N
+254	39613	MB6370	33.0	14936.0	270.0	1100.0	492888.0	9801.0	39930.0	542619.0	LMC routes (stand alone) 	\N	\N	\N	\N
+255	39614	6281	165.0	14936.0	270.0	1100.0	2464440.0	49005.00000000001	199650.0	2713095.0	LMC routes (stand alone) 	\N	\N	\N	\N
+256	39615	5886	110.0	14936.0	270.0	1100.0	1642960.0	32670.0	133100.0	1808730.0	LMC routes (stand alone) 	\N	\N	\N	\N
+257	39616	MA4575	286.0	8518.0	270.0	1100.0	2436148.0	84942.0	346060.0	2867150.0	LMC routes (stand alone) 	\N	\N	\N	\N
+258	39617	MA928	368.5	14936.0	270.0	1100.0	5503916.0	109444.5	445885.0	6059245.5	LMC routes (stand alone) 	\N	\N	\N	\N
+259	39618	MA2115	11.0	32019.0	270.0	1100.0	352209.0	3267.0	13310.0	368786.0	LMC routes (stand alone) 	\N	\N	\N	\N
+260	39619	MA699	22.0	14936.0	270.0	1100.0	328592.0	6534.000000000001	26620.0	361746.0	LMC routes (stand alone) 	\N	\N	\N	\N
+261	39620	3128	165.0	11600.0	270.0	1100.0	1914000.0	49005.00000000001	199650.0	2162655.0	LMC routes (stand alone) 	\N	\N	\N	\N
+262	39621	2931	385.0	8518.0	270.0	1100.0	3279430.0	114345.0	465850.0	3859625.0	LMC routes (stand alone) 	\N	\N	\N	\N
+263	39622	4081	165.0	3500.0	270.0	1100.0	577500.0	49005.00000000001	199650.0	826155.0	LMC routes (stand alone) 	\N	\N	\N	\N
+264	39623	4858	30.8	14936.0	270.0	1100.0	460028.8	9147.6	37268.0	506444.4	LMC routes (stand alone) 	\N	\N	\N	\N
+265	39624	4880	55.0	8518.0	270.0	1100.0	468490.0	16335.0	66550.0	551375.0	LMC routes (stand alone) 	\N	\N	\N	\N
+266	39625	MA649	542.0	12600.0	270.0	1100.0	6829200.0	160974.0	655820.0	7645994.0	LMC routes (stand alone) 	\N	\N	\N	\N
+267	39626	MA1621	165.0	3500.0	270.0	1100.0	577500.0	49005.00000000001	199650.0	826155.0	LMC routes (stand alone) 	\N	\N	\N	\N
+268	39627	MA2398	346.5	11600.0	270.0	1100.0	4019400.0	102910.5	419265.0	4541575.5	LMC routes (stand alone) 	\N	\N	\N	\N
+269	39628	MA6227	154.0	11700.0	270.0	1100.0	1801800.0	45738.00000000001	186340.0	2033878.0	LMC routes (stand alone) 	\N	\N	\N	\N
+270	39629	MA241	297.0	11600.0	270.0	1100.0	3445200.0	88209.0	359370.0	3892779.0	LMC routes (stand alone) 	\N	\N	\N	\N
+271	39630	2372	10.0	14936.0	270.0	1100.0	149360.0	2970.0	12100.0	164430.0	LMC routes (stand alone) 	\N	\N	\N	\N
+272	39631	MB2509	11.0	3500.0	270.0	1100.0	38500.0	3267.0	13310.0	55077.0	LMC routes (stand alone) 	\N	\N	\N	\N
+273	39632	MA2576	38.5	14936.0	270.0	1100.0	575036.0	11434.5	46585.0	633055.5	LMC routes (stand alone) 	\N	\N	\N	\N
+274	39633	1471	308.0	32019.0	270.0	1100.0	9861852.0	91476.00000000001	372680.0	10326008.0	LMC routes (stand alone) 	\N	\N	\N	\N
+275	39634	319	286.0	9600.0	270.0	1100.0	2745600.0	84942.0	346060.0	3176602.0	LMC routes (stand alone) 	\N	\N	\N	\N
+276	39635	MB2367	143.0	1500.0	270.0	1100.0	214500.0	42471.0	173030.0	430001.0	LMC routes (stand alone) 	\N	\N	\N	\N
+277	39636	370	66.0	14936.0	270.0	1100.0	985776.0	19602.0	79860.0	1085238.0	LMC routes (stand alone) 	\N	\N	\N	\N
+278	39637	MA1855	110.0	14936.0	270.0	1100.0	1642960.0	32670.0	133100.0	1808730.0	LMC routes (stand alone) 	\N	\N	\N	\N
+279	39638	MA4114	726.0	12600.0	270.0	1100.0	9147600.0	215622.0	878460.0	10241682.0	LMC routes (stand alone) 	\N	\N	\N	\N
+280	39639	MA3841	1210.0	11600.0	270.0	1100.0	14036000.0	359370.0	1464100.0	15859470.0	LMC routes (stand alone) 	\N	\N	\N	\N
+281	39640	4337	742.5	12469.0	270.0	1100.0	9258232.5	220522.5	898425.0	10377180.0	LMC routes (stand alone) 	\N	\N	\N	\N
+282	39641	MA3052	2552.0	12600.0	270.0	1100.0	32155200.0	757944.0000000001	3087920.0	36001064.0	LMC routes (stand alone) 	\N	\N	\N	\N
+283	39642	4449	1155.0	10187.0	270.0	1100.0	11765985.0	343035.0	1397550.0	13506570.0	LMC routes (stand alone) 	\N	\N	\N	\N
+284	39643	423	1078.0	8518.0	270.0	1100.0	9182404.0	320166.0	1304380.0	10806950.0	LMC routes (stand alone) 	\N	\N	\N	\N
+285	39644	MA2194	517.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+286	39645	ROM1533	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+287	39646	306	396.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+288	39647	3645	476.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+289	39648	5767	1430.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+290	39649	1550	737.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+291	39650	6279	2420.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+292	39651	MB2619	550.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+293	39652	MA1336	712.8	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+294	39653	MA4735	858.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+295	39654	1297	981.2	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+296	39655	MA3828	903.1	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+297	39656	MB2693	550.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+298	39657	5095	891.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+299	39658	660	2750.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+300	39659	MB328	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+301	39660	434	56.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+302	39661	MA1813	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+303	39662	MB2632	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+304	39663	4690	11.0	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+305	39664	MA5091	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+306	39665	880	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+307	39666	4997	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+308	39667	3989	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+309	39668	5508	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+310	39669	MB2355	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+311	39670	8	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+312	39671	MA769	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+313	39672	MB2229	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+314	39673	1852	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+315	39674	4501	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+316	39675	MA3132	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+317	39676	MB2765	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+318	39677	MB1615	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+319	39678	6172	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+320	39679	1734	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+321	39680	MA3759	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+322	39681	5225	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+323	39682	MA28	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+324	39683	MB1591	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	308000.0	3631600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+325	39684	MA312	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	123200.0	1452640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+326	39685	MA72	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	123200.0	1452640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+327	39686	MA6498	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+328	39687	MA1048	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	308000.0	3631600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+329	39688	MA6019	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	308000.0	3631600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+330	39689	MA5099	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	246400.0	2905280.0	LMC routes (stand alone) 	\N	\N	\N	\N
+331	39690	2366	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	308000.0	3631600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+332	39691	MA1730	280.0	11600.0	270.0	1100.0	3248000.0	83160.0	308000.0	3631600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+333	39692	MA1227	268.8	12600.0	270.0	1100.0	3386880.0	79833.6	295680.0	3755136.0	LMC routes (stand alone) 	\N	\N	\N	\N
+334	39693	MB2863	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	123200.0	1452640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+335	39694	MA2049	224.0	12600.0	270.0	1100.0	2822400.0	66528.0	246400.0	3129280.0	LMC routes (stand alone) 	\N	\N	\N	\N
+336	39695	4917	11.2	12600.0	270.0	1100.0	141120.0	3326.4	12320.0	156464.0	LMC routes (stand alone) 	\N	\N	\N	\N
+337	39696	MB3502	224.0	9500.0	270.0	1100.0	2128000.0	66528.0	246400.0	2434880.0	LMC routes (stand alone) 	\N	\N	\N	\N
+338	39697	MA3832	112.0	11600.0	270.0	1100.0	1299200.0	33264.0	123200.0	1452640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+339	39698	2798	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+340	39699	MB3311	224.0	12600.0	270.0	1100.0	2822400.0	66528.0	246400.0	3129280.0	LMC routes (stand alone) 	\N	\N	\N	\N
+341	39700	MB1584	112.0	9500.0	270.0	1100.0	1064000.0	33264.0	123200.0	1217440.0	LMC routes (stand alone) 	\N	\N	\N	\N
+342	39701	MA2866	246.4	5000.0	270.0	2500.0	1232000.0	73180.8	616000.0	1914528.0	LMC routes (stand alone) 	\N	\N	\N	\N
+343	39702	MB1481	280.0	9600.0	270.0	1100.0	2688000.0	83160.0	308000.0	3071600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+344	39703	MA73	280.0	1500.0	270.0	2800.0	420000.0	83160.0	784000.0	1279600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+345	39704	MA3055	280.0	1500.0	270.0	1100.0	420000.0	83160.0	308000.0	803600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+346	39705	1640	168.0	9600.0	270.0	1100.0	1612800.0	49896.00000000001	184800.0	1842960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+347	39706	MA6505	280.0	9600.0	270.0	1100.0	2688000.0	83160.0	308000.0	3071600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+348	39707	MA6340	180.77	13439.0	270.0	1100.0	2429341.15	53688.69	198844.8	2676993.31	LMC routes (stand alone) 	\N	\N	\N	\N
+349	39708	4495	134.4	1500.0	270.0	2800.0	201600.0	39916.8	376320.0	614208.0	LMC routes (stand alone) 	\N	\N	\N	\N
+350	39709	MA3916	280.0	1500.0	270.0	1100.0	420000.0	83160.0	308000.0	803600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+351	39710	MA3683	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	308000.0	3659600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+352	39711	2245	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	308000.0	3659600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+353	39712	MA943	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	184800.0	2195760.0	LMC routes (stand alone) 	\N	\N	\N	\N
+354	39713	MB3890	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	308000.0	3659600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+355	39714	MA3180	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	308000.0	3659600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+356	39715	5286	56.0	12469.0	270.0	1100.0	698264.0	16632.0	61600.0	774984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+357	39716	MB4482	112.0	11700.0	270.0	1100.0	1310400.0	33264.0	123200.0	1463840.0	LMC routes (stand alone) 	\N	\N	\N	\N
+358	39717	1788	168.0	12469.0	270.0	1100.0	2094792.0	49896.00000000001	184800.0	2324952.0	LMC routes (stand alone) 	\N	\N	\N	\N
+359	39718	4014	168.0	14936.0	270.0	1100.0	2509248.0	49896.00000000001	184800.0	2739408.0	LMC routes (stand alone) 	\N	\N	\N	\N
+360	39719	2122	112.0	14936.0	270.0	1100.0	1672832.0	33264.0	123200.0	1826272.0	LMC routes (stand alone) 	\N	\N	\N	\N
+361	39720	6169	280.0	14936.0	270.0	1100.0	4182080.0	83160.0	308000.0	4565680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+362	39721	MA4100	280.0	8518.0	270.0	1100.0	2385040.0	83160.0	308000.0	2768640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+363	39722	MA5495	134.4	12469.0	270.0	1100.0	1675833.6	39916.8	147840.0	1859961.6	LMC routes (stand alone) 	\N	\N	\N	\N
+364	39723	5682	224.0	14936.0	270.0	1100.0	3345664.0	66528.0	246400.0	3652544.0	LMC routes (stand alone) 	\N	\N	\N	\N
+365	39724	3901	280.0	8518.0	270.0	1100.0	2385040.0	83160.0	308000.0	2768640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+366	39725	2510	134.4	7487.0	270.0	1100.0	1006252.8	39916.8	147840.0	1190380.8	LMC routes (stand alone) 	\N	\N	\N	\N
+367	39726	MA1794	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+368	39727	3107	291.2	8518.0	270.0	1100.0	2480441.6	86486.40000000001	320320.0	2879385.6	LMC routes (stand alone) 	\N	\N	\N	\N
+369	39728	744	112.0	14936.0	270.0	1100.0	1672832.0	33264.0	123200.0	1826272.0	LMC routes (stand alone) 	\N	\N	\N	\N
+370	39729	1659	224.0	8518.0	270.0	1100.0	1908032.0	66528.0	246400.0	2214912.0	LMC routes (stand alone) 	\N	\N	\N	\N
+371	39730	1365	134.4	14936.0	270.0	1100.0	2007398.4	39916.8	147840.0	2191526.4	LMC routes (stand alone) 	\N	\N	\N	\N
+372	39731	MA184	291.2	4500.0	270.0	1100.0	1310400.0	86486.40000000001	320320.0	1709344.0	LMC routes (stand alone) 	\N	\N	\N	\N
+373	39732	596	134.4	4500.0	270.0	1100.0	604800.0	39916.8	147840.0	788928.0	LMC routes (stand alone) 	\N	\N	\N	\N
+374	39733	6154	246.4	14936.0	270.0	1100.0	3680230.4	73180.8	271040.0	4017798.4	LMC routes (stand alone) 	\N	\N	\N	\N
+375	39734	5980	44.8	14936.0	270.0	1100.0	669132.8	13305.6	49280.0	730508.8	LMC routes (stand alone) 	\N	\N	\N	\N
+376	39735	MB2495	224.0	8518.0	270.0	1100.0	1908032.0	66528.0	246400.0	2214912.0	LMC routes (stand alone) 	\N	\N	\N	\N
+377	39736	6015	280.0	14936.0	270.0	1100.0	4182080.0	83160.0	308000.0	4565680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+378	39737	MA4977	257.6	1500.0	270.0	1100.0	386400.0	76507.20000000001	283360.0	739312.0	LMC routes (stand alone) 	\N	\N	\N	\N
+379	39738	MB2505	256.7	12676.0	270.0	1100.0	3253979.9	76239.90000000001	282374.4	3605664.38	LMC routes (stand alone) 	\N	\N	\N	\N
+380	39739	6479	190.4	14936.0	270.0	1100.0	2843814.4	56548.8	209440.0	3104662.4	LMC routes (stand alone) 	\N	\N	\N	\N
+381	39740	2477	134.4	\N	270.0	2500.0	\N	39916.8	336000.0	372288.0	LMC routes (stand alone) 	\N	\N	\N	\N
+382	39741	MA366	224.0	4500.0	270.0	1100.0	1008000.0	66528.0	246400.0	1314880.0	LMC routes (stand alone) 	\N	\N	\N	\N
+383	39742	MA2282	89.6	4500.0	270.0	1100.0	403200.0	26611.2	98560.0	525952.0	LMC routes (stand alone) 	\N	\N	\N	\N
+384	39743	5155	145.6	12469.0	270.0	1100.0	1815486.4	43243.2	160160.0	2014958.4	LMC routes (stand alone) 	\N	\N	\N	\N
+385	39744	5898	134.4	14936.0	270.0	1100.0	2007398.4	39916.8	147840.0	2191526.4	LMC routes (stand alone) 	\N	\N	\N	\N
+386	39745	5627	161.28	4500.0	270.0	1100.0	725760.0	47900.16	177408.0	946713.6	LMC routes (stand alone) 	\N	\N	\N	\N
+387	39746	3386	280.0	8518.0	270.0	1100.0	2385040.0	83160.0	308000.0	2768640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+388	39747	MB5491	224.0	12469.0	270.0	1100.0	2793056.0	66528.0	246400.0	3099936.0	LMC routes (stand alone) 	\N	\N	\N	\N
+389	39748	MA4076	89.6	14936.0	270.0	1100.0	1338265.6	26611.2	98560.0	1461017.6	LMC routes (stand alone) 	\N	\N	\N	\N
+390	39749	3604	56.0	7487.0	270.0	1100.0	419272.0	16632.0	61600.0	495992.0	LMC routes (stand alone) 	\N	\N	\N	\N
+391	39750	5541	235.2	14936.0	270.0	1100.0	3512947.2	69854.40000000001	258720.0	3835171.2	LMC routes (stand alone) 	\N	\N	\N	\N
+392	39751	MA4416	280.0	11700.0	270.0	1100.0	3276000.0	83160.0	308000.0	3659600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+393	39752	2628	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	184800.0	2195760.0	LMC routes (stand alone) 	\N	\N	\N	\N
+394	39753	MA2512	56.0	12469.0	270.0	1100.0	698264.0	16632.0	61600.0	774984.0	LMC routes (stand alone) 	\N	\N	\N	\N
+395	39754	2958	224.0	14936.0	270.0	1100.0	3345664.0	66528.0	246400.0	3652544.0	LMC routes (stand alone) 	\N	\N	\N	\N
+396	39755	MA4828	230.72	13439.0	270.0	1100.0	3100646.08	68523.84000000001	253792.0	3416732.48	LMC routes (stand alone) 	\N	\N	\N	\N
+397	39756	MA6274	156.8	4500.0	270.0	1100.0	705600.0	46569.60000000001	172480.0	920416.0	LMC routes (stand alone) 	\N	\N	\N	\N
+398	39757	MB1785	162.85	12469.0	270.0	1100.0	2030551.71	48366.45	179132.8	2253653.47	LMC routes (stand alone) 	\N	\N	\N	\N
+399	39758	142	145.6	14936.0	270.0	1100.0	2174681.6	43243.2	160160.0	2374153.6	LMC routes (stand alone) 	\N	\N	\N	\N
+400	39759	MA3580	190.4	14936.0	270.0	1100.0	2843814.4	56548.8	209440.0	3104662.4	LMC routes (stand alone) 	\N	\N	\N	\N
+401	39760	MA3442	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+402	39761	5590	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	246400.0	2905280.0	LMC routes (stand alone) 	\N	\N	\N	\N
+403	39762	MA5750	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+404	39763	MA3897	224.0	9500.0	270.0	1100.0	2128000.0	66528.0	246400.0	2434880.0	LMC routes (stand alone) 	\N	\N	\N	\N
+405	39764	MA658	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	184800.0	2195760.0	LMC routes (stand alone) 	\N	\N	\N	\N
+406	39765	1924	280.0	12469.0	270.0	1100.0	3491320.0	83160.0	308000.0	3874920.0	LMC routes (stand alone) 	\N	\N	\N	\N
+407	39766	1490	280.0	14936.0	270.0	1100.0	4182080.0	83160.0	308000.0	4565680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+408	39767	5687	280.0	7487.0	270.0	1100.0	2096360.0	83160.0	308000.0	2479960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+409	39768	2367	179.2	32091.0	270.0	1100.0	5750707.2	53222.4	197120.0	5996211.2	LMC routes (stand alone) 	\N	\N	\N	\N
+410	39769	MB3106	190.4	14936.0	270.0	1100.0	2843814.4	56548.8	209440.0	3104662.4	LMC routes (stand alone) 	\N	\N	\N	\N
+411	39770	4131	224.0	14936.0	270.0	1100.0	3345664.0	66528.0	246400.0	3652544.0	LMC routes (stand alone) 	\N	\N	\N	\N
+412	39771	MA1939	134.4	4500.0	270.0	1100.0	604800.0	39916.8	147840.0	788928.0	LMC routes (stand alone) 	\N	\N	\N	\N
+413	39772	400	156.8	8518.0	270.0	1100.0	1335622.4	46569.60000000001	172480.0	1550438.4	LMC routes (stand alone) 	\N	\N	\N	\N
+414	39773	3398	134.4	8518.0	270.0	1100.0	1144819.2	39916.8	147840.0	1328947.2	LMC routes (stand alone) 	\N	\N	\N	\N
+415	39774	6006	145.6	32091.0	270.0	1100.0	4672449.6	43243.2	160160.0	4871921.6	LMC routes (stand alone) 	\N	\N	\N	\N
+416	39775	MB3226	168.0	11600.0	270.0	1100.0	1948800.0	49896.00000000001	184800.0	2178960.0	LMC routes (stand alone) 	\N	\N	\N	\N
+417	39776	MA4786	291.2	12600.0	270.0	1100.0	3669120.0	86486.40000000001	320320.0	4068064.0	LMC routes (stand alone) 	\N	\N	\N	\N
+418	39777	MA4011	224.0	11600.0	270.0	1100.0	2598400.0	66528.0	246400.0	2905280.0	LMC routes (stand alone) 	\N	\N	\N	\N
+419	39778	MA3567	280.0	9600.0	270.0	1100.0	2688000.0	83160.0	308000.0	3071600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+420	39779	MA2370	224.0	11700.0	270.0	1100.0	2620800.0	66528.0	246400.0	2927680.0	LMC routes (stand alone) 	\N	\N	\N	\N
+421	39780	4198	168.0	11700.0	270.0	1100.0	1965600.0	49896.00000000001	184800.0	2195760.0	LMC routes (stand alone) 	\N	\N	\N	\N
+422	39781	MA6546	280.0	5700.0	270.0	1100.0	1596000.0	83160.0	308000.0	1979600.0	LMC routes (stand alone) 	\N	\N	\N	\N
+423	39782	MA2096	112.0	12469.0	270.0	1100.0	1396528.0	33264.0	123200.0	1549968.0	LMC routes (stand alone) 	\N	\N	\N	\N
+424	39783	MA3601	280.0	8518.0	270.0	1100.0	2385040.0	83160.0	308000.0	2768640.0	LMC routes (stand alone) 	\N	\N	\N	\N
+425	39784	MB3457	78.4	7487.0	270.0	1100.0	586980.8	23284.8	86240.0	694388.8	LMC routes (stand alone) 	\N	\N	\N	\N
+426	39785	379	190.4	14936.0	270.0	1100.0	2843814.4	56548.8	209440.0	3104662.4	LMC routes (stand alone) 	\N	\N	\N	\N
+427	39786	MB2981	257.6	4500.0	270.0	1100.0	1159200.0	76507.20000000001	283360.0	1512112.0	LMC routes (stand alone) 	\N	\N	\N	\N
+428	39787	721	112.0	4500.0	270.0	1100.0	504000.0	33264.0	123200.0	657440.0	LMC routes (stand alone) 	\N	\N	\N	\N
+429	39788	MA4210	11.2	14936.0	270.0	1100.0	167283.2	3326.4	12320.0	182627.2	LMC routes (stand alone) 	\N	\N	\N	\N
+430	39789	3411	16.8	14936.0	270.0	1100.0	250924.8	4989.6	18480.0	273940.8	LMC routes (stand alone) 	\N	\N	\N	\N
+431	39790	MA701	168.0	14936.0	270.0	1100.0	2509248.0	49896.00000000001	184800.0	2739408.0	LMC routes (stand alone) 	\N	\N	\N	\N
+432	39791	111	25.09	32091.0	270.0	1100.0	805099.01	7451.73	27596.8	839469.57	LMC routes (stand alone) 	\N	\N	\N	\N
+433	39792	MA4632	291.2	14936.0	270.0	1100.0	4349363.2	86486.40000000001	320320.0	4748307.2	LMC routes (stand alone) 	\N	\N	\N	\N
+434	39793	5237	11.2	14936.0	270.0	1100.0	167283.2	3326.4	12320.0	182627.2	LMC routes (stand alone) 	\N	\N	\N	\N
+435	39794	MA960	234.93	13439.0	270.0	1100.0	3157240.4	69774.21	258424.32	3479096.14	LMC routes (stand alone) 	\N	\N	\N	\N
+436	39795	3071	156.8	8518.0	270.0	1100.0	1335622.4	46569.60000000001	172480.0	1550438.4	LMC routes (stand alone) 	\N	\N	\N	\N
+437	39796	2996	62.72	12676.0	270.0	1100.0	795038.72	18627.84	68992.0	880965.12	LMC routes (stand alone) 	\N	\N	\N	\N
+438	39797	2010	250.88	12676.0	270.0	1100.0	3180154.88	74511.36000000002	275968.0	3523860.48	LMC routes (stand alone) 	\N	\N	\N	\N
+439	39798	341	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+440	39799	MB36	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+441	39800	3273	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+442	39801	3144	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+443	39802	1797	\N	\N	\N	\N	\N	\N	\N	\N	LMC routes (stand alone) 	\N	\N	\N	\N
+444	39803	MA5656	605.0	3000.0	270.0	1100.0	1996500.0	179685.0	732050.0	2908235.0	Route LM	\N	\N	\N	\N
+445	39804	4474	275.0	12469.0	270.0	1100.0	3771872.5	81675.0	332750.0	4186297.5	Route LM	\N	\N	\N	\N
+446	39805	6369	11.0	10187.0	270.0	1100.0	123262.7	3267.0	13310.0	139839.7	Route LM	\N	\N	\N	\N
+447	39806	3354	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+448	39807	MA1751	275.0	11700.0	270.0	1100.0	3539250.0	81675.0	332750.0	3953675.0	Route LM	\N	\N	\N	\N
+449	39808	MA3495	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+450	39809	2587	275.0	11700.0	270.0	1100.0	3539250.0	81675.0	332750.0	3953675.0	Route LM	\N	\N	\N	\N
+451	39810	MA5212	275.0	11700.0	270.0	1100.0	3539250.0	81675.0	332750.0	3953675.0	Route LM	\N	\N	\N	\N
+452	39811	4378	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+453	39812	MA4138	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+454	39813	5357	495.0	11700.0	270.0	1100.0	6370650.0	147015.0	598950.0	7116615.0	Route LM	\N	\N	\N	\N
+455	39814	MA2152	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+456	39815	MA1036	275.0	11700.0	270.0	1100.0	3539250.0	81675.0	332750.0	3953675.0	Route LM	\N	\N	\N	\N
+457	39816	MB6417	220.0	11700.0	270.0	1100.0	2831400.0	65340.00000000001	266200.0	3162940.0	Route LM	\N	\N	\N	\N
+458	39817	6094	165.0	11700.0	270.0	1100.0	2123550.0	49005.00000000001	199650.0	2372205.0	Route LM	\N	\N	\N	\N
+459	39818	MB4464	55.0	5600.0	270.0	1100.0	338800.0	16335.0	66550.0	421685.0	Route LM	\N	\N	\N	\N
+460	39819	MB2248	55.0	5600.0	270.0	1100.0	338800.0	16335.0	66550.0	421685.0	Route LM	\N	\N	\N	\N
+461	39820	MB4458	77.0	5600.0	270.0	1100.0	474320.0	22869.0	93170.0	590359.0	Route LM	\N	\N	\N	\N
+462	39821	MA5118	55.0	1500.0	270.0	1100.0	90750.0	16335.0	66550.0	173635.0	Route LM	\N	\N	\N	\N
+463	39822	MA4147	385.0	1500.0	270.0	1100.0	635250.0	114345.0	465850.0	1215445.0	Route LM	\N	\N	\N	\N
+464	39823	MA2824	220.0	11700.0	270.0	1100.0	2831400.0	65340.00000000001	266200.0	3162940.0	Route LM	\N	\N	\N	\N
+465	39824	MA1907	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+466	39825	1677	220.0	11700.0	270.0	1100.0	2831400.0	65340.00000000001	266200.0	3162940.0	Route LM	\N	\N	\N	\N
+467	39826	MB1711	275.0	11700.0	270.0	1100.0	3539250.0	81675.0	332750.0	3953675.0	Route LM	\N	\N	\N	\N
+468	39827	496	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+469	39828	3817	220.0	1500.0	270.0	1100.0	363000.0	65340.00000000001	266200.0	694540.0	Route LM	\N	\N	\N	\N
+470	39829	2213	352.0	11700.0	270.0	1100.0	4530240.0	104544.0	425920.0	5060704.0	Route LM	\N	\N	\N	\N
+471	39830	MA638	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+472	39831	MB2815	110.0	14000.0	270.0	1100.0	1694000.0	32670.0	133100.0	1859770.0	Route LM	\N	\N	\N	\N
+473	39832	MB5991	200.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+474	39833	4139	55.0	1500.0	270.0	1100.0	90750.0	16335.0	66550.0	173635.0	Route LM	\N	\N	\N	\N
+475	39834	MB2459	220.0	1500.0	270.0	1100.0	363000.0	65340.00000000001	266200.0	694540.0	Route LM	\N	\N	\N	\N
+476	39835	MB3220	110.0	1500.0	270.0	1100.0	181500.0	32670.0	133100.0	347270.0	Route LM	\N	\N	\N	\N
+477	39836	MA2619	165.0	1500.0	270.0	1100.0	272250.0	49005.00000000001	199650.0	520905.0	Route LM	\N	\N	\N	\N
+478	39837	MB1795	165.0	1500.0	270.0	1100.0	272250.0	49005.00000000001	199650.0	520905.0	Route LM	\N	\N	\N	\N
+479	39838	4973	297.0	1500.0	270.0	1100.0	490050.0	88209.0	359370.0	937629.0	Route LM	\N	\N	\N	\N
+480	39839	6224	275.0	1500.0	270.0	1100.0	453750.0	81675.0	332750.0	868175.0	Route LM	\N	\N	\N	\N
+481	39840	2342	110.0	1500.0	270.0	1100.0	181500.0	32670.0	133100.0	347270.0	Route LM	\N	\N	\N	\N
+482	39841	MA4523	220.0	9600.0	270.0	1100.0	2323200.0	65340.00000000001	266200.0	2654740.0	Route LM	\N	\N	\N	\N
+483	39842	MB1266	198.0	1500.0	270.0	1100.0	326700.0	58806.00000000001	239580.0	625086.0	Route LM	\N	\N	\N	\N
+484	39843	MB2903	220.0	1500.0	270.0	1100.0	363000.0	65340.00000000001	266200.0	694540.0	Route LM	\N	\N	\N	\N
+485	39844	MB3271	165.0	1500.0	270.0	1100.0	272250.0	49005.00000000001	199650.0	520905.0	Route LM	\N	\N	\N	\N
+486	39845	2253	55.0	1500.0	270.0	1100.0	90750.0	16335.0	66550.0	173635.0	Route LM	\N	\N	\N	\N
+487	39846	1392	275.0	1500.0	270.0	1100.0	453750.0	81675.0	332750.0	868175.0	Route LM	\N	\N	\N	\N
+488	39847	2910	71.5	11600.0	270.0	1100.0	912340.0	21235.5	86515.0	1020090.5	Route LM	\N	\N	\N	\N
+489	39848	4794	220.0	11600.0	270.0	1100.0	2807200.0	65340.00000000001	266200.0	3138740.0	Route LM	\N	\N	\N	\N
+490	39849	4553	55.0	11600.0	270.0	1100.0	701800.0	16335.0	66550.0	784685.0	Route LM	\N	\N	\N	\N
+491	39850	MB3309	143.0	11600.0	270.0	1100.0	1824680.0	42471.0	173030.0	2040181.0	Route LM	\N	\N	\N	\N
+492	39851	MB2965	121.0	11600.0	270.0	1100.0	1543960.0	35937.0	146410.0	1726307.0	Route LM	\N	\N	\N	\N
+493	39852	MB1259	33.0	11600.0	270.0	1100.0	421080.0	9801.0	39930.0	470811.0	Route LM	\N	\N	\N	\N
+494	39853	MA2218	22.0	11600.0	270.0	1100.0	280720.0	6534.000000000001	26620.0	313874.0	Route LM	\N	\N	\N	\N
+495	39854	MB1589	88.0	11600.0	270.0	1100.0	1122880.0	26136.0	106480.0	1255496.0	Route LM	\N	\N	\N	\N
+496	39855	MA5147	143.0	11600.0	270.0	1100.0	1824680.0	42471.0	173030.0	2040181.0	Route LM	\N	\N	\N	\N
+497	39856	MA5051	22.0	11600.0	270.0	1100.0	280720.0	6534.000000000001	26620.0	313874.0	Route LM	\N	\N	\N	\N
+498	39857	MA1934	150.0	14936.0	270.0	1100.0	2464440.0	44550.0	181500.0	2690490.0	Route LM	\N	\N	\N	\N
+499	39858	5995	99.0	8518.0	270.0	1100.0	927610.2	29403.0	119790.0	1076803.2	Route LM	\N	\N	\N	\N
+500	39859	MA3984	22.0	14936.0	270.0	1100.0	361451.2	6534.000000000001	26620.0	394605.2	Route LM	\N	\N	\N	\N
+501	39860	6180	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+502	39861	4919	33.0	12469.0	270.0	1100.0	452624.7	9801.0	39930.0	502355.7	Route LM	\N	\N	\N	\N
+503	39862	5181	33.0	32019.0	270.0	1100.0	1162289.7	9801.0	39930.0	1212020.7	Route LM	\N	\N	\N	\N
+504	39863	3511	33.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+505	39864	5392	99.0	12469.0	270.0	1100.0	1357874.1	29403.0	119790.0	1507067.1	Route LM	\N	\N	\N	\N
+506	39865	MA4005	195.33	12676.0	270.0	1100.0	2723575.5	58013.01000000001	236346.88	3017934.8	Route LM	\N	\N	\N	\N
+507	39866	MB1727	26.4	12469.0	270.0	1100.0	362099.76	7840.8	31944.0	401884.56	Route LM	\N	\N	\N	\N
+508	39867	6062	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+509	39868	4436	52.8	10187.0	270.0	1100.0	591660.96	15681.6	63888.0	671230.56	Route LM	\N	\N	\N	\N
+510	39869	MA1265	280.5	8518.0	270.0	1100.0	2628228.9	83308.5	339405.0	3050942.4	Route LM	\N	\N	\N	\N
+511	39870	MA4376	27.5	8518.0	270.0	1100.0	257669.5	8167.500000000001	33275.0	299112.0	Route LM	\N	\N	\N	\N
+512	39871	MB1626	33.0	14936.0	270.0	1100.0	542176.8	9801.0	39930.0	591907.8	Route LM	\N	\N	\N	\N
+513	39872	5741	99.0	14936.0	270.0	1100.0	1626530.4	29403.0	119790.0	1775723.4	Route LM	\N	\N	\N	\N
+514	39873	6407	22.0	14936.0	270.0	1100.0	361451.2	6534.000000000001	26620.0	394605.2	Route LM	\N	\N	\N	\N
+515	39874	1191	33.0	14936.0	270.0	1100.0	542176.8	9801.0	39930.0	591907.8	Route LM	\N	\N	\N	\N
+516	39875	5761	88.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+517	39876	1956	308.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+518	39877	MB4276	11.0	3500.0	270.0	1100.0	42350.0	3267.0	13310.0	58927.0	Route LM	\N	\N	\N	\N
+519	39878	MA2979	601.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+520	39879	MA2463	100.0	12600.0	270.0	1100.0	1386000.0	29700.0	121000.0	1536700.0	Route LM	\N	\N	\N	\N
+521	39880	MA2028	55.0	12600.0	270.0	1100.0	762300.0	16335.0	66550.0	845185.0	Route LM	\N	\N	\N	\N
+522	39881	MA2559	132.0	12600.0	270.0	1100.0	1829520.0	39204.0	159720.0	2028444.0	Route LM	\N	\N	\N	\N
+523	39882	686	22.0	11600.0	270.0	1100.0	280720.0	6534.000000000001	26620.0	313874.0	Route LM	\N	\N	\N	\N
+524	39883	MB2153	110.0	11600.0	270.0	1100.0	1403600.0	32670.0	133100.0	1569370.0	Route LM	\N	\N	\N	\N
+525	39884	MA954	220.0	11600.0	270.0	1100.0	2807200.0	65340.00000000001	266200.0	3138740.0	Route LM	\N	\N	\N	\N
+526	39885	MB1581	110.0	11600.0	270.0	1100.0	1403600.0	32670.0	133100.0	1569370.0	Route LM	\N	\N	\N	\N
+527	39886	2452	5.5	11600.0	270.0	1100.0	70180.0	1633.5	6655.0	78468.5	Route LM	\N	\N	\N	\N
+528	39887	4991	165.0	11600.0	270.0	1100.0	2105400.0	49005.00000000001	199650.0	2354055.0	Route LM	\N	\N	\N	\N
+529	39888	MA1400	66.0	11600.0	270.0	1100.0	842160.0	19602.0	79860.0	941622.0	Route LM	\N	\N	\N	\N
+530	39889	MA285	55.0	11600.0	270.0	1100.0	701800.0	16335.0	66550.0	784685.0	Route LM	\N	\N	\N	\N
+531	39890	MA138	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+532	39891	6179	5.5	32019.0	270.0	1100.0	193714.95	1633.5	6655.0	202003.45	Route LM	\N	\N	\N	\N
+533	39892	1041	159.5	32019.0	270.0	1100.0	5617733.55	47371.50000000001	192995.0	5858100.05	Route LM	\N	\N	\N	\N
+534	39893	MA818	49.5	32019.0	270.0	1100.0	1743434.55	14701.5	59895.0	1818031.05	Route LM	\N	\N	\N	\N
+535	39894	4558	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+536	39895	MB1466	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+537	39896	4427	22.0	14936.0	270.0	1100.0	361451.2	6534.000000000001	26620.0	394605.2	Route LM	\N	\N	\N	\N
+538	39897	MB1349	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+539	39898	MA4606	5.5	32019.0	270.0	1100.0	193714.95	1633.5	6655.0	202003.45	Route LM	\N	\N	\N	\N
+540	39899	MA6472	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+541	39900	304	99.0	14936.0	270.0	1100.0	1626530.4	29403.0	119790.0	1775723.4	Route LM	\N	\N	\N	\N
+542	39901	1955	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+543	39902	3068	5.5	10187.0	270.0	1100.0	61631.35	1633.5	6655.0	69919.85	Route LM	\N	\N	\N	\N
+544	39903	1831	201.6	14936.0	270.0	1100.0	3312207.36	59875.2	243936.0	3616018.56	Route LM	\N	\N	\N	\N
+545	39904	4509	187.0	14936.0	270.0	1100.0	3072335.2	55539.00000000001	226270.0	3354144.2	Route LM	\N	\N	\N	\N
+546	39905	1742	33.0	14936.0	270.0	1100.0	542176.8	9801.0	39930.0	591907.8	Route LM	\N	\N	\N	\N
+547	39906	MA6080	297.0	14936.0	270.0	1100.0	4879591.2	88209.0	359370.0	5327170.2	Route LM	\N	\N	\N	\N
+548	39907	1046	11.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+549	39908	4634	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+550	39909	MA3718	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+551	39910	3019	60.5	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+552	39911	MA1260	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+553	39912	3700	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+554	39913	2460	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+555	39914	MA2221	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+556	39915	5619	231.0	32019.0	270.0	1100.0	8136027.9	68607.0	279510.0	8484144.9	Route LM	\N	\N	\N	\N
+557	39916	MA3332	22.0	11600.0	270.0	1100.0	280720.0	6534.000000000001	26620.0	313874.0	Route LM	\N	\N	\N	\N
+558	39917	MA5231	11.0	11600.0	270.0	1100.0	140360.0	3267.0	13310.0	156937.0	Route LM	\N	\N	\N	\N
+559	39918	1508	11.0	11600.0	270.0	1100.0	140360.0	3267.0	13310.0	156937.0	Route LM	\N	\N	\N	\N
+560	39919	MB5951	11.0	11600.0	270.0	1100.0	140360.0	3267.0	13310.0	156937.0	Route LM	\N	\N	\N	\N
+561	39920	1262	55.0	11600.0	270.0	1100.0	701800.0	16335.0	66550.0	784685.0	Route LM	\N	\N	\N	\N
+562	39921	MB2213	110.0	11600.0	270.0	1100.0	1403600.0	32670.0	133100.0	1569370.0	Route LM	\N	\N	\N	\N
+563	39922	MA5208	110.0	11600.0	270.0	1100.0	1403600.0	32670.0	133100.0	1569370.0	Route LM	\N	\N	\N	\N
+564	39923	6394	11.0	11600.0	270.0	1100.0	140360.0	3267.0	13310.0	156937.0	Route LM	\N	\N	\N	\N
+565	39924	MB2836	275.0	11600.0	270.0	1100.0	3509000.0	81675.0	332750.0	3923425.0	Route LM	\N	\N	\N	\N
+566	39925	MA1356	11.0	3500.0	270.0	1100.0	42350.0	3267.0	13310.0	58927.0	Route LM	\N	\N	\N	\N
+567	39926	MA1352	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+568	39927	2369	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+569	39928	MA5707	220.0	32019.0	270.0	1100.0	7748598.0	65340.00000000001	266200.0	8080138.0	Route LM	\N	\N	\N	\N
+570	39929	4525	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+571	39930	3389	11.0	32019.0	270.0	1100.0	387429.9	3267.0	13310.0	404006.9	Route LM	\N	\N	\N	\N
+572	39931	4871	11.0	12600.0	270.0	1100.0	152460.0	3267.0	13310.0	169037.0	Route LM	\N	\N	\N	\N
+573	39932	MB6431	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+574	39933	MB1187	88.0	11600.0	270.0	1100.0	1122880.0	26136.0	106480.0	1255496.0	Route LM	\N	\N	\N	\N
+575	39934	MA5523	55.0	11600.0	270.0	1100.0	701800.0	16335.0	66550.0	784685.0	Route LM	\N	\N	\N	\N
+576	39935	175	165.0	11600.0	270.0	1100.0	2105400.0	49005.00000000001	199650.0	2354055.0	Route LM	\N	\N	\N	\N
+577	39936	MA599	330.0	11600.0	270.0	1100.0	4210800.0	98010.00000000001	399300.0	4708110.0	Route LM	\N	\N	\N	\N
+578	39937	MA5153	276.1	11600.0	270.0	1100.0	3523036.0	82001.70000000001	334081.0	3939118.7	Route LM	\N	\N	\N	\N
+579	39938	MA5138	181.5	11600.0	270.0	1100.0	2315940.0	53905.50000000001	219615.0	2589460.5	Route LM	\N	\N	\N	\N
+580	39939	6194	63.8	11600.0	270.0	1100.0	814088.0	18948.6	77198.0	910234.6	Route LM	\N	\N	\N	\N
+581	39940	MA4669	6.6	11600.0	270.0	1100.0	84216.0	1960.2	7986.0	94162.2	Route LM	\N	\N	\N	\N
+582	39941	MA3429	35.2	11600.0	270.0	1100.0	449152.0	10454.4	42592.0	502198.4	Route LM	\N	\N	\N	\N
+583	39942	6164	11.0	11600.0	270.0	1100.0	140360.0	3267.0	13310.0	156937.0	Route LM	\N	\N	\N	\N
+584	39943	4488	11.0	11700.0	270.0	1100.0	141570.0	3267.0	13310.0	158147.0	Route LM	\N	\N	\N	\N
+585	39944	4004	11.0	11700.0	270.0	1100.0	141570.0	3267.0	13310.0	158147.0	Route LM	\N	\N	\N	\N
+586	39945	MA5851	187.0	11700.0	270.0	1100.0	2406690.0	55539.00000000001	226270.0	2688499.0	Route LM	\N	\N	\N	\N
+587	39946	2309	11.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+588	39947	MA4640	55.0	12469.0	270.0	1100.0	754374.5	16335.0	66550.0	837259.5	Route LM	\N	\N	\N	\N
+589	39948	1641	400.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+590	39949	3625	110.0	1000.0	270.0	1100.0	121000.0	32670.0	133100.0	286770.0	Route LM	\N	\N	\N	\N
+591	39950	583	110.0	9600.0	270.0	1100.0	1161600.0	32670.0	133100.0	1327370.0	Route LM	\N	\N	\N	\N
+592	39951	5307	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+593	39952	5814	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+594	39953	1694	300.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+595	39954	1863	605.0	3000.0	270.0	1100.0	1996500.0	179685.0	732050.0	2908235.0	Route LM	\N	\N	\N	\N
+596	39955	MB2246	605.0	3000.0	270.0	1100.0	1996500.0	179685.0	732050.0	2908235.0	Route LM	\N	\N	\N	\N
+597	39956	5618	200.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+598	39957	109	200.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+599	39958	2161	110.0	12469.0	270.0	1100.0	1508749.0	32670.0	133100.0	1674519.0	Route LM	\N	\N	\N	\N
+600	39959	4750	330.0	1500.0	270.0	1100.0	544500.0	98010.00000000001	399300.0	1041810.0	Route LM	\N	\N	\N	\N
+601	39960	MA5877	55.0	1500.0	270.0	1100.0	90750.0	16335.0	66550.0	173635.0	Route LM	\N	\N	\N	\N
+602	39961	MA3485	132.0	1500.0	270.0	1100.0	217800.0	39204.0	159720.0	416724.0	Route LM	\N	\N	\N	\N
+603	39962	MB1718	198.0	9600.0	270.0	1100.0	2090880.0	58806.00000000001	239580.0	2389266.0	Route LM	\N	\N	\N	\N
+604	39963	MB6371	220.0	9600.0	270.0	1100.0	2323200.0	65340.00000000001	266200.0	2654740.0	Route LM	\N	\N	\N	\N
+605	39964	MA2181	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+606	39965	MB3667	275.0	9600.0	270.0	1100.0	2904000.0	81675.0	332750.0	3318425.0	Route LM	\N	\N	\N	\N
+607	39966	MB2282	55.0	1500.0	270.0	1100.0	90750.0	16335.0	66550.0	173635.0	Route LM	\N	\N	\N	\N
+608	39967	297	165.0	8518.0	270.0	1100.0	1546017.0	49005.00000000001	199650.0	1794672.0	Route LM	\N	\N	\N	\N
+609	39968	MA2938	165.0	3500.0	270.0	1100.0	635250.0	49005.00000000001	199650.0	883905.0	Route LM	\N	\N	\N	\N
+610	39969	MA2915	110.0	3500.0	270.0	1100.0	423500.0	32670.0	133100.0	589270.0	Route LM	\N	\N	\N	\N
+611	39970	4779	110.0	3500.0	270.0	1100.0	423500.0	32670.0	133100.0	589270.0	Route LM	\N	\N	\N	\N
+612	39971	MB6450	55.0	3500.0	270.0	1100.0	211750.0	16335.0	66550.0	294635.0	Route LM	\N	\N	\N	\N
+613	39972	MA2917	242.0	3500.0	270.0	1100.0	931700.0	71874.0	292820.0	1296394.0	Route LM	\N	\N	\N	\N
+614	39973	5274	55.0	3500.0	270.0	1100.0	211750.0	16335.0	66550.0	294635.0	Route LM	\N	\N	\N	\N
+615	39974	MA609	110.0	32091.0	270.0	1100.0	3883011.0	32670.0	133100.0	4048781.0	Route LM	\N	\N	\N	\N
+616	39975	MA5287	154.0	14936.0	270.0	1100.0	2530158.4	45738.00000000001	186340.0	2762236.4	Route LM	\N	\N	\N	\N
+617	39976	MA4035	88.0	14936.0	270.0	1100.0	1445804.8	26136.0	106480.0	1578420.8	Route LM	\N	\N	\N	\N
+618	39977	6033	396.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+619	39978	MA3631	264.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+620	39979	278	66.0	8518.0	270.0	1100.0	618406.8	19602.0	79860.0	717868.8	Route LM	\N	\N	\N	\N
+621	39980	MA6341	22.0	14936.0	270.0	1100.0	361451.2	6534.000000000001	26620.0	394605.2	Route LM	\N	\N	\N	\N
+622	39981	MA1484	143.0	8518.0	270.0	1100.0	1339881.4	42471.0	173030.0	1555382.4	Route LM	\N	\N	\N	\N
+623	39982	5768	297.0	8518.0	270.0	1100.0	2782830.6	88209.0	359370.0	3230409.6	Route LM	\N	\N	\N	\N
+624	39983	5579	99.0	14936.0	270.0	1100.0	1626530.4	29403.0	119790.0	1775723.4	Route LM	\N	\N	\N	\N
+625	39984	MA1878	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+626	39985	6502	264.0	14936.0	270.0	1100.0	4337414.4	78408.0	319440.0	4735262.4	Route LM	\N	\N	\N	\N
+627	39986	139	209.0	14936.0	270.0	1100.0	3433786.4	62073.00000000001	252890.0	3748749.4	Route LM	\N	\N	\N	\N
+628	39987	2283	104.5	8518.0	270.0	1100.0	979144.1	31036.5	126445.0	1136625.6	Route LM	\N	\N	\N	\N
+629	39988	MB3372	88.0	14936.0	270.0	1100.0	1445804.8	26136.0	106480.0	1578420.8	Route LM	\N	\N	\N	\N
+630	39989	1148	475.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+631	39990	MB6434	5.5	14936.0	270.0	1100.0	90362.8	1633.5	6655.0	98651.3	Route LM	\N	\N	\N	\N
+632	39991	MB2875	5.5	8518.0	270.0	1100.0	51533.9	1633.5	6655.0	59822.4	Route LM	\N	\N	\N	\N
+633	39992	MB1250	121.0	8518.0	270.0	1100.0	1133745.8	35937.0	146410.0	1316092.8	Route LM	\N	\N	\N	\N
+634	39993	MA4901	99.0	14936.0	270.0	1100.0	1626530.4	29403.0	119790.0	1775723.4	Route LM	\N	\N	\N	\N
+635	39994	1777	110.0	9600.0	270.0	1100.0	1161600.0	32670.0	133100.0	1327370.0	Route LM	\N	\N	\N	\N
+636	39995	MA1669	220.0	13439.0	270.0	1100.0	3252238.0	65340.00000000001	266200.0	3583778.0	Route LM	\N	\N	\N	\N
+637	39996	2257	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+638	39997	2895	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+639	39998	MB2250	5.5	14936.0	270.0	1100.0	90362.8	1633.5	6655.0	98651.3	Route LM	\N	\N	\N	\N
+640	39999	MA3616	275.0	14936.0	270.0	1100.0	4518140.0	81675.0	332750.0	4932565.0	Route LM	\N	\N	\N	\N
+641	40000	MA1806	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+642	40001	MA118	22.0	14936.0	270.0	1100.0	361451.2	6534.000000000001	26620.0	394605.2	Route LM	\N	\N	\N	\N
+643	40002	1455	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+644	40003	2946	253.0	14936.0	270.0	1100.0	4156688.8	75141.0	306130.0	4537959.8	Route LM	\N	\N	\N	\N
+645	40004	MB1435	110.0	14936.0	270.0	1100.0	1807256.0	32670.0	133100.0	1973026.0	Route LM	\N	\N	\N	\N
+646	40005	5294	33.0	8518.0	270.0	1100.0	309203.4	9801.0	39930.0	358934.4	Route LM	\N	\N	\N	\N
+647	40006	MB1703	5.5	14936.0	270.0	1100.0	90362.8	1633.5	6655.0	98651.3	Route LM	\N	\N	\N	\N
+648	40007	5665	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+649	40008	MA6116	154.0	12469.0	270.0	1100.0	2112248.6	45738.00000000001	186340.0	2344326.6	Route LM	\N	\N	\N	\N
+650	40009	MB3864	264.0	14936.0	270.0	1100.0	4337414.4	78408.0	319440.0	4735262.4	Route LM	\N	\N	\N	\N
+651	40010	MA6036	154.0	12469.0	270.0	1100.0	2112248.6	45738.00000000001	186340.0	2344326.6	Route LM	\N	\N	\N	\N
+652	40011	5339	143.0	14936.0	270.0	1100.0	2349432.8	42471.0	173030.0	2564933.8	Route LM	\N	\N	\N	\N
+653	40012	1949	88.0	14936.0	270.0	1100.0	1445804.8	26136.0	106480.0	1578420.8	Route LM	\N	\N	\N	\N
+654	40013	2359	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+655	40014	MB4811	110.0	8518.0	270.0	1100.0	1030678.0	32670.0	133100.0	1196448.0	Route LM	\N	\N	\N	\N
+656	40015	MB5402	220.0	8518.0	270.0	1100.0	2061356.0	65340.00000000001	266200.0	2392896.0	Route LM	\N	\N	\N	\N
+657	40016	5827	77.0	14936.0	270.0	1100.0	1265079.2	22869.0	93170.0	1381118.2	Route LM	\N	\N	\N	\N
+658	40017	MB2378	264.0	3250.0	270.0	1100.0	943800.0	78408.0	319440.0	1341648.0	Route LM	\N	\N	\N	\N
+659	40018	MA3597	110.0	12469.0	270.0	1100.0	1508749.0	32670.0	133100.0	1674519.0	Route LM	\N	\N	\N	\N
+660	40019	MB2245	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+661	40020	MB2238	110.0	12469.0	270.0	1100.0	1508749.0	32670.0	133100.0	1674519.0	Route LM	\N	\N	\N	\N
+662	40021	6056	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+663	40022	MB1348	110.0	11700.0	270.0	1100.0	1415700.0	32670.0	133100.0	1581470.0	Route LM	\N	\N	\N	\N
+664	40023	2351	165.0	11700.0	270.0	1100.0	2123550.0	49005.00000000001	199650.0	2372205.0	Route LM	\N	\N	\N	\N
+665	40024	5235	88.0	32091.0	270.0	1100.0	3106408.8	26136.0	106480.0	3239024.8	Route LM	\N	\N	\N	\N
+666	40025	1562	110.0	32091.0	270.0	1100.0	3883011.0	32670.0	133100.0	4048781.0	Route LM	\N	\N	\N	\N
+667	40026	MB1179	110.0	32091.0	270.0	1100.0	3883011.0	32670.0	133100.0	4048781.0	Route LM	\N	\N	\N	\N
+668	40027	3023	110.0	32091.0	270.0	1100.0	3883011.0	32670.0	133100.0	4048781.0	Route LM	\N	\N	\N	\N
+669	40028	MB3249	69.3	11700.0	270.0	1100.0	891891.0	20582.1	83853.0	996326.1	Route LM	\N	\N	\N	\N
+670	40029	MA6156	11.0	11700.0	270.0	1100.0	141570.0	3267.0	13310.0	158147.0	Route LM	\N	\N	\N	\N
+671	40030	141	33.0	32019.0	270.0	1100.0	1162289.7	9801.0	39930.0	1212020.7	Route LM	\N	\N	\N	\N
+672	40031	MB2230	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+673	40032	MA5673	44.0	12469.0	270.0	1100.0	603499.6	13068.0	53240.0	669807.6	Route LM	\N	\N	\N	\N
+674	40033	1536	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+675	40034	MA4315	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+676	40035	1532	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+677	40036	MB2233	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+678	40037	MB2239	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+679	40038	2730	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+680	40039	MB2649	220.0	14936.0	270.0	1100.0	3614512.0	65340.00000000001	266200.0	3946052.0	Route LM	\N	\N	\N	\N
+681	40040	MA2578	11.0	12469.0	270.0	1100.0	150874.9	3267.0	13310.0	167451.9	Route LM	\N	\N	\N	\N
+682	40041	MA5223	275.0	12469.0	270.0	1100.0	3771872.5	81675.0	332750.0	4186297.5	Route LM	\N	\N	\N	\N
+683	40042	MB2236	77.0	14936.0	270.0	1100.0	1265079.2	22869.0	93170.0	1381118.2	Route LM	\N	\N	\N	\N
+684	40043	MA2131	55.0	8518.0	270.0	1100.0	515339.0	16335.0	66550.0	598224.0	Route LM	\N	\N	\N	\N
+685	40044	5769	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+686	40045	2263	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+687	40046	999	121.0	14936.0	270.0	1100.0	1987981.6	35937.0	146410.0	2170328.6	Route LM	\N	\N	\N	\N
+688	40047	MA4248	264.0	12469.0	270.0	1100.0	3620997.6	78408.0	319440.0	4018845.6	Route LM	\N	\N	\N	\N
+689	40048	3075	187.0	12469.0	270.0	1100.0	2564873.3	55539.00000000001	226270.0	2846682.3	Route LM	\N	\N	\N	\N
+690	40049	MA5557	176.0	14936.0	270.0	1100.0	2891609.6	52272.00000000001	212960.0	3156841.6	Route LM	\N	\N	\N	\N
+691	40050	MA4846	121.0	8518.0	270.0	1100.0	1133745.8	35937.0	146410.0	1316092.8	Route LM	\N	\N	\N	\N
+692	40051	MB1103	154.0	12469.0	270.0	1100.0	2112248.6	45738.00000000001	186340.0	2344326.6	Route LM	\N	\N	\N	\N
+693	40052	MB1882	55.0	12676.0	270.0	1100.0	766898.0	16335.0	66550.0	849783.0	Route LM	\N	\N	\N	\N
+694	40053	MA1165	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+695	40054	MA2586	110.0	8518.0	270.0	1100.0	1030678.0	32670.0	133100.0	1196448.0	Route LM	\N	\N	\N	\N
+696	40055	MA3996	275.0	14936.0	270.0	1100.0	4518140.0	81675.0	332750.0	4932565.0	Route LM	\N	\N	\N	\N
+697	40056	2731	220.0	14936.0	270.0	1100.0	3614512.0	65340.00000000001	266200.0	3946052.0	Route LM	\N	\N	\N	\N
+698	40057	MB2224	55.0	14936.0	270.0	1100.0	903628.0	16335.0	66550.0	986513.0	Route LM	\N	\N	\N	\N
+699	40058	MB2462	77.0	14936.0	270.0	1100.0	1265079.2	22869.0	93170.0	1381118.2	Route LM	\N	\N	\N	\N
+700	40059	6359	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+701	40060	MB1595	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+702	40061	4213	198.0	32091.0	270.0	1100.0	6989419.8	58806.00000000001	239580.0	7287805.8	Route LM	\N	\N	\N	\N
+703	40062	4506	77.0	8518.0	270.0	1100.0	721474.6	22869.0	93170.0	837513.6	Route LM	\N	\N	\N	\N
+704	40063	3170	220.0	12469.0	270.0	1100.0	3017498.0	65340.00000000001	266200.0	3349038.0	Route LM	\N	\N	\N	\N
+705	40064	4670	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+706	40065	6518	253.0	14936.0	270.0	1100.0	4156688.8	75141.0	306130.0	4537959.8	Route LM	\N	\N	\N	\N
+707	40066	MA2281	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+708	40067	4070	220.0	14936.0	270.0	1100.0	3614512.0	65340.00000000001	266200.0	3946052.0	Route LM	\N	\N	\N	\N
+709	40068	MA5500	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+710	40069	MA3417	110.0	12676.0	270.0	1100.0	1533796.0	32670.0	133100.0	1699566.0	Route LM	\N	\N	\N	\N
+711	40070	1029	161.7	10187.0	270.0	1100.0	1811961.69	48024.9	195657.0	2055643.59	Route LM	\N	\N	\N	\N
+712	40071	MA6540	16.5	12469.0	270.0	1100.0	226312.35	4900.5	19965.0	251177.85	Route LM	\N	\N	\N	\N
+713	40072	3054	144.1	14936.0	270.0	1100.0	2367505.36	42797.7	174361.0	2584664.06	Route LM	\N	\N	\N	\N
+714	40073	5256	33.0	12469.0	270.0	1100.0	452624.7	9801.0	39930.0	502355.7	Route LM	\N	\N	\N	\N
+715	40074	5055	5.5	14936.0	270.0	1100.0	90362.8	1633.5	6655.0	98651.3	Route LM	\N	\N	\N	\N
+716	40075	5606	44.0	8518.0	270.0	1100.0	412271.2	13068.0	53240.0	478579.2	Route LM	\N	\N	\N	\N
+717	40076	MA1059	77.0	14936.0	270.0	1100.0	1265079.2	22869.0	93170.0	1381118.2	Route LM	\N	\N	\N	\N
+718	40077	5029	66.0	14936.0	270.0	1100.0	1084353.6	19602.0	79860.0	1183815.6	Route LM	\N	\N	\N	\N
+719	40078	MB3135	134.2	14936.0	270.0	1100.0	2204852.32	39857.4	162382.0	2407091.72	Route LM	\N	\N	\N	\N
+720	40079	5451	110.0	12469.0	270.0	1100.0	1508749.0	32670.0	133100.0	1674519.0	Route LM	\N	\N	\N	\N
+721	40080	2763	88.0	12469.0	270.0	1100.0	1206999.2	26136.0	106480.0	1339615.2	Route LM	\N	\N	\N	\N
+722	40081	4847	5.5	8518.0	270.0	1100.0	51533.9	1633.5	6655.0	59822.4	Route LM	\N	\N	\N	\N
+723	40082	MB2225	49.5	8518.0	270.0	1100.0	463805.1	14701.5	59895.0	538401.6	Route LM	\N	\N	\N	\N
+724	40083	MA6295	22.0	12469.0	270.0	1100.0	301749.8	6534.000000000001	26620.0	334903.8	Route LM	\N	\N	\N	\N
+725	40084	MA4226	22.0	12469.0	270.0	1100.0	301749.8	6534.000000000001	26620.0	334903.8	Route LM	\N	\N	\N	\N
+726	40085	MA1885	44.0	12469.0	270.0	1100.0	603499.6	13068.0	53240.0	669807.6	Route LM	\N	\N	\N	\N
+727	40086	4859	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+728	40087	MB3948	104.5	12469.0	270.0	1100.0	1433311.55	31036.5	126445.0	1590793.05	Route LM	\N	\N	\N	\N
+729	40088	3090	11.0	8518.0	270.0	1100.0	103067.8	3267.0	13310.0	119644.8	Route LM	\N	\N	\N	\N
+730	40089	MB6015	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+731	40090	MB6017	22.0	12469.0	270.0	1100.0	301749.8	6534.000000000001	26620.0	334903.8	Route LM	\N	\N	\N	\N
+732	40091	907	99.0	8518.0	270.0	1100.0	927610.2	29403.0	119790.0	1076803.2	Route LM	\N	\N	\N	\N
+733	40092	3310	16.5	14936.0	270.0	1100.0	271088.4	4900.5	19965.0	295953.9	Route LM	\N	\N	\N	\N
+734	40093	MB1504	179.2	8518.0	270.0	1100.0	1679068.16	53222.4	216832.0	1949122.56	Route LM	\N	\N	\N	\N
+735	40094	6239	55.0	14936.0	270.0	1100.0	903628.0	16335.0	66550.0	986513.0	Route LM	\N	\N	\N	\N
+736	40095	MA5269	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+737	40096	810	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+738	40097	3058	110.0	14936.0	270.0	1100.0	1807256.0	32670.0	133100.0	1973026.0	Route LM	\N	\N	\N	\N
+739	40098	MA742	275.0	12469.0	270.0	1100.0	3771872.5	81675.0	332750.0	4186297.5	Route LM	\N	\N	\N	\N
+740	40099	MA256	110.0	14936.0	270.0	1100.0	1807256.0	32670.0	133100.0	1973026.0	Route LM	\N	\N	\N	\N
+741	40100	4545	275.0	14936.0	270.0	1100.0	4518140.0	81675.0	332750.0	4932565.0	Route LM	\N	\N	\N	\N
+742	40101	MB5997	55.0	12676.0	270.0	1100.0	766898.0	16335.0	66550.0	849783.0	Route LM	\N	\N	\N	\N
+743	40102	6102	110.0	12676.0	270.0	1100.0	1533796.0	32670.0	133100.0	1699566.0	Route LM	\N	\N	\N	\N
+744	40103	MA3668	110.0	12676.0	270.0	1100.0	1533796.0	32670.0	133100.0	1699566.0	Route LM	\N	\N	\N	\N
+745	40104	5604	220.0	8518.0	270.0	1100.0	2061356.0	65340.00000000001	266200.0	2392896.0	Route LM	\N	\N	\N	\N
+746	40105	4913	275.0	8518.0	270.0	1100.0	2576695.0	81675.0	332750.0	2991120.0	Route LM	\N	\N	\N	\N
+747	40106	MA4466	55.0	32091.0	270.0	1100.0	1941505.5	16335.0	66550.0	2024390.5	Route LM	\N	\N	\N	\N
+748	40107	4932	11.0	12469.0	270.0	1100.0	150874.9	3267.0	13310.0	167451.9	Route LM	\N	\N	\N	\N
+749	40108	MA728	176.0	12469.0	270.0	1100.0	2413998.4	52272.00000000001	212960.0	2679230.4	Route LM	\N	\N	\N	\N
+750	40109	4929	110.0	14936.0	270.0	1100.0	1807256.0	32670.0	133100.0	1973026.0	Route LM	\N	\N	\N	\N
+751	40110	358	33.0	14936.0	270.0	1100.0	542176.8	9801.0	39930.0	591907.8	Route LM	\N	\N	\N	\N
+752	40111	3120	110.0	14936.0	270.0	1100.0	1807256.0	32670.0	133100.0	1973026.0	Route LM	\N	\N	\N	\N
+753	40112	3258	26.4	12469.0	270.0	1100.0	362099.76	7840.8	31944.0	401884.56	Route LM	\N	\N	\N	\N
+754	40113	3177	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+755	40114	MA2383	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+756	40115	MA25	60.5	14936.0	270.0	1100.0	993990.8	17968.5	73205.0	1085164.3	Route LM	\N	\N	\N	\N
+757	40116	5372	55.0	8518.0	270.0	1100.0	515339.0	16335.0	66550.0	598224.0	Route LM	\N	\N	\N	\N
+758	40117	4324	77.0	8518.0	270.0	1100.0	721474.6	22869.0	93170.0	837513.6	Route LM	\N	\N	\N	\N
+759	40118	5342	16.5	12469.0	270.0	1100.0	226312.35	4900.5	19965.0	251177.85	Route LM	\N	\N	\N	\N
+760	40119	MB5740	11.0	14936.0	270.0	1100.0	180725.6	3267.0	13310.0	197302.6	Route LM	\N	\N	\N	\N
+761	40120	1303	165.0	12600.0	270.0	1100.0	2286900.0	49005.00000000001	199650.0	2535555.0	Route LM	\N	\N	\N	\N
+762	40121	4941	150.0	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+763	40122	1135	55.0	14936.0	270.0	1100.0	903628.0	16335.0	66550.0	986513.0	Route LM	\N	\N	\N	\N
+764	40123	MA1542	220.0	14936.0	270.0	1100.0	3614512.0	65340.00000000001	266200.0	3946052.0	Route LM	\N	\N	\N	\N
+765	40124	1456	231.0	14936.0	270.0	1100.0	3795237.6	68607.0	279510.0	4143354.6	Route LM	\N	\N	\N	\N
+766	40125	MA4021	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+767	40126	MB6122	275.0	12600.0	270.0	1100.0	3811500.0	81675.0	332750.0	4225925.0	Route LM	\N	\N	\N	\N
+768	40127	2825	165.0	12600.0	270.0	1100.0	2286900.0	49005.00000000001	199650.0	2535555.0	Route LM	\N	\N	\N	\N
+769	40128	879	55.0	12600.0	270.0	1100.0	762300.0	16335.0	66550.0	845185.0	Route LM	\N	\N	\N	\N
+770	40129	2074	66.0	12600.0	270.0	1100.0	914760.0	19602.0	79860.0	1014222.0	Route LM	\N	\N	\N	\N
+771	40130	MA4382	220.0	12600.0	270.0	1100.0	3049200.0	65340.00000000001	266200.0	3380740.0	Route LM	\N	\N	\N	\N
+772	40131	5154	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+773	40132	MB6428	275.0	6500.0	270.0	1100.0	1966250.0	81675.0	332750.0	2380675.0	Route LM	\N	\N	\N	\N
+774	40133	MA4570	132.0	14936.0	270.0	1100.0	2168707.2	39204.0	159720.0	2367631.2	Route LM	\N	\N	\N	\N
+775	40134	4207	275.0	12676.0	270.0	1100.0	3834490.0	81675.0	332750.0	4248915.0	Route LM	\N	\N	\N	\N
+776	40135	4986	55.0	32091.0	270.0	1100.0	1941505.5	16335.0	66550.0	2024390.5	Route LM	\N	\N	\N	\N
+777	40136	MB1714	165.0	11700.0	270.0	1100.0	2123550.0	49005.00000000001	199650.0	2372205.0	Route LM	\N	\N	\N	\N
+778	40137	MA1119	110.0	13439.0	270.0	1100.0	1626119.0	32670.0	133100.0	1791889.0	Route LM	\N	\N	\N	\N
+779	40138	3879	275.0	14936.0	270.0	1100.0	4518140.0	81675.0	332750.0	4932565.0	Route LM	\N	\N	\N	\N
+780	40139	4981	297.0	14936.0	270.0	1100.0	4879591.2	88209.0	359370.0	5327170.2	Route LM	\N	\N	\N	\N
+781	40140	MA13	220.0	3250.0	270.0	1100.0	786500.0	65340.00000000001	266200.0	1118040.0	Route LM	\N	\N	\N	\N
+782	40141	2475	55.0	32091.0	270.0	1100.0	1941505.5	16335.0	66550.0	2024390.5	Route LM	\N	\N	\N	\N
+783	40142	6463	275.0	14936.0	270.0	1100.0	4518140.0	81675.0	332750.0	4932565.0	Route LM	\N	\N	\N	\N
+784	40143	5959	99.0	12469.0	270.0	1100.0	1357874.1	29403.0	119790.0	1507067.1	Route LM	\N	\N	\N	\N
+785	40144	MA2903	275.0	12676.0	270.0	1100.0	3834490.0	81675.0	332750.0	4248915.0	Route LM	\N	\N	\N	\N
+786	40145	MB3940	165.0	14936.0	270.0	1100.0	2710884.0	49005.00000000001	199650.0	2959539.0	Route LM	\N	\N	\N	\N
+787	40146	MB1450	280.0	11600.0	270.0	1100.0	3572800.0	83160.0	338800.0	3994760.0	Route LM	\N	\N	\N	\N
+788	40147	5856	11.2	14936.0	270.0	1100.0	184011.52	3326.4	13552.0	200889.92	Route LM	\N	\N	\N	\N
+789	40148	5385	66.0	12469.0	270.0	1100.0	905249.4	19602.0	79860.0	1004711.4	Route LM	\N	\N	\N	\N
+790	40149	MA4620	66.0	32019.0	270.0	1100.0	2324579.4	19602.0	79860.0	2424041.4	Route LM	\N	\N	\N	\N
+791	40150	MA2014	517.0	1500.0	270.0	1100.0	853050.0	153549.0	625570.0	1632169.0	Route LM	\N	\N	\N	\N
+792	40151	MA3548	495.0	8518.0	270.0	1100.0	4638051.0	147015.0	598950.0	5384016.0	Route LM	\N	\N	\N	\N
+793	40152	1144	126.5	12469.0	270.0	1100.0	1735061.35	37570.5	153065.0	1925696.85	Route LM	\N	\N	\N	\N
+794	40153	MB1917	55.0	11600.0	270.0	1100.0	701800.0	16335.0	66550.0	784685.0	Route LM	\N	\N	\N	\N
+795	40154	859	66.0	11600.0	270.0	1100.0	842160.0	19602.0	79860.0	941622.0	Route LM	\N	\N	\N	\N
+796	40155	MB6174	88.0	11600.0	270.0	1100.0	1122880.0	26136.0	106480.0	1255496.0	Route LM	\N	\N	\N	\N
+797	40156	5032	77.0	12469.0	270.0	1100.0	1056124.3	22869.0	93170.0	1172163.3	Route LM	\N	\N	\N	\N
+798	40157	MA4450	16.5	14936.0	270.0	1100.0	271088.4	4900.5	19965.0	295953.9	Route LM	\N	\N	\N	\N
+799	40158	2234	605.0	1500.0	270.0	1100.0	998250.0	179685.0	732050.0	1909985.0	Route LM	\N	\N	\N	\N
+800	40159	MA2726	660.0	11600.0	270.0	1100.0	8421600.0	196020.0	798600.0	9416220.0	Route LM	\N	\N	\N	\N
+801	40160	5987	715.0	\N	270.0	1100.0	\N	212355.0	865150.0	1077505.0	Route LM	\N	\N	\N	\N
+802	40161	1277	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+803	40162	MA3407	\N	\N	\N	\N	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+804	40163	MA3665	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+805	40164	MA2771	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+806	40165	5568	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+807	40166	MB3514	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+808	40167	6027	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+809	40168	MA3655	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+810	40169	5196	\N	\N	270.0	1100.0	\N	\N	\N	\N	Route LM	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: dn_master; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.dn_master (id, sr_no, route_type, ip1_co_built, dn_recipient, project_name, route_id_site_id, uid, build_type, category_type, survey_id, po_number, po_length, parent_route, ce_route_lmc_id, route_lmc_section_id, route_lmc_subsection_id, application_number, application_length_mtr, application_date, from_location, to_location, authority, ward, dn_number, dn_length_mtr, dn_received_date, trench_type, ot_length, surface, surface_wise_ri_amount, dn_ri_amount, surface_wise_multiplication_factor, ground_rent, administrative_charge, supervision_charges, chamber_fee, gst, ri_budget_amount_per_meter, projected_budget_ri_amount_dn, actual_total_non_refundable, non_refundable_amount_per_mtr, proj_non_refundable_savings_per_mtr, deposit, total_dn_amount, new_revised_dn_number, new_revised_dn_against, internal_approval_start, internal_approval_end, ticket_raised_date, dn_payment_date, tat_days, civil_completion_date, hdd_length, no_of_pits, pit_ri_rate, proj_savings_per_dn, surface_wise_length, road_name, permission_receipt_date, permit_no, permit_start_date, permit_end_date, permitted_length_by_ward_mts) FROM stdin;
+1	20	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_10	MUM_Route_10	Existing	Strategic	\N	10004633.0	10280.0	\N	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWE241221D2C6L0012	783326066	23.0	2024-06-26	 BOB Mirza Galibh road	Byculla Fire Bricade	MCGM	E	783326066	33.0	2024-12-21	Open Trench	\N	Carriageway(Mastic Asphalt 25 mm)+footpath/Passages(Finished in Stencil/)	12469/11211	1152439.0	\N	66.0	33.0	\N	\N	\N	8413.0	277629.0	1152538.0	34925.39393939394	-26512.39393939394	576219.5	1728757.5	\N	\N	2025-04-04	2025-04-05	2025-05-20	2025-04-10	5	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+2	21	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_10	MUM_Route_10	Existing	Strategic	\N	10004633.0	10280.0	\N	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWE241221D3C6L0013	783326083	29.0	2024-06-26	BMC E ward office 	 Mirza Galibh road junction 	MCGM	E	783326083	39.0	2024-12-21	Open Trench	\N	Carriageway(Mastic Asphalt 25 mm)+footpath/Passages(Grey or Any_x000D_\nColor)	12469/8518	367761.0	\N	78.0	39.0	\N	\N	\N	8413.0	328107.0	367878.0	9432.76923076923	-1019.76923076923	183880.5	551758.5	\N	\N	2025-04-04	2025-04-05	2025-05-07	2025-04-10	5	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+3	5	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA4226	MU-MA4226	New-build	Non-Strategic	\N	10004641.0	20.0	MUMU25R010	MUMU25NL003	MUMU25NL003MCWA	MUMU25NL003MCWA250404D3C3L0004	783339100	8.0	2025-03-27	NEAR HOTEL CASTLE IN HIRA BLDG	NEAR HOTEL CASTLE IN HIRA BLDG	MCGM	A	783339100	8.0	2025-04-04	Open Trench	\N	Footpath/Passages(Finished in_x000D_\nStencil)	11211	448440.0	\N	16.0	8.0	\N	\N	\N	12469.0	99752.0	448464.0	56058.0	-43589.0	\N	448464.0	\N	\N	2025-04-04	2025-04-11	2025-04-01	2025-04-15	4	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+4	4	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	6295	MU-MA6295	New-build	Non-Strategic	\N	10004641.0	30.0	MUMU25R010	MUMU25NL002	MUMU25NL002MCWA	MUMU25NL002MCWA250404D3C3L0003	783339141	20.0	2025-03-27	NEAR EP NO-F/R-9 HOTEL POPULAR PALACE	NEAR MINT ROAD	MCGM	A	783339141	27.0	2025-04-04	Open Trench	\N	Carriageway	10187	275049.0	\N	54.0	27.0	\N	\N	\N	12469.0	336663.0	275130.0	10190.0	2279.0	137524.5	412654.5	\N	\N	2025-04-04	2025-04-11	2025-04-01	2025-04-15	4	\N	\N	\N	\N	\N	\N	\N	2025-04-16	783339141.0	2025-04-17	2025-04-18	27.0
+5	3	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_131	MUM_Route_131	New-build	Non-Strategic	\N	10004641.0	200.0	\N	MUMU25R131	MUMU25R131MCWA	MUMU25R131MCWA250328D3C3	783339212	145.0	2025-03-28	NEAR SUCHITA BUILDING	NEAR HOTEL VICTORIA	MCGM	A	783339212	155.0	2025-04-04	Open Trench	\N	Carriageway+footpath/Passages	10187/10454	1613962.0	\N	310.0	155.0	\N	\N	\N	8413.0	1304015.0	1614427.0	10415.65806451613	-2002.658064516128	806981.0	2421408.0	\N	\N	2025-04-15	2025-04-16	\N	2025-04-17	1	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+6	15	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	5831	MU-5831	New-build	Non-Strategic	\N	10004791.0	67.0	\N	MUMU25FL005	MUMU25FL005MCRN	MUMU25FL005MCRN250401D3C30027	783339323	116.0	2025-04-01	JAYWANT SAWANT MARG	SAI AMRUT CHS	MCGM	RN	783339323	136.0	2025-04-17	Open Trench	\N	Carriageway(PB 80(OnlyGrey+Use of Existing Duct)	8246/2900	1067996.0	\N	272.0	136.0	\N	\N	\N	7487.0	1018232.0	1068404.0	7855.911764705882	-368.911764705882	533998.0	1602402.0	\N	\N	2025-04-18	2025-04-20	2025-04-16	2025-04-23	3	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+7	17	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_10	MUM_Route_10	Existing	Strategic	\N	10004633.0	10280.0	\N	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWB250403D3C3L0029	783339575	50.0	2025-04-03	Hotel Elphinstone Annexe	Godee Area opp. Navratna Premises	MCGM	B	783339575	60.0	2025-04-19	Open Trench	\N	 Mastic_x000D_\nAsphalt 40 m	14936	896160.0	\N	120.0	60.0	\N	\N	\N	8413.0	504780.0	896340.0	14939.0	-6526.0	448080.0	1344420.0	\N	\N	2025-04-22	2025-04-24	2025-04-05	2025-04-25	1	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8	9	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_10	MUM_Route_10	Existing	Strategic	\N	10004633.0	10280.0	\N	MUMU25R010	MUMU25R010MCWA	MUMU25R010MCWA250408D3C3L0020	783339910	42.0	2025-04-08	PNB HOUSE (PNB BANK)	APNA BAZAR (GREAT SOCIAL BLDG	MCGM	A	783339910	52.0	2025-04-08	Open Trench	\N	Mastic Asphalt 40 m+Concrete Finished	14936/28	651176.0	\N	104.0	52.0	\N	\N	\N	8413.0	437476.0	651332.0	12525.61538461538	-4112.615384615385	325588.0	976920.0	\N	\N	2025-04-09	2025-04-20	2025-05-07	2025-04-25	5	\N	\N	\N	\N	\N	\N	\N	2025-04-25	783339910.0	2025-04-26	2025-04-27	52.0
+9	25	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_90	MUM_Route_90	Co-Build	Strategic	AIR52K24R090010	10004960.0	14270.0	MUM_Route_90	\N	\N	\N	783339980	156.0	2025-04-08	NR ASHTVINAYAK CHS	POLE NO. YJS/005/023	MCGM	ME	783339980	156.0	2025-04-12	Open Trench	156.0	Trench on already ex	6711.00	1046916.0	0.00	312.0	156.0	\N	\N	\N	14936.0	2330016.0	1047384.0	6714.0	8222.0	523458.0	1570842.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1282632.0	156	\N	\N	\N	\N	\N	\N
+10	26	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_90	MUM_Route_90	Co-Build	Strategic	AIR52K24R090010	10004960.0	14270.0	MUM_Route_90	\N	\N	\N	783340005	126.0	2025-04-08	POLE NO. YJS/005/023	MCGM MOTOR LODER CHOWKY( AAGARWADI JN.)	MCGM	ME	783340005	136.0	2025-04-12	Open Trench	136.0	Trench on already ex	6711.00	912696.0	0.00	272.0	136.0	\N	\N	\N	14936.0	2031296.0	913104.0	6714.0	8222.0	456348.0	1369452.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1118192.0	136	\N	\N	\N	\N	\N	\N
+11	16	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB6370	MU-MB6370	New-build	Non-Strategic	\N	10004838.0	33.0	\N	MUMU25FL005	MUMU25FL005MCRN	MUMU25FL005MCRN250409D3C30028	783340181	81.0	2025-04-09	RAJ HERITAGE TOWER	MARY JAMMACULATE GIRLS SCHOOL	MCGM	RN	783340181	91.0	2025-04-17	Open Trench	\N	Carriageway(Bituminous_x000D_\nConcrete)	11378	1035398.0	\N	182.0	91.0	\N	\N	\N	14936.0	1359176.0	1035671.0	11381.0	3555.0	517699.0	1553370.0	\N	\N	2025-04-18	2025-04-20	2025-04-20	2025-04-23	3	\N	\N	\N	\N	\N	\N	\N	2025-04-24	783340181.0	2025-04-25	2025-04-30	91.0
+12	32	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB3135	MU-MB3135	New-build	Non-Strategic	\N	10004641.0	130.0	MUMU25R010	MUMU25NL007	MUMU25NL007MCWA	MUMU25NL007MCWA250414D3C3L0016	783340649	28.0	2025-04-14	HOTEL MANAMA	FRIENDS PREMISES	MCGM	A	783340649	38.0	2025-05-02	Open Trench	\N	Carriageway(Mastic Asphalt 40 m)	14936	567568.0	\N	76.0	38.0	\N	\N	\N	14958.0	568404.0	567682.0	14939.0	19.0	283784.0	851466.0	\N	\N	2025-05-05	2025-05-06	2025-02-23	2025-05-09	3	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+13	8	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA2115	MU-MA2115	New-build	Non-Strategic	\N	10004833.0	34.0	\N	\N	\N	\N	783340659	3.0	2025-04-15	KRISHNA HERITAGE	KRISHNA HERITAGE FOOTPATH	MCGM	RC	783340659	4.0	2025-04-25	Open Trench	4.0	Grey or Any Color	8518.00	68144.0	2.0	8.0	4.0	\N	\N	\N	32019.0	128076.0	68156.0	17039.0	14980.0	34072.0	102228.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+14	31	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	3054	MU-3054	New-build	Non-Strategic	\N	10004641.0	30.0	MUMU25R010	MUMU25NL006	MUMU25NL006MCWA	MUMU25NL006MCWA250415D3C3L0015	783340693	20.0	2025-04-15	SUN CLINIC	ANIL MILK SUPPLIER	MCGM	A	783340693	34.0	2025-05-02	Open Trench	\N	Carriageway(Bituminous Concrete)	10187	346358.0	\N	68.0	34.0	\N	\N	\N	14946.0	508164.0	346460.0	10190.0	4756.0	173179.0	519639.0	\N	\N	2025-05-05	2025-05-06	2025-03-05	2025-05-08	2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+15	24	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA928	MU-MA928	New-build	Non-Strategic	\N	10004856.0	368.0	\N	MUMU25FL012	MUMU25FL012MCRC	MUMU25FL012MCRC250415D3C3L0007	783340697	90.0	2025-04-15	PM KULKARNI ROAD	ACHARYA ASHRAM	MCGM	RC	783340697	100.0	2025-04-25	Open Trench	\N	Carriageway(Mastic Asphalt 40 m)	14936	1493600.0	\N	200.0	100.0	\N	\N	\N	14936.0	1493600.0	1493900.0	14939.0	-3.0	746800.0	2240700.0	\N	\N	2025-04-26	2025-04-28	2025-04-20	2025-05-09	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+16	23	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA928	MU-MA928	New-build	Non-Strategic	\N	10004856.0	368.0	\N	MUMU25FL012	MUMU25FL012MCRC	MUMU25FL012MCRC250415D3C3L0018	783340711	132.0	2025-04-15	PM KULKARNI ROAD	ACHARYA ASHRAM	MCGM	RC	783340711	100.0	2025-04-25	Open Trench	\N	On Carriageway(Mastic Asphalt 40 m)	14936	1493600.0	\N	200.0	100.0	\N	\N	\N	14936.0	1493600.0	1493900.0	14939.0	-3.0	746800.0	2240700.0	\N	\N	2025-04-26	2025-04-28	2025-04-01	2025-05-09	11	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+17	29	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	2958	MU-2958	New-build	Non-Strategic	\N	10004801.0	224.0	\N	MUMU25FL010	MUMU25FL010MCMW	MUMU25FL010MCMW250417D3C3L0013	783340898	80.0	2024-04-17	OPP. SANKET APARTMENT	NEAR EESH KRIPA BLDG	MCGM	MW	783340898	90.0	2025-04-29	Open Trench	\N	Carriageway(Bituminous Concrete+Others)	10187	916830.0	\N	180.0	90.0	\N	\N	\N	14936.0	1344240.0	917100.0	10190.0	4746.0	458415.0	1375515.0	\N	\N	2025-04-29	2025-02-05	2025-03-05	\N	-45721	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+18	30	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	2958	MU-2958	New-build	Non-Strategic	\N	10004801.0	224.0	\N	MUMU25FL010	MUMU25FL010MCMW	MUMU25FL010MCMW250417D3C3L0014	783340954	130.0	2024-04-17	NEAR EESH KRIPA BLDG	NEAR MAHESH KUTIR BLDG	MCGM	MW	783340954	140.0	2025-04-29	Open Trench	\N	Carriageway(Bituminous Concrete+Others)	10187	1426180.0	\N	280.0	140.0	\N	\N	\N	14936.0	2091040.0	1426600.0	10190.0	4746.0	713090.0	2139690.0	\N	\N	2025-04-29	2025-02-05	2025-04-20	\N	-45721	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+19	9	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	6195	MU-6195	New-build	Non-Strategic	\N	10004835.0	242.0	19.21347832	\N	\N	\N	783341287	65.0	2025-04-22	AVERSHINE MILLENIUM PAIRADISE	THAKUR SHYAM NARAYAN SCHOOL	MCGM	RS	783341287	75.0	2025-04-24	Open Trench	75.0	Bituminous Concrete	11378.00	853350.0	1.0	150.0	75.0	\N	\N	\N	14936.0	1120200.0	853575.0	11381.0	3555.0	426675.0	1280250.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+20	26	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	148	MU-148	New-build	Non-Strategic	\N	10004692.0	67.0	\N	MUMU25FL007	MUMU25FL007MCHW	MUMU25FL007MCHW250424D3C30030	783341566	130.0	2025-04-24	OPP. JASHMIN HOUSE	PANJETANI VILLA	MCGM	HW	783341566	140.0	2025-04-26	Open Trench	\N	Carriageway	10187	1426180.0	\N	280.0	140.0	\N	\N	\N	14936.0	2091040.0	1426600.0	10190.0	4746.0	713090.0	2139690.0	\N	\N	2025-04-27	2025-04-28	2025-04-19	2025-04-19	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	27.0
+21	17	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	5541	MU-5541	New-build	Non-Strategic	\N	10004701.0	235.0	Fibmax	\N	\N	\N	783341568	100.0	2025-04-24	EDVIN 189 BUILDING	CHIMBAI ROAD CORNER	MCGM	HW	783341568	120.0	2025-04-26	Open Trench	120.0	Bituminous Concrete	10187.00	1222440.0	1.00	240.0	120.0	\N	\N	\N	14936.0	1792320.0	1222800.0	10190.0	4746.0	611220.0	1834020.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	569520.0	120	\N	\N	\N	\N	\N	\N
+22	25	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	3386	MU-3386	New-build	Non-Strategic	\N	10004879.0	280.0	\N	MUMU25FL006	MUMU25FL006MCHW	MUMU25FL006MCHW250424D3C30029	783341573	166.0	2025-04-24	DR. KESHAW BALRAM CHOWK	GAEITY GALAXY THEATER	MCGM	HW	783341573	196.0	2025-04-26	Open Trench	\N	Carriageway	6711	1315356.0	\N	392.0	196.0	\N	\N	\N	8518.0	1669528.0	1315944.0	6714.0	1804.0	657678.0	1973622.0	\N	\N	2025-04-27	2025-04-28	2025-05-07	2025-04-29	1	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+23	18	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	5541	MU-5541	New-build	Non-Strategic	\N	10004701.0	235.0	Fibmax	\N	\N	\N	783341581	130.0	2025-04-24	WINNIE APARTMENT	EDVIN 189 BUILDING	MCGM	HW	783341581	140.0	2025-04-26	Open Trench	140.0	Bituminous Concrete / Concrete Finished	10187.00 / 10454.00	1427515.0	1.00 / 1.00	280.0	140.0	\N	\N	\N	14936.0	2091040.0	1427935.0	10199.54	4736.46	713757.5	2141692.5	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	663104.4	135 / 5	PERRY ROAD	\N	\N	\N	\N	\N
+24	27	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_90	MUM_Route_90	Co-Build	Strategic	AIR52K24R090010	10004960.0	14270.0	MUM_Route_90	\N	\N	\N	783341644	160.0	2025-04-24	ZARINA PARK GATE NO 02	MCGM MOTOR LOADER CHOWKY	MCGM	ME	783341644	160.0	2025-04-25	Open Trench	160.0	Trench on already ex	6711.00	1073760.0	0.00	320.0	160.0	\N	\N	\N	14936.0	2389760.0	1074240.0	6714.0	8222.0	536880.0	1611120.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1315520.0	160	\N	\N	\N	\N	\N	\N
+25	591	LMC routes (stand alone)	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA2512	MU-MA2512	New-build	Non-Strategic	\N	10004727.0	56.0	Fibmax	MUMU26LF046	MUMU26LF046MCME	MUMU26LF046MCME250905D2C20001	783344777	4.0	2025-09-05	SHREE GANESH WASHING CENTRE	SHRINATH GUPTA SHOP	MCGM	ME	783344777	4.0	2025-09-11	Open Trench	4.0	Mastic Asphalt 40 m	14936.00	59744.0	1.00	8.0	4.0	\N	\N	\N	12469.0	49876.0	59756.0	14939.0	-2470.0	\N	59756.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-9880.0	4.00	DEONAR POLICE STATION ROAD	2025-09-15	783344777.0	2025-09-16	2025-09-18	4.0
+26	1143	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_111	MUM_Route_111	\N	Additional Route	\N	10004515.0	841.0	MUM_Route_111	MUMU26RA111	\N	\N	783348485	135.0	2025-10-06	SILVER SPRING	GREEN ACRES	MCGM	KW	783348485	145.0	2025-10-14	OT	145.0	Mastic Asphalt 40 m	14936.00	2165720.0	1.00	290.0	145.0	\N	\N	\N	17151.13	2486913.76	2166155.0	14939.0	2212.13	1082860.0	3249015.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	320758.85	145.00	MAHARANA PRATAP ROAD	\N	\N	\N	\N	\N
+27	1144	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_111	MUM_Route_111	\N	Additional Route	\N	10004515.0	841.0	MUM_Route_111	MUMU26RA111	\N	\N	783348486	160.0	2025-10-07	RUSHI TOWER	OPP MALA TOWER	MCGM	KW	783348486	185.0	2025-10-14	OT	185.0	Mastic Asphalt 40 m	14936.00	2763160.0	1.00	370.0	185.0	\N	\N	\N	17151.13	3172958.94	2763715.0	14939.0	2212.13	1381580.0	4145295.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	409244.05	185.00	MAHARANA PRATAP ROAD	\N	\N	\N	\N	\N
+28	1147	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348508	152.0	2025-10-07	TWIN APARTMENT(PRABHAT HARDWARE)	FANTACY OPTIC SHOP	MCGM	KW	783348508	168.0	2025-10-14	OT	168.0	Mastic Asphalt 40 m	14936.00	2509248.0	1.00	336.0	168.0	\N	\N	\N	22885.75	3844806.63	2509752.0	14939.0	7946.75	1254624.0	3764376.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1335054.0	168.00	LOKHANDWALA COMPLEX ROAD	\N	\N	\N	\N	\N
+29	1145	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_111	MUM_Route_111	\N	Additional Route	\N	10004515.0	841.0	MUM_Route_111	\N	\N	\N	783348515	157.0	2025-10-07	GREEN ACRES	RUSHI TOWER	MCGM	KW	783348515	167.0	2025-10-14	OT	167.0	Mastic Asphalt 40 m	14936.00	2494312.0	1.00	334.0	167.0	\N	\N	\N	17151.13	2864238.61	2494813.0	14939.0	2212.13	1247156.0	3741969.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	369425.71	167.00	MAHARANA PRATAP ROAD	\N	\N	\N	\N	\N
+30	1148	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348516	85.0	2025-10-07	ROYAL ACCORD	SNEH BUILDING	MCGM	KW	783348516	95.0	2025-10-14	OT	95.0	Mastic Asphalt 40 m	14936.00	1418920.0	1.00	190.0	95.0	\N	\N	\N	22885.75	2174146.61	1419205.0	14939.0	7946.75	709460.0	2128665.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	754941.25	95.00	BALASAHEB DEORAS MARG	\N	\N	\N	\N	\N
+31	1146	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_111	MUM_Route_111	\N	Additional Route	\N	10004515.0	841.0	MUM_Route_111	\N	\N	\N	783348525	78.0	2025-10-07	SAMARTH VAIBHAV	GREEN VILLE CHSL	MCGM	KW	783348525	80.0	2025-10-14	OT	80.0	PB 100(Only Grey) / Bituminous Concrete	7487.00 / 10187.00	701560.0	1.00 / 1.00	160.0	80.0	\N	\N	\N	17151.13	1372090.35	701800.0	8772.5	8378.63	350780.0	1052580.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	670290.4	42.00	MAHARANA PRATAP ROAD	\N	\N	\N	\N	\N
+32	1149	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348526	112.0	2025-10-07	SNEH BUILDING	BANK OF MAHARASHTRA	MCGM	KW	783348526	128.0	2025-10-14	OT	128.0	Mastic Asphalt 40 m	14936.00	1911808.0	1.00	256.0	128.0	\N	\N	\N	22885.75	2929376.48	1912192.0	14939.0	7946.75	955904.0	2868096.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1017184.0	128.00	LOKHANDWALA COMPLEX ROAD	\N	\N	\N	\N	\N
+33	1150	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348527	146.0	2025-10-07	BANK OF MAHARASHTRA	KAMDHENU SHOPPING CENTRE	MCGM	KW	783348527	162.0	2025-10-14	OT	162.0	Mastic Asphalt 40 m	14936.00	2419632.0	1.00	324.0	162.0	\N	\N	\N	22885.75	3707492.11	2420118.0	14939.0	7946.75	1209816.0	3629934.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1287373.5	162.00	LOKHANDWALA COMPLEX ROAD	\N	\N	\N	\N	\N
+34	1151	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348528	149.0	2025-10-07	KAMDHENU SHOPPING CENTER	TWIN APARTMENT(PRABHAT HARDWARE)	MCGM	KW	783348528	168.0	2025-10-14	OT	168.0	Mastic Asphalt 40 m	14936.00	2509248.0	1.00	336.0	168.0	\N	\N	\N	22885.75	3844806.63	2509752.0	14939.0	7946.75	1254624.0	3764376.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1335054.0	168.00	LOKHANDWALA COMPLEX ROAD	\N	\N	\N	\N	\N
+35	1152	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_112	MUM_Route_112	\N	Additional Route	\N	10004515.0	1020.0	MUM_Route_112	\N	\N	\N	783348529	152.0	2025-10-07	FANTACY OPTIC SHOP	ARSHA SALOON	MCGM	KW	783348529	170.0	2025-10-14	OT	170.0	Mastic Asphalt 40 m	14936.00	2539120.0	1.00	340.0	170.0	\N	\N	\N	22885.75	3890578.14	2539630.0	14939.0	7946.75	1269560.0	3809190.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	1350947.5	170.00	LOKHANDWALA COMPLEX ROAD	\N	\N	\N	\N	\N
+36	983	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_99	MUM_Route_99	\N	Additional Route	\N	\N	\N	MUM_Route_99	\N	\N	\N	783348588	148.0	2025-10-07	MAHATMA GANDHI ROAD	KARMAVEER BHAURAO MARG	MCGM	A	783348588	155.0	2025-10-14	OT	155.0	Concrete Finished	10454.00	1620370.01	1.00	310.0	155.0	\N	\N	\N	1500.0	232500.0	1620835.01	3.01	1496.99	\N	1620835.01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	232033.45	155.00	UNIVERSITY ROAD	\N	\N	\N	\N	\N
+37	1153	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349538	90.0	2025-10-11	OPP TRUPTI BUNGLOW	OPP JAYKANT BLISS BUILDING	MCGM	RC	783349538	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+38	1154	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349543	125.0	2025-10-11	VAISHALI CHS	OPP TRUPTI BUNGLOW	MCGM	RC	783349543	135.0	2025-10-15	OT	135.0	Bituminous Concrete / Mastic Asphalt 40 m	10187.00 / 14936.00	1636440.0	1.00 / 1.00	270.0	135.0	\N	\N	\N	11640.27	1571436.49	1636845.0	12124.78	-484.51	\N	1636845.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-65408.85	80.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+39	1155	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349555	90.0	2025-10-11	OPP JAYKANT BLISS BUILDING	MCF BMC GROUND	MCGM	RC	783349555	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+40	1156	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349560	90.0	2025-10-11	MCF BMC GROUND	HIBISCUS WATER SUPPLIERS	MCGM	RC	783349560	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+41	1157	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349565	90.0	2025-10-11	VIJAY NAGAR	RUDRA GROUP ISPACE TOWER	MCGM	RC	783349565	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	EKSAR ROAD	\N	\N	\N	\N	\N
+42	1158	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349569	90.0	2025-10-11	OPP MUMBAI MILK CENTRE	CKP COLONY BUS STOP	MCGM	RC	783349569	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	EKSAR ROAD	\N	\N	\N	\N	\N
+43	1159	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349574	90.0	2025-10-11	SHEETAL MEGHDOOT	OTTOBOCK CARE	MCGM	RC	783349574	100.0	2025-10-15	OT	100.0	PB 80(Only Grey) / Mastic Asphalt 40 m	7011.00 / 14936.00	883375.0	1.00 / 1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	883675.0	8836.75	2803.52	\N	883675.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	280352.0	77.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+44	1160	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349577	90.0	2025-10-11	OTTOBOCK CARE	TRIMURTI KRIPA CHS	MCGM	RC	783349577	100.0	2025-10-15	OT	100.0	PB 80(Only Grey) / Mastic Asphalt 40 m	7011.00 / 14936.00	819975.0	1.00 / 1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	820275.0	8202.75	3437.52	\N	820275.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	343752.0	85.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+45	1161	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349582	75.0	2025-10-11	HIBISCUS WATER SUPPLIER	SHEETAL MEGHDOOT	MCGM	RC	783349582	85.0	2025-10-15	OT	85.0	Bituminous Concrete	10187.00	865895.0	1.00	170.0	85.0	\N	\N	\N	11640.27	989422.97	866150.0	10190.0	1450.27	\N	866150.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	123272.95	85.00	VAN UDYAN ROAD	\N	\N	\N	\N	\N
+46	1162	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349588	40.0	2025-10-11	MAYUR TOWER	VEG TREAT ROYAL HOTEL	MCGM	RC	783349588	50.0	2025-10-15	OT	50.0	PB 80(Only Grey) / Bituminous Concrete	7011.00 / 10187.00	461710.0	1.00 / 1.00	100.0	50.0	\N	\N	\N	11640.27	582013.51	461860.0	9237.2	2403.07	\N	461860.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	120153.5	15.00	EKSAR ROAD	\N	\N	\N	\N	\N
+47	1163	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349589	90.0	2025-10-11	ROYAL EKSAR CHS	OM GAJANAN  KRUPA CHS	MCGM	RC	783349589	103.0	2025-10-15	OT	103.0	Use of Existing Duct / Mastic Asphalt 40 m	2900.00 / 14936.00	1357868.0	0.00 / 1.00	206.0	103.0	\N	\N	\N	11640.27	1198947.84	1358177.0	13186.18	-1545.91	\N	1358177.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-159228.73	15.00	CHANDAVARKAR ROAD	\N	\N	\N	\N	\N
+48	1164	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349590	95.0	2025-10-11	RAIL NAGAR CHS	KARMA YOG BUILDING NO.4	MCGM	RC	783349590	105.0	2025-10-15	OT	105.0	Mastic Asphalt 40 m	14936.00	1568280.0	1.00	210.0	105.0	\N	\N	\N	11640.27	1222228.38	1568595.0	14939.0	-3298.73	\N	1568595.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-346366.65	105.00	CHANDAVARKAR ROAD	\N	\N	\N	\N	\N
+49	1165	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349595	90.0	2025-10-11	TRIMURTI KRIPA CHS	VIJAY NAGAR	MCGM	RC	783349595	100.0	2025-10-15	OT	100.0	Bituminous Concrete / Mastic Asphalt 40 m	10187.00 / 14936.00	1066190.0	1.00 / 1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1066490.0	10664.9	975.37	\N	1066490.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	97537.0	90.00	EKSAR ROAD	\N	\N	\N	\N	\N
+50	1166	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349598	90.0	2025-10-11	RUDRA GROUP ISPACE TOWER	MUMBAI MILK CENTRE	MCGM	RC	783349598	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	EKSAR ROAD	\N	\N	\N	\N	\N
+51	1167	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349599	90.0	2025-10-11	CKP COLONY BUS STOP	RBI SAHAYOG APT	MCGM	RC	783349599	100.0	2025-10-15	OT	100.0	Bituminous Concrete	10187.00	1018700.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1019000.0	10190.0	1450.27	\N	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	145027.0	100.00	EKSAR ROAD	\N	\N	\N	\N	\N
+52	1168	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349600	90.0	2025-10-11	OM GAJANAN  KRUPA CHS	RAIL NAGAR CHS	MCGM	RC	783349600	100.0	2025-10-15	OT	100.0	Mastic Asphalt 40 m	14936.00	1493600.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1493900.0	14939.0	-3298.73	\N	1493900.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-329873.0	100.00	CHANDAVARKAR ROAD	\N	\N	\N	\N	\N
+53	1169	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349601	80.0	2025-10-11	RBI SAHAYOG APARTMENT	MAYUR TOWER	MCGM	RC	783349601	90.0	2025-10-15	OT	90.0	Bituminous Concrete	10187.00	916830.0	1.00	180.0	90.0	\N	\N	\N	11640.27	1047624.32	917100.0	10190.0	1450.27	\N	917100.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	130524.3	90.00	EKSAR ROAD	\N	\N	\N	\N	\N
+54	1170	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349602	90.0	2025-10-11	VEG TREAT ROYAL HOTEL	ROYAL EKSAR CHS	MCGM	RC	783349602	100.0	2025-10-15	OT	100.0	Mastic Asphalt 40 m	14936.00	1493600.0	1.00	200.0	100.0	\N	\N	\N	11640.27	1164027.03	1493900.0	14939.0	-3298.73	\N	1493900.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-329873.0	100.00	CHANDAVARKAR ROAD	\N	\N	\N	\N	\N
+55	1171	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	\N	Additional Route	\N	10004963.0	4070.0	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	783349611	110.0	2025-10-11	KARMA YOG BUILDING NO.4	AKSAR BIRYANI CENTER	MCGM	RC	783349611	120.0	2025-10-15	OT	120.0	Mastic Asphalt 40 m	14936.00	1792320.0	1.00	240.0	120.0	\N	\N	\N	11640.27	1396832.43	1792680.0	14939.0	-3298.73	\N	1792680.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	-395847.6	120.00	BABURAO PARANJPE MARG	\N	\N	\N	\N	\N
+56	18	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_45	MUM_Route_45	New-build	Strategic	AIR52K24R045005, AIR52K24R045006, AIR52K24R045007, AIR52K24R045008, AIR52K24R045009	10004670.0	6432.0	\N	MUMU25R045	MUMU25R045NMKK	MUMU25R045NMKK250327D3C3L0004	I110310	4765.0	2025-03-27	Stock Holding Corporation	Shilphata Road	MIDC	KK	I110310	4765.0	2025-04-24	Open Trench	\N	Embankment Soil	484	2306260.0	\N	14300.0	0.0	\N	\N	417908.0	7354.101316542645	35042292.7733257	2320560.0	487.0010493179433	6867.100267224701	500000.0	3238468.0	\N	\N	2025-04-25	2025-04-25	\N	2025-05-01	3	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+57	1	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_50	MUM_Route_50	Sify - Common	Strategic	AIR52K24R050001	10004765.0	6030.0	\N	MUMUR050	MUMUR050NIMI	MUMUR050NMMI250129D4C4L0001	I96966	5000.0	2025-01-29	A SIFY Rabale	F Mahape	MIDC	MIDC	I96966	4766.0	2025-02-10	Open Trench	\N	Embankment Soil	41	195406.0	\N	0.0	4766.0	\N	\N	36030.96	19200.0	91507200.0	200172.0	42.0	19158.0	250000.0	486202.96	\N	\N	2025-02-01	2025-02-06	2025-02-06	2025-02-12	6	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+58	2	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_50	MUM_Route_50	Sify - Common	Strategic	AIR52K24R050002	10004765.0	6030.0	\N	MUMUR050	MUMUR050NIMI	MUMUR050NMMI250212D4C4L0001	I99340	600.0	\N	F Mahape Police Chowky	G CNTRL S Mahape	MIDC	MIDC	I99340	600.0	2025-02-12	Open Trench	\N	Embankment Soil+CC Crossing	41/1797	59720.0	\N	0.0	600.0	\N	\N	10857.6	3000.0	1800000.0	60320.0	100.5333333333333	2899.466666666666	60000.0	131177.6	\N	\N	2025-02-18	2025-02-19	2025-04-28	2025-03-13	18	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+59	14	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	AIR52K24RC13007	10004545.0	3030.0	\N	MUMU25RC13	MUMU25RC13KDKD	MUMU25RC13KDKD250325D3C3L0026	AIRTEL/OSP/2024-25/Open Trench-HDD/kdmc/02	80.0	2025-03-25	Jhulelal Chowk	Gold Gym	KDMC	KD	KDMC/Ex.Engg/Construction/K-W/06	80.0	2025-04-11	Open Trench	80.0	Paverblock	9269.27	741541.6000000001	1	160.0	0.0	\N	\N	\N	\N	\N	741701.6000000001	\N	\N	74170.16000000002	815871.7600000001	\N	\N	\N	\N	2025-04-11	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+60	13	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route7	Mumbai_Coverage_Route7	New-build	Non-Strategic	Entire route DN achieved in single go.	10004531.0	2590.0	\N	MUMU25RC07	MUMU25RC07KDWI	MUMU25RC07KDWI250325D3C3L0025	AIRTEL/OSP/2024-25/Open Trench-HDD/kdmc/01	2128.0	2025-03-25	Hanuman Road	Nr jankalayan multispeciality hospital	KDMC	KD	KDMC/Ex.Engg/Construction/K-W/10	2128.0	2025-04-15	Open Trench	2128.0	Paverblock+Asphalt	9269.27/12326.53	24301725.0	\N	425600.0	\N	3645258.717	\N	\N	11600.0	24684800.0	28372583.717	13332.9810700188	-1732.981070018797	2430172.478	30802756.195	\N	\N	2025-04-18	2025-04-20	2025-04-20	2025-05-02	12	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+61	1030	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	\N	10004545.0	3030.0	\N	MUMU26RC013	\N	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.2/387 Mtrs	387.0	\N	Near Moti Ram Open Plot Kalyan Sape Road	Near Hotel Maintals Restaurant	KDMC	KD	KDMC/KA/Const./162	387.0	\N	HDD	\N	Asphalt	5871.39	105685.02	1	77400.0	0.0	15852.753	0.0	0.0	11600.0	4489200.0	198937.77300000002	514.0510930232558	11085.948906976744	10568.502	209506.27500000002	\N	\N	\N	\N	\N	\N	\N	\N	387.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+62	1031	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	\N	10004545.0	3030.0	\N	MUMU26RC013	\N	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.5/336 Mtrs	336.0	\N	Near Jhulele Chowk	Near Barve Road	KDMC	KD	KDMC/KA/Const./163	336.0	\N	OT	336.0	CC/Asphalt	12072.1/12326.50	4123896.0	1	67200.0	0.0	618585.912	0.0	0.0	11600.0	3897600.0	4809681.9120000005	14314.5295	-2714.5295000000006	412390.608	5222082.5200000005	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+63	1032	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	\N	10004545.0	3030.0	\N	MUMU26RC013	\N	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.1/328 Mtrs	328.0	\N	Near D Mart, Mohan Square one	Near Moti Ram Open Plot Kalyan Sape Road	KDMC	KD	KDMC/KA/Const./164	328.0	\N	OT	328.0	Paver Block/Gravelling	9269.27/5871.39	2870426.56	1	65600.0	0.0	430563.984	0.0	0.0	11600.0	3804800.0	3366590.544	10263.99556097561	1336.0044390243893	287042.656	3653633.2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+64	1033	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	\N	10004545.0	3030.0	\N	MUMU26RC013	\N	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.4/493 Mtrs	493.0	\N	Near KDMC Garden	Near Jhulelal Chowk	KDMC	KD	KDMC/KA/Const./165	493.0	\N	OT	493.0	Paver Block/Asphalt	9269.27/12326.50	4945789.4	1	98600.0	0.0	741868.9635	0.0	0.0	11600.0	5718800.0	5786258.3635	11736.832380324544	-136.83238032454392	494579.309	6280841.6725	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+65	1034	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	New-build	Non-Strategic	\N	10004545.0	3030.0	\N	MUMU26RC013	\N	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.3/570 Mtrs	570.0	\N	Near Hotel Maintals Restaurant	Near KDMC Garden	KDMC	KD	KDMC/KA/Const./177	570.0	\N	HDD	\N	Asphalt	12326.5	295836.0	1	114000.0	0.0	44375.4	0.0	0.0	11600.0	6612000.0	454211.4	796.8621052631579	10803.137894736843	29583.600000000002	483795.0	\N	\N	\N	\N	\N	\N	\N	\N	570.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+66	804	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route39	Mumbai_Coverage_Route39	New-build	Non-Strategic	\N	10004578.0	2200.0	\N	MUMU26RC039	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_39.5/672 Mtrs	672.0	\N	NEAR KANGARO KIDS INTERNATIONAL SCHOOL	NEAR NEPTUNE ACCIDENT TRAUMA & BURN CENTER	KDMC	F	KDMC/KA/Const./180	672.0	\N	OT	672.0	Asphalt/PB/CC	12326.53/9269.27/12072.13	8193879.36	\N	134400.0	0.0	1229081.9	0.0	0.0	11600.0	7795200.0	9557361.26	14222.2637797619	2622.263779761905	819387.84	2182869.84	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	SHANKARA NAGAR ROAD	\N	\N	\N	\N	\N
+67	803	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route39	Mumbai_Coverage_Route39	New-build	Non-Strategic	\N	10004578.0	2200.0	\N	MUMU26RC039	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_39.4/510 Mtrs	510.0	\N	NEAR KAMESHWAR MAHADEV MANDIR	NEAR KANGARO KIDS INTERNATIONAL SCHOOL	KDMC	F	KDMC/KA/Const./181	510.0	\N	OT	510.0	Asphalt/PB/CC	12326.53/9269.27/12072.13	6156786.3	\N	102000.0	0.0	923517.95	0.0	0.0	11600.0	5916000.0	7182304.25	14082.94950980392	2482.949509803922	615678.63	7797982.88	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	REGENCY ESTATE ROAD	\N	\N	\N	\N	\N
+68	801	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route31	Mumbai_Coverage_Route31	New-build	Non-Strategic	\N	10004578.0	2200.0	\N	MUMU26RC031	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_31.4/353 Mtrs	353.0	\N	NEAR GAJ BANDHAN CHSL	NEAR OM SAI VIHAR	KDMC	F	KDMC/KA/Const./182	353.0	\N	OT	353.0	Asphalt	12326.53	4351265.09	\N	70600.0	0.0	652689.76	0.0	0.0	11600.0	4094800.0	5074554.85	14375.50949008499	2775.509490084985	435126.51	5509681.36	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	PATHARLI ROAD	\N	\N	\N	\N	\N
+69	802	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route31	Mumbai_Coverage_Route31	New-build	Non-Strategic	\N	10004578.0	2200.0	\N	MUMU26RC031	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_31.3/254 Mtrs	254.0	\N	NEAR NAV RAM DARSHAN BUILDING	NEAR GAJ BANDHAN CHSL	KDMC	F	KDMC/KA/Const./183	254.0	\N	Open Trench	254.0	Asphalt/PB/CC	12326.53/9269.27/12072.13	2647396.12	\N	50800.0	0.0	397109.42	0.0	0.0	11600.0	2946400.0	3095305.54	12186.24228346457	586.2422834645677	264739.61	3360045.15	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	JIJAI NAGAR ROAD & AMBIKA NAGAR ROAD	\N	\N	\N	\N	\N
+70	1086	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route21	Mumbai_Coverage_Route21	New-build	Non-Strategic	\N	10004564.0	2000.0	\N	MUMU26RC021	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumbai_Coverage_Route21.2/640 Mtrs	640.0	\N	Near Gopinath Chowk	Near Sai Vaibhav Paradise	KDMC	H	KDMC/KA/Const./189	640.0	\N	OT	640.0	Asphalt	12326.53	7888979.2	1	128000.0	0.0	1183346.88	0.0	0.0	11600.0	7424000.0	9200326.08	14375.5095	-2775.5095	788897.92	9989224.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+71	1087	Additional Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	Mumbai_Coverage_Route21	Mumbai_Coverage_Route21	New-build	Non-Strategic	\N	10004564.0	2000.0	\N	MUMU26RC021	\N	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumbai_Coverage_Route21.1/970 Mtrs	970.0	\N	Near Atithi Hotel	Near Gopinath Chowk	KDMC	H	KDMC/KA/Const./191	970.0	\N	OT	970.0	Asphalt	12326.53	11956734.100000001	1	194000.0	0.0	1793510.1150000002	0.0	0.0	11600.0	11252000.0	13944244.215000002	14375.509500000002	-2775.509500000002	1195673.4100000001	15139917.625000002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+72	33	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB1585	MU-MB1585	New-build	Non-Strategic	\N	10004873.0	112.0	\N	MUMU25FL011	MUMU25FL011KDWA	MUMU25FL011KDWA250424D3C3L0017	Airtel/OSP/2025-26/Open Trench/KDMC/MB-1585/130 Mtrs	130.0	2024-04-24	BHIWANDI MURBAD ROAD	SHREE GANESH VANDAN BUILDING	KDMC	A	KMDC/KA/Const./25	130.0	\N	\N	\N	\N	9269.27	1205005.1	\N	26000.0	0.0	180750.76	\N	\N	11600.0	1508000.0	1411755.86	10859.66046153846	740.3395384615378	120500.51	1532256.37	\N	\N	2025-05-06	2025-05-07	2025-05-06	\N	-45784	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+73	36	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA1048	MU-MA1048	New-build	Non-Strategic	\N	10004830.0	280.0	\N	MUMU25FL012	MUMU25FL012KDWB	MUMU25FL012KDWB250418D3C3L0020	Airtel / MBMC /OSP/2025-26/OPEN TRENCH/KDMC/MA-1048/127 Mtrs	127.0	2024-04-18	Khadkapada Road	Reliance Digital Building	KDMC	B	KMDC/KA/Const./26	127.0	2025-05-02	Open Trench	\N	Paver Block	9269.27	1177197.29	\N	25400.0	0.0	176579.59	\N	\N	11600.0	1473200.0	1379176.88	10859.66047244095	740.3395275590537	117719.729	1496896.609	\N	\N	2025-05-06	2025-05-07	2025-05-20	\N	-45784	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+74	34	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA2218	MU-MA2218	New-build	Non-Strategic	\N	10004521.0	20.0	MUMU25RC07	MUMU25NL008	MUMU25NL008KDWA	MUMU25NL008KDWA250429D3C3L0004	Airtel/OSP/2025-26/Open Trench/KDMC/MA-2218/20 Mtrs	20.0	\N	\N	\N	KDMC	KDMC	KMDC/KA/Const./27	20.0	\N	\N	\N	\N	9269.27	185385.4	\N	4000.0	0.0	27807.81	\N	\N	11600.0	232000.0	217193.21	10859.6605	740.3394999999982	18538.54	235731.75	\N	\N	2025-05-06	2025-05-07	2025-04-11	2025-05-14	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+75	35	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB1589	MU-MB1589	New-build	Non-Strategic	\N	10004521.0	90.0	MUMU25RC07	MUMU25NL009	MUMU25NL009KDWA	MUMU25NL009KDWA250429D3C3L0001	Airtel/OSP/2025-26/Open Trench/KDMC/MB-1589/75 Mtrs	75.0	\N	\N	\N	KDMC	KDMC	KMDC/KA/Const./28	75.0	\N	\N	\N	\N	9269.27	695195.25	\N	15000.0	0.0	104279.28	\N	\N	11600.0	870000.0	814474.53	10859.6604	740.3395999999993	69519.52	883994.05	\N	\N	2025-05-06	2025-05-07	2025-05-07	2025-05-14	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+76	7	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_48	MUM_Route_48	Sify - Common	Strategic	AIR52K24R048008	10004681.0	3300.0	\N	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0010	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/02	820.0	2025-03-18	Gami Industrial Park Pawne 	Ashwini Infra Development 	NMMC 	KK	NMMC/Z-2/264/2025	820.0	2025-03-18	Open Trench/HDD	820.0	Asphalt	9600	624000.0	\N	164000.0	0.0	93600.0	\N	\N	3000.0	2460000.0	881600.0	1075.121951219512	1924.878048780488	71760.0	953360.0	\N	\N	2025-03-25	2025-04-01	2025-04-05	2025-04-09	8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+77	6	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_48	MUM_Route_48	Sify - Common	Strategic	AIR52K24R048008	10004681.0	3300.0	\N	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0011	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/01	975.0	2025-03-18	TTC Industrial area Bharti Airtel Office 	Gami Industrial Park Pawne 	NMMC 	KK	NMMC/Z-2/265/2025	975.0	2025-03-18	Open Trench/HDD	975.0	Asphalt	9600	624000.0	\N	195000.0	0.0	93600.0	\N	\N	3000.0	2925000.0	912600.0	936.0	2064.0	71760.0	984360.0	\N	\N	2025-03-25	2025-04-01	\N	2025-04-09	8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+78	8	DC Route	IP-1	CE	Mumbai Fiber Refresh Project	MUM_Route_48	MUM_Route_48	Sify - Common	Strategic	AIR52K24R048008	10004681.0	3300.0	\N	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0009	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/03	825.0	2025-03-18	Ashwini Infra Development 	CTRL S Data Center 	NMMC	KK	NMMC/Z-2/266/2025	825.0	2025-03-18	Open Trench/HDD	825.0	Asphalt	9600	624000.0	\N	165000.0	0.0	93600.0	\N	\N	3000.0	2475000.0	882600.0	1069.818181818182	1930.181818181818	71760.0	954360.0	\N	\N	2025-03-25	2025-04-01	2025-04-28	2025-04-09	8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+79	937	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_49	MUM_Route_49	New-build	Strategic	\N	10004665.0	2800.0	\N	MUMU26R049	\N	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.3/189 Mtrs	189.0	\N	NAER PLOT NO W 145C	NEAR NISC	NMMC	KK	NMMC/Z-2/962/2025	189.0	\N	Open Trench/HDD	189.0	Asphalt	9600	1695292.0	0	37800.0	0.0	0.0	0.0	0.0	6952.0	1313928.0	1733092.0	9169.79	2217.790000000001	169529.2	1902621.2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	Pawane Village Road	\N	\N	\N	\N	\N
+80	1141	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_49	MUM_Route_49	New-build	Strategic	\N	10004665.0	2800.0	\N	MUMU26R049	\N	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.3/931 Mtrs	931.0	\N	Near Eco Friend Industries 	Near Plot No-W-145C	NMMC	KK	NMMC/Z-2/963/2025	931.0	\N	Open Trench/HDD	120.0	Asphat/CC	9600	3149612.0	1	186200.0	0.0	0.0	0.0	0.0	9600.0	8937600.0	3335812.0	3583.041890440387	6016.958109559613	314961.2	3650773.2	\N	\N	\N	\N	\N	\N	\N	\N	811.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+81	1142	DC Route	Co-Built	Airtel	Mumbai Fiber Refresh Project	MUM_Route_49	MUM_Route_49	New-build	Strategic	\N	10004665.0	2800.0	\N	MUMU26R049	\N	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.4/498 Mtrs	498.0	\N	Near NISC	Near Nextra Mahape	NMMC	KK	NMMC/Z-2/964/2025	498.0	\N	Open Trench/HDD	167.0	Asphat/CC	9600	3682178.0	1	99600.0	0.0	0.0	0.0	0.0	9600.0	4780800.0	3781778.0	7593.931726907631	2006.068273092369	368217.80000000005	4149995.8	\N	\N	\N	\N	\N	\N	\N	\N	331.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+82	38	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB3667	MU-MB3667	New-build	Non-Strategic	\N	10004772.0	280.0	MUMU25R050	MUMU25NL011	MUMU25NL011NIMI	MUMU25NL011NIMI250418D3C3L0022	MIDC-DIV-2/OSP/2025-26/AIRTEL/MB-3667/130 MTRS 	130.0	2024-04-18	\N	\N	MIDC	MIDC	No.EE/Dn.II/MHP/Eoffice/I/I113922	130.0	2025-05-19	Open Trench	\N	Hard Side Shoulder	\N	63000.0	\N	400.0	0.0	0.0	\N	11412.0	11107.0	1443910.0	63400.0	487.6923076923077	10619.30769230769	25000.0	99812.0	\N	\N	2025-05-20	2025-05-20	\N	2025-05-27	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+83	37	Route LM	Co-Built	Airtel	Mumbai Fiber Refresh Project	MA2181	MU-MA2181	New-build	Non-Strategic	\N	10004772.0	400.0	MUMU25R050	MUMU25NL010	MUMU25NL010NIMI	MUMU25NL010NIMI250418D3C3L0021	MIDC-DIV-2/OSP/2025-26/AIRTEL/PLOT NO-PAP-R-343/375 MTRS	375.0	2024-04-18	\N	\N	MIDC	MIDC	No.EE/Dn.II/MHP/Eoffice/I/I113925	375.0	2025-05-19	Open Trench	\N	Hard Side Shoulder	\N	181500.0	\N	1200.0	0.0	0.0	\N	32886.0	11849.0	4443375.0	182700.0	487.2	11361.8	50000.0	265586.0	\N	\N	2025-05-20	2025-05-20	2025-04-28	2025-05-27	7	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+84	40	LMC routes (stand alone) 	Co-Built	Airtel	Mumbai Fiber Refresh Project	MB1608	MU-MB1608	New-build	Non-Strategic	\N	10004869.0	56.0	\N	MUMU25FL012	MUMU25FL012MBMB	MUMU25FL012MBMB250411D3C3L0001	Airtel / MBMC /OSP/2025-26/OT/ Arihant “B” CHSL /124 Mtrs	124.0	2024-04-11	Radha Krishna Hotel	Arihant “B” CHSL	MBMC	MBMC	NO.MBMC/PWD/1014/64/2025-26	124.0	2025-04-30	Open Trench	\N	Asphalt Road	9600	1190400.0	\N	24800.0	0.0	0.0	\N	218736.0	4500.0	558000.0	1215200.0	9800.0	-5300.0	119040.0	1552976.0	\N	\N	\N	\N	2025-04-24	\N	0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+89	\N	\N	\N	\N	\N	TestRoute	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	999999	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: master_tracker; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.master_tracker (id, source_id, dn_number, circle, state, city, area, type_of_build, financial_year, link_name, ce_route_id, ce_section_id, ce_subsection_id, municipal_authority, ward, road_name, start_point, end_point, authority_application_date, authority_application_number, authority_new_application_number, dn_received_date, dn_length, ri_amount, sd_amount, supervision_charge_amt, additional_charge_amt, land_length_mtrs, land_rent_start_date, land_rent_end_date, land_rent_tenure, ground_rent, access_charge, admin_charges, chamber_fee, gst, dn_amount_without_gst, dn_amount_with_gst, dn_payment_date, differential_dn_number, differential_dn_amount, differential_dn_sd, permission_receipt_date, permit_no, permit_start_date, permit_end_date, permitted_length_by_ward_mts, permitted_no_of_ducts, work_status, date_of_refund_application, refund_application_no, sd_refund_amount, sd_deductions, remarks_for_deductions, sd_check, sd_refund_date, sd_refund_ack_no, date_of_refund_application_ri, refund_application_no_ri, ri_refund_amount, penalty_deductions, remarks_for_deductions_ri, ri_refund_date, ri_refund_ack_no) FROM stdin;
+1	1	783341566	Mumbai	Maharashtra	Mumbai	HW	Co-Built	25-26	148	MUMU25FL007	MUMU25FL007MCHW	MUMU25FL007MCHW250424D3C30030	MCGM	HW	\N	OPP. JASHMIN HOUSE	PANJETANI VILLA	2025-04-24	783341566	\N	2025-04-26	140.0	1426180.0	713090.0	\N	\N	140.0	\N	\N	\N	280.0	\N	140.0	\N	\N	2139690.0	2139690.0	2025-04-19	\N	\N	\N	\N	\N	\N	\N	27.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+2	2	NMMC/Z-2/264/2025	Mumbai	Maharashtra	Mumbai	KK	IP-1	24-25	MUM_Route_48	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0010	NMMC 	KK	\N	Gami Industrial Park Pawne 	Ashwini Infra Development 	2025-03-18	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/02	\N	2025-03-18	820.0	624000.0	71760.0	93600.0	\N	820.0	\N	\N	\N	164000.0	\N	0.0	\N	\N	953360.0	953360.0	2025-04-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+3	3	NMMC/Z-2/266/2025	Mumbai	Maharashtra	Mumbai	KK	IP-1	24-25	MUM_Route_48	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0009	NMMC	KK	\N	Ashwini Infra Development 	CTRL S Data Center 	2025-03-18	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/03	\N	2025-03-18	825.0	624000.0	71760.0	93600.0	\N	825.0	\N	\N	\N	165000.0	\N	0.0	\N	\N	954360.0	954360.0	2025-04-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+4	4	783339910	Mumbai	Maharashtra	Mumbai	A	IP-1	25-26	MUM_Route_10	MUMU25R010	MUMU25R010MCWA	MUMU25R010MCWA250408D3C3L0020	MCGM	A	\N	PNB HOUSE (PNB BANK)	APNA BAZAR (GREAT SOCIAL BLDG	2025-04-08	783339910	\N	2025-04-08	52.0	651176.0	325588.0	\N	\N	52.0	\N	\N	\N	104.0	\N	52.0	\N	\N	976920.0	976920.0	2025-04-25	\N	\N	\N	2025-04-25	783339910.0	2025-04-26	2025-04-27	52.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+5	5	KMDC/KA/Const./27	Mumbai	Maharashtra	Mumbai	KDMC	Co-Built	\N	MA2218	MUMU25NL008	MUMU25NL008KDWA	MUMU25NL008KDWA250429D3C3L0004	KDMC	KDMC	\N	\N	\N	\N	Airtel/OSP/2025-26/Open Trench/KDMC/MA-2218/20 Mtrs	\N	\N	20.0	185385.4	18538.54	27807.81	\N	20.0	\N	\N	\N	4000.0	\N	0.0	\N	\N	235731.75	235731.75	2025-05-14	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+6	6	783339980	Mumbai	Maharashtra	Mumbai	ME	Co-Built	25-26	MUM_Route_90	\N	\N	\N	MCGM	ME	\N	NR ASHTVINAYAK CHS	POLE NO. YJS/005/023	2025-04-08	783339980	\N	2025-04-12	156.0	1046916.0	523458.0	\N	\N	156.0	\N	\N	\N	312.0	\N	156.0	\N	\N	1570842.0	1570842.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+7	7	I110310	Mumbai	Maharashtra	Mumbai	KK	Co-Built	25-26	MUM_Route_45	MUMU25R045	MUMU25R045NMKK	MUMU25R045NMKK250327D3C3L0004	MIDC	KK	\N	Stock Holding Corporation	Shilphata Road	2025-03-27	I110310	\N	2025-04-24	4765.0	2306260.0	500000.0	\N	\N	4765.0	\N	\N	\N	14300.0	\N	0.0	\N	417908.0	2820560.0	3238468.0	2025-05-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8	8	783340659	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	MA2115	\N	\N	\N	MCGM	RC	\N	KRISHNA HERITAGE	KRISHNA HERITAGE FOOTPATH	2025-04-15	783340659	\N	2025-04-25	4.0	68144.0	34072.0	\N	\N	4.0	\N	\N	\N	8.0	\N	4.0	\N	\N	102228.0	102228.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+9	9	783341287	Mumbai	Maharashtra	Mumbai	RS	Co-Built	25-26	6195	\N	\N	\N	MCGM	RS	\N	AVERSHINE MILLENIUM PAIRADISE	THAKUR SHYAM NARAYAN SCHOOL	2025-04-22	783341287	\N	2025-04-24	75.0	853350.0	426675.0	\N	\N	75.0	\N	\N	\N	150.0	\N	75.0	\N	\N	1280250.0	1280250.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+10	10	783340005	Mumbai	Maharashtra	Mumbai	ME	Co-Built	25-26	MUM_Route_90	\N	\N	\N	MCGM	ME	\N	POLE NO. YJS/005/023	MCGM MOTOR LODER CHOWKY( AAGARWADI JN.)	2025-04-08	783340005	\N	2025-04-12	136.0	912696.0	456348.0	\N	\N	136.0	\N	\N	\N	272.0	\N	136.0	\N	\N	1369452.0	1369452.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+11	11	783341644	Mumbai	Maharashtra	Mumbai	ME	Co-Built	25-26	MUM_Route_90	\N	\N	\N	MCGM	ME	\N	ZARINA PARK GATE NO 02	MCGM MOTOR LOADER CHOWKY	2025-04-24	783341644	\N	2025-04-25	160.0	1073760.0	536880.0	\N	\N	160.0	\N	\N	\N	320.0	\N	160.0	\N	\N	1611120.0	1611120.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+12	12	783340693	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	3054	MUMU25NL006	MUMU25NL006MCWA	MUMU25NL006MCWA250415D3C3L0015	MCGM	A	\N	SUN CLINIC	ANIL MILK SUPPLIER	2025-04-15	783340693	\N	2025-05-02	34.0	346358.0	173179.0	\N	\N	34.0	\N	\N	\N	68.0	\N	34.0	\N	\N	519639.0	519639.0	2025-05-08	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+13	13	783340898	Mumbai	Maharashtra	Mumbai	MW	Co-Built	25-26	2958	MUMU25FL010	MUMU25FL010MCMW	MUMU25FL010MCMW250417D3C3L0013	MCGM	MW	\N	OPP. SANKET APARTMENT	NEAR EESH KRIPA BLDG	2024-04-17	783340898	\N	2025-04-29	90.0	916830.0	458415.0	\N	\N	90.0	\N	\N	\N	180.0	\N	90.0	\N	\N	1375515.0	1375515.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+14	14	783340711	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	MA928	MUMU25FL012	MUMU25FL012MCRC	MUMU25FL012MCRC250415D3C3L0018	MCGM	RC	\N	PM KULKARNI ROAD	ACHARYA ASHRAM	2025-04-15	783340711	\N	2025-04-25	100.0	1493600.0	746800.0	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	2240700.0	2240700.0	2025-05-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+15	15	783340697	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	MA928	MUMU25FL012	MUMU25FL012MCRC	MUMU25FL012MCRC250415D3C3L0007	MCGM	RC	\N	PM KULKARNI ROAD	ACHARYA ASHRAM	2025-04-15	783340697	\N	2025-04-25	100.0	1493600.0	746800.0	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	2240700.0	2240700.0	2025-05-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+16	16	KDMC/Ex.Engg/Construction/K-W/10	Mumbai	Maharashtra	Mumbai	KD	Co-Built	25-26	Mumbai_Coverage_Route7	MUMU25RC07	MUMU25RC07KDWI	MUMU25RC07KDWI250325D3C3L0025	KDMC	KD	\N	Hanuman Road	Nr jankalayan multispeciality hospital	2025-03-25	AIRTEL/OSP/2024-25/Open Trench-HDD/kdmc/01	\N	2025-04-15	2128.0	24301725.0	2430172.478	3645258.717	\N	2128.0	\N	\N	\N	425600.0	\N	\N	\N	\N	30802756.195	30802756.195	2025-05-02	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+17	17	783340181	Mumbai	Maharashtra	Mumbai	RN	Co-Built	25-26	MB6370	MUMU25FL005	MUMU25FL005MCRN	MUMU25FL005MCRN250409D3C30028	MCGM	RN	\N	RAJ HERITAGE TOWER	MARY JAMMACULATE GIRLS SCHOOL	2025-04-09	783340181	\N	2025-04-17	91.0	1035398.0	517699.0	\N	\N	91.0	\N	\N	\N	182.0	\N	91.0	\N	\N	1553370.0	1553370.0	2025-04-23	\N	\N	\N	2025-04-24	783340181.0	2025-04-25	2025-04-30	91.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+18	18	783326066	Mumbai	Maharashtra	Mumbai	E	IP-1	24-25	MUM_Route_10	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWE241221D2C6L0012	MCGM	E	\N	 BOB Mirza Galibh road	Byculla Fire Bricade	2024-06-26	783326066	\N	2024-12-21	33.0	1152439.0	576219.5	\N	\N	33.0	\N	\N	\N	66.0	\N	33.0	\N	\N	1728757.5	1728757.5	2025-04-10	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+19	19	783340954	Mumbai	Maharashtra	Mumbai	MW	Co-Built	25-26	2958	MUMU25FL010	MUMU25FL010MCMW	MUMU25FL010MCMW250417D3C3L0014	MCGM	MW	\N	NEAR EESH KRIPA BLDG	NEAR MAHESH KUTIR BLDG	2024-04-17	783340954	\N	2025-04-29	140.0	1426180.0	713090.0	\N	\N	140.0	\N	\N	\N	280.0	\N	140.0	\N	\N	2139690.0	2139690.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+20	20	783339323	Mumbai	Maharashtra	Mumbai	RN	Co-Built	25-26	5831	MUMU25FL005	MUMU25FL005MCRN	MUMU25FL005MCRN250401D3C30027	MCGM	RN	\N	JAYWANT SAWANT MARG	SAI AMRUT CHS	2025-04-01	783339323	\N	2025-04-17	136.0	1067996.0	533998.0	\N	\N	136.0	\N	\N	\N	272.0	\N	136.0	\N	\N	1602402.0	1602402.0	2025-04-23	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+21	21	No.EE/Dn.II/MHP/Eoffice/I/I113922	Mumbai	Maharashtra	Mumbai	MIDC	Co-Built	25-26	MB3667	MUMU25NL011	MUMU25NL011NIMI	MUMU25NL011NIMI250418D3C3L0022	MIDC	MIDC	\N	\N	\N	2024-04-18	MIDC-DIV-2/OSP/2025-26/AIRTEL/MB-3667/130 MTRS 	\N	2025-05-19	130.0	63000.0	25000.0	0.0	\N	130.0	\N	\N	\N	400.0	\N	0.0	\N	11412.0	88400.0	99812.0	2025-05-27	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+22	22	NO.MBMC/PWD/1014/64/2025-26	Mumbai	Maharashtra	Mumbai	MBMC	Co-Built	25-26	MB1608	MUMU25FL012	MUMU25FL012MBMB	MUMU25FL012MBMB250411D3C3L0001	MBMC	MBMC	\N	Radha Krishna Hotel	Arihant “B” CHSL	2024-04-11	Airtel / MBMC /OSP/2025-26/OT/ Arihant “B” CHSL /124 Mtrs	\N	2025-04-30	124.0	1190400.0	119040.0	0.0	\N	124.0	\N	\N	\N	24800.0	\N	0.0	\N	218736.0	1334240.0	1552976.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+23	23	783339575	Mumbai	Maharashtra	Mumbai	B	IP-1	25-26	MUM_Route_10	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWB250403D3C3L0029	MCGM	B	\N	Hotel Elphinstone Annexe	Godee Area opp. Navratna Premises	2025-04-03	783339575	\N	2025-04-19	60.0	896160.0	448080.0	\N	\N	60.0	\N	\N	\N	120.0	\N	60.0	\N	\N	1344420.0	1344420.0	2025-04-25	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+24	24	783326083	Mumbai	Maharashtra	Mumbai	E	IP-1	24-25	MUM_Route_10	MUMU25R010	MUMU25R010MCWB	MUMU25R010MCWE241221D3C6L0013	MCGM	E	\N	BMC E ward office 	 Mirza Galibh road junction 	2024-06-26	783326083	\N	2024-12-21	39.0	367761.0	183880.5	\N	\N	39.0	\N	\N	\N	78.0	\N	39.0	\N	\N	551758.5	551758.5	2025-04-10	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+25	25	KMDC/KA/Const./25	Mumbai	Maharashtra	Mumbai	A	Co-Built	\N	MB1585	MUMU25FL011	MUMU25FL011KDWA	MUMU25FL011KDWA250424D3C3L0017	KDMC	A	\N	BHIWANDI MURBAD ROAD	SHREE GANESH VANDAN BUILDING	2024-04-24	Airtel/OSP/2025-26/Open Trench/KDMC/MB-1585/130 Mtrs	\N	\N	130.0	1205005.1	120500.51	180750.76	\N	130.0	\N	\N	\N	26000.0	\N	0.0	\N	\N	1532256.37	1532256.37	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+26	26	783340649	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	MB3135	MUMU25NL007	MUMU25NL007MCWA	MUMU25NL007MCWA250414D3C3L0016	MCGM	A	\N	HOTEL MANAMA	FRIENDS PREMISES	2025-04-14	783340649	\N	2025-05-02	38.0	567568.0	283784.0	\N	\N	38.0	\N	\N	\N	76.0	\N	38.0	\N	\N	851466.0	851466.0	2025-05-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+27	27	783339212	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	MUM_Route_131	MUMU25R131	MUMU25R131MCWA	MUMU25R131MCWA250328D3C3	MCGM	A	\N	NEAR SUCHITA BUILDING	NEAR HOTEL VICTORIA	2025-03-28	783339212	\N	2025-04-04	155.0	1613962.0	806981.0	\N	\N	155.0	\N	\N	\N	310.0	\N	155.0	\N	\N	2421408.0	2421408.0	2025-04-17	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+28	28	KDMC/Ex.Engg/Construction/K-W/06	Mumbai	Maharashtra	Mumbai	KD	Co-Built	25-26	Mumbai_Coverage_Route13	MUMU25RC13	MUMU25RC13KDKD	MUMU25RC13KDKD250325D3C3L0026	KDMC	KD	\N	Jhulelal Chowk	Gold Gym	2025-03-25	AIRTEL/OSP/2024-25/Open Trench-HDD/kdmc/02	\N	2025-04-11	80.0	741541.6000000001	74170.16000000002	\N	\N	80.0	\N	\N	\N	160.0	\N	0.0	\N	\N	815871.7600000001	815871.7600000001	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+29	29	783339100	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	MA4226	MUMU25NL003	MUMU25NL003MCWA	MUMU25NL003MCWA250404D3C3L0004	MCGM	A	\N	NEAR HOTEL CASTLE IN HIRA BLDG	NEAR HOTEL CASTLE IN HIRA BLDG	2025-03-27	783339100	\N	2025-04-04	8.0	448440.0	\N	\N	\N	8.0	\N	\N	\N	16.0	\N	8.0	\N	\N	448464.0	448464.0	2025-04-15	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+30	30	NMMC/Z-2/265/2025	Mumbai	Maharashtra	Mumbai	KK	IP-1	24-25	MUM_Route_48	MUMU25R048	MUMUR048NMKK	MUMUR048NMKK250220D4C5L0011	NMMC 	KK	\N	TTC Industrial area Bharti Airtel Office 	Gami Industrial Park Pawne 	2025-03-18	ETIPL/OSP/Koperkhairne MIDC/HDD/2024-25/01	\N	2025-03-18	975.0	624000.0	71760.0	93600.0	\N	975.0	\N	\N	\N	195000.0	\N	0.0	\N	\N	984360.0	984360.0	2025-04-09	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+31	31	783341568	Mumbai	Maharashtra	Mumbai	HW	Co-Built	25-26	5541	\N	\N	\N	MCGM	HW	\N	EDVIN 189 BUILDING	CHIMBAI ROAD CORNER	2025-04-24	783341568	\N	2025-04-26	120.0	1222440.0	611220.0	\N	\N	120.0	\N	\N	\N	240.0	\N	120.0	\N	\N	1834020.0	1834020.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+32	32	783341581	Mumbai	Maharashtra	Mumbai	HW	Co-Built	25-26	5541	\N	\N	\N	MCGM	HW	PERRY ROAD	WINNIE APARTMENT	EDVIN 189 BUILDING	2025-04-24	783341581	\N	2025-04-26	140.0	1427515.0	713757.5	\N	\N	140.0	\N	\N	\N	280.0	\N	140.0	\N	\N	2141692.5	2141692.5	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+33	33	I96966	Mumbai	Maharashtra	Mumbai	MIDC	IP-1	24-25	MUM_Route_50	MUMUR050	MUMUR050NIMI	MUMUR050NMMI250129D4C4L0001	MIDC	MIDC	\N	A SIFY Rabale	F Mahape	2025-01-29	I96966	\N	2025-02-10	4766.0	195406.0	250000.0	\N	\N	4766.0	\N	\N	\N	0.0	\N	4766.0	\N	36030.96	450172.0	486202.96	2025-02-12	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+34	34	I99340	Mumbai	Maharashtra	Mumbai	MIDC	IP-1	24-25	MUM_Route_50	MUMUR050	MUMUR050NIMI	MUMUR050NMMI250212D4C4L0001	MIDC	MIDC	\N	F Mahape Police Chowky	G CNTRL S Mahape	\N	I99340	\N	2025-02-12	600.0	59720.0	60000.0	\N	\N	600.0	\N	\N	\N	0.0	\N	600.0	\N	10857.6	120320.0	131177.6	2025-03-13	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+35	35	783341573	Mumbai	Maharashtra	Mumbai	HW	Co-Built	25-26	3386	MUMU25FL006	MUMU25FL006MCHW	MUMU25FL006MCHW250424D3C30029	MCGM	HW	\N	DR. KESHAW BALRAM CHOWK	GAEITY GALAXY THEATER	2025-04-24	783341573	\N	2025-04-26	196.0	1315356.0	657678.0	\N	\N	196.0	\N	\N	\N	392.0	\N	196.0	\N	\N	1973622.0	1973622.0	2025-04-29	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+36	36	KMDC/KA/Const./28	Mumbai	Maharashtra	Mumbai	KDMC	Co-Built	\N	MB1589	MUMU25NL009	MUMU25NL009KDWA	MUMU25NL009KDWA250429D3C3L0001	KDMC	KDMC	\N	\N	\N	\N	Airtel/OSP/2025-26/Open Trench/KDMC/MB-1589/75 Mtrs	\N	\N	75.0	695195.25	69519.52	104279.28	\N	75.0	\N	\N	\N	15000.0	\N	0.0	\N	\N	883994.05	883994.05	2025-05-14	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+37	37	KMDC/KA/Const./26	Mumbai	Maharashtra	Mumbai	B	Co-Built	25-26	MA1048	MUMU25FL012	MUMU25FL012KDWB	MUMU25FL012KDWB250418D3C3L0020	KDMC	B	\N	Khadkapada Road	Reliance Digital Building	2024-04-18	Airtel / MBMC /OSP/2025-26/OPEN TRENCH/KDMC/MA-1048/127 Mtrs	\N	2025-05-02	127.0	1177197.29	117719.729	176579.59	\N	127.0	\N	\N	\N	25400.0	\N	0.0	\N	\N	1496896.609	1496896.609	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+38	38	No.EE/Dn.II/MHP/Eoffice/I/I113925	Mumbai	Maharashtra	Mumbai	MIDC	Co-Built	25-26	MA2181	MUMU25NL010	MUMU25NL010NIMI	MUMU25NL010NIMI250418D3C3L0021	MIDC	MIDC	\N	\N	\N	2024-04-18	MIDC-DIV-2/OSP/2025-26/AIRTEL/PLOT NO-PAP-R-343/375 MTRS	\N	2025-05-19	375.0	181500.0	50000.0	0.0	\N	375.0	\N	\N	\N	1200.0	\N	0.0	\N	32886.0	232700.0	265586.0	2025-05-27	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+39	39	783339141	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	6295	MUMU25NL002	MUMU25NL002MCWA	MUMU25NL002MCWA250404D3C3L0003	MCGM	A	\N	NEAR EP NO-F/R-9 HOTEL POPULAR PALACE	NEAR MINT ROAD	2025-03-27	783339141	\N	2025-04-04	27.0	275049.0	137524.5	\N	\N	27.0	\N	\N	\N	54.0	\N	27.0	\N	\N	412654.5	412654.5	2025-04-15	\N	\N	\N	2025-04-16	783339141.0	2025-04-17	2025-04-18	27.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+40	313	783341581.00	Mumbai	Maharashtra	Mumbai	HW	Co-Built	25-26	5541.00	\N	\N	\N	MCGM	HW	PERRY ROAD	WINNIE APARTMENT	EDVIN 189 BUILDING	2025-04-24	783341581.00	\N	2025-04-26	140	1427515.0	713757.5	\N	\N	140	\N	\N	\N	280	\N	140.0	\N	\N	2141692.5	2141692.5	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+41	1214	783344777	Mumbai	Maharashtra	Mumbai	ME	Co-Built	25-26	MA2512	MUMU26LF046	MUMU26LF046MCME	MUMU26LF046MCME250905D2C20001	MCGM	ME	DEONAR POLICE STATION ROAD	SHREE GANESH WASHING CENTRE	SHRINATH GUPTA SHOP	2025-09-05	783344777	\N	2025-09-11	4.0	59744.0	\N	\N	\N	4.0	\N	\N	\N	8.0	\N	4.0	\N	\N	59756.0	59756.0	\N	\N	\N	\N	2025-09-15	783344777.0	2025-09-16	2025-09-18	4.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+42	1276	KDMC/KA/Const./181	Mumbai	Maharashtra	Mumbai	F	Co-Built	\N	Mumbai_Coverage_Route39	MUMU26RC039	\N	\N	KDMC	F	REGENCY ESTATE ROAD	NEAR KAMESHWAR MAHADEV MANDIR	NEAR KANGARO KIDS INTERNATIONAL SCHOOL	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_39.4/510 Mtrs	\N	\N	510.0	6156786.3	615678.63	923517.95	\N	510.0	\N	\N	\N	102000.0	\N	0.0	0.0	0.0	7797982.88	7797982.88	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+43	1277	KDMC/KA/Const./180	Mumbai	Maharashtra	Mumbai	F	Co-Built	\N	Mumbai_Coverage_Route39	MUMU26RC039	\N	\N	KDMC	F	SHANKARA NAGAR ROAD	NEAR KANGARO KIDS INTERNATIONAL SCHOOL	NEAR NEPTUNE ACCIDENT TRAUMA & BURN CENTER	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_39.5/672 Mtrs	\N	\N	672.0	8193879.36	819387.84	1229081.9	\N	672.0	\N	\N	\N	134400.0	\N	0.0	0.0	0.0	2182869.84	2182869.84	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+44	1288	KDMC/KA/Const./182	Mumbai	Maharashtra	Mumbai	F	Co-Built	\N	Mumbai_Coverage_Route31	MUMU26RC031	\N	\N	KDMC	F	PATHARLI ROAD	NEAR GAJ BANDHAN CHSL	NEAR OM SAI VIHAR	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_31.4/353 Mtrs	\N	\N	353.0	4351265.09	435126.51	652689.76	\N	353.0	\N	\N	\N	70600.0	\N	0.0	0.0	0.0	5509681.36	5509681.36	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+45	1301	KDMC/KA/Const./183	Mumbai	Maharashtra	Mumbai	F	Co-Built	\N	Mumbai_Coverage_Route31	MUMU26RC031	\N	\N	KDMC	F	JIJAI NAGAR ROAD & AMBIKA NAGAR ROAD	NEAR NAV RAM DARSHAN BUILDING	NEAR GAJ BANDHAN CHSL	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumabi_Coverage_31.3/254 Mtrs	\N	\N	254.0	2647396.12	264739.61	397109.42	\N	254.0	\N	\N	\N	50800.0	\N	0.0	0.0	0.0	3360045.15	3360045.15	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+46	1317	NMMC/Z-2/962/2025	Mumbai	Maharashtra	Mumbai	KK	Co-Built	\N	MUM_Route_49	MUMU26R049	\N	\N	NMMC	KK	Pawane Village Road	NAER PLOT NO W 145C	NEAR NISC	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.3/189 Mtrs	\N	\N	189.0	1695292.0	169529.2	0.0	\N	189.0	\N	\N	\N	37800.0	\N	0.0	0.0	0.0	1902621.2	1902621.2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+47	1360	783348486	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_111	MUMU26RA111	\N	\N	MCGM	KW	MAHARANA PRATAP ROAD	RUSHI TOWER	OPP MALA TOWER	2025-10-07	783348486	\N	2025-10-14	185.0	2763160.0	1381580.0	\N	\N	185.0	\N	\N	\N	370.0	\N	185.0	\N	\N	4145295.0	4145295.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+48	1361	783348515	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_111	\N	\N	\N	MCGM	KW	MAHARANA PRATAP ROAD	GREEN ACRES	RUSHI TOWER	2025-10-07	783348515	\N	2025-10-14	167.0	2494312.0	1247156.0	\N	\N	167.0	\N	\N	\N	334.0	\N	167.0	\N	\N	3741969.0	3741969.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+49	1369	KDMC/KA/Const./163	Mumbai	Maharashtra	Mumbai	KD	Co-Built	\N	Mumbai_Coverage_Route13	MUMU26RC013	\N	\N	KDMC	KD	\N	Near Jhulele Chowk	Near Barve Road	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.5/336 Mtrs	\N	\N	336.0	4123896.0	412390.608	618585.912	\N	336.0	\N	\N	\N	67200.0	\N	0.0	0.0	0.0	5222082.5200000005	5222082.5200000005	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+50	1370	KDMC/KA/Const./164	Mumbai	Maharashtra	Mumbai	KD	Co-Built	\N	Mumbai_Coverage_Route13	MUMU26RC013	\N	\N	KDMC	KD	\N	Near D Mart, Mohan Square one	Near Moti Ram Open Plot Kalyan Sape Road	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.1/328 Mtrs	\N	\N	328.0	2870426.56	287042.656	430563.984	\N	328.0	\N	\N	\N	65600.0	\N	0.0	0.0	0.0	3653633.2	3653633.2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+51	1378	783348588	Mumbai	Maharashtra	Mumbai	A	Co-Built	25-26	MUM_Route_99	\N	\N	\N	MCGM	A	UNIVERSITY ROAD	MAHATMA GANDHI ROAD	KARMAVEER BHAURAO MARG	2025-10-07	783348588	\N	2025-10-14	155.0	1620370.01	\N	\N	\N	155.0	\N	\N	\N	310.0	\N	155.0	\N	\N	1620835.01	1620835.01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+52	1379	KDMC/KA/Const./189	Mumbai	Maharashtra	Mumbai	H	Co-Built	\N	Mumbai_Coverage_Route21	MUMU26RC021	\N	\N	KDMC	H	\N	Near Gopinath Chowk	Near Sai Vaibhav Paradise	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumbai_Coverage_Route21.2/640 Mtrs	\N	\N	640.0	7888979.2	788897.92	1183346.88	\N	640.0	\N	\N	\N	128000.0	\N	0.0	0.0	0.0	9989224.0	9989224.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+53	1387	KDMC/KA/Const./162	Mumbai	Maharashtra	Mumbai	KD	Co-Built	\N	Mumbai_Coverage_Route13	MUMU26RC013	\N	\N	KDMC	KD	\N	Near Moti Ram Open Plot Kalyan Sape Road	Near Hotel Maintals Restaurant	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.2/387 Mtrs	\N	\N	387.0	105685.02	10568.502	15852.753	\N	387.0	\N	\N	\N	77400.0	\N	0.0	0.0	0.0	209506.27500000002	209506.27500000002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+54	1388	KDMC/KA/Const./191	Mumbai	Maharashtra	Mumbai	H	Co-Built	\N	Mumbai_Coverage_Route21	MUMU26RC021	\N	\N	KDMC	H	\N	Near Atithi Hotel	Near Gopinath Chowk	\N	Airtel/OSP/2025-26/OT/Kalyan/Mumbai_Coverage_Route21.1/970 Mtrs	\N	\N	970.0	11956734.100000001	1195673.4100000001	1793510.1150000002	\N	970.0	\N	\N	\N	194000.0	\N	0.0	0.0	0.0	15139917.625000002	15139917.625000002	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+55	1389	NMMC/Z-2/963/2025	Mumbai	Maharashtra	Mumbai	KK	Co-Built	\N	MUM_Route_49	MUMU26R049	\N	\N	NMMC	KK	\N	Near Eco Friend Industries 	Near Plot No-W-145C	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.3/931 Mtrs	\N	\N	931.0	3149612.0	314961.2	0.0	\N	931.0	\N	\N	\N	186200.0	\N	0.0	0.0	0.0	3650773.2	3650773.2	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+56	1390	NMMC/Z-2/964/2025	Mumbai	Maharashtra	Mumbai	KK	Co-Built	\N	MUM_Route_49	MUMU26R049	\N	\N	NMMC	KK	\N	Near NISC	Near Nextra Mahape	\N	Airtel/OSP/2025-26/HDD+OT/NMMC-Z-II/MUM_Coverage_Route49.4/498 Mtrs	\N	\N	498.0	3682178.0	368217.80000000005	0.0	\N	498.0	\N	\N	\N	99600.0	\N	0.0	0.0	0.0	4149995.8	4149995.8	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+57	1401	783348516	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	BALASAHEB DEORAS MARG	ROYAL ACCORD	SNEH BUILDING	2025-10-07	783348516	\N	2025-10-14	95.0	1418920.0	709460.0	\N	\N	95.0	\N	\N	\N	190.0	\N	95.0	\N	\N	2128665.0	2128665.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+58	1402	783348526	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	LOKHANDWALA COMPLEX ROAD	SNEH BUILDING	BANK OF MAHARASHTRA	2025-10-07	783348526	\N	2025-10-14	128.0	1911808.0	955904.0	\N	\N	128.0	\N	\N	\N	256.0	\N	128.0	\N	\N	2868096.0	2868096.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+59	1403	783348529	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	LOKHANDWALA COMPLEX ROAD	FANTACY OPTIC SHOP	ARSHA SALOON	2025-10-07	783348529	\N	2025-10-14	170.0	2539120.0	1269560.0	\N	\N	170.0	\N	\N	\N	340.0	\N	170.0	\N	\N	3809190.0	3809190.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+60	1404	783349555	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	OPP JAYKANT BLISS BUILDING	MCF BMC GROUND	2025-10-11	783349555	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+61	1405	783349569	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	OPP MUMBAI MILK CENTRE	CKP COLONY BUS STOP	2025-10-11	783349569	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+62	1406	783348527	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	LOKHANDWALA COMPLEX ROAD	BANK OF MAHARASHTRA	KAMDHENU SHOPPING CENTRE	2025-10-07	783348527	\N	2025-10-14	162.0	2419632.0	1209816.0	\N	\N	162.0	\N	\N	\N	324.0	\N	162.0	\N	\N	3629934.0	3629934.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+63	1407	783348528	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	LOKHANDWALA COMPLEX ROAD	KAMDHENU SHOPPING CENTER	TWIN APARTMENT(PRABHAT HARDWARE)	2025-10-07	783348528	\N	2025-10-14	168.0	2509248.0	1254624.0	\N	\N	168.0	\N	\N	\N	336.0	\N	168.0	\N	\N	3764376.0	3764376.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+64	1408	783349560	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	MCF BMC GROUND	HIBISCUS WATER SUPPLIERS	2025-10-11	783349560	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+65	1409	783349577	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	OTTOBOCK CARE	TRIMURTI KRIPA CHS	2025-10-11	783349577	\N	2025-10-15	100.0	819975.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	820275.0	820275.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+66	1410	783349588	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	MAYUR TOWER	VEG TREAT ROYAL HOTEL	2025-10-11	783349588	\N	2025-10-15	50.0	461710.0	\N	\N	\N	50.0	\N	\N	\N	100.0	\N	50.0	\N	\N	461860.0	461860.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+67	1411	783349595	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	TRIMURTI KRIPA CHS	VIJAY NAGAR	2025-10-11	783349595	\N	2025-10-15	100.0	1066190.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1066490.0	1066490.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+68	1412	783349599	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	CKP COLONY BUS STOP	RBI SAHAYOG APT	2025-10-11	783349599	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+69	1413	783348525	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_111	\N	\N	\N	MCGM	KW	MAHARANA PRATAP ROAD	SAMARTH VAIBHAV	GREEN VILLE CHSL	2025-10-07	783348525	\N	2025-10-14	80.0	701560.0	350780.0	\N	\N	80.0	\N	\N	\N	160.0	\N	80.0	\N	\N	1052580.0	1052580.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+70	1414	783349600	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	CHANDAVARKAR ROAD	OM GAJANAN  KRUPA CHS	RAIL NAGAR CHS	2025-10-11	783349600	\N	2025-10-15	100.0	1493600.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1493900.0	1493900.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+71	1415	783348508	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_112	\N	\N	\N	MCGM	KW	LOKHANDWALA COMPLEX ROAD	TWIN APARTMENT(PRABHAT HARDWARE)	FANTACY OPTIC SHOP	2025-10-07	783348508	\N	2025-10-14	168.0	2509248.0	1254624.0	\N	\N	168.0	\N	\N	\N	336.0	\N	168.0	\N	\N	3764376.0	3764376.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+72	1416	783349538	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	OPP TRUPTI BUNGLOW	OPP JAYKANT BLISS BUILDING	2025-10-11	783349538	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+73	1417	783349543	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	VAISHALI CHS	OPP TRUPTI BUNGLOW	2025-10-11	783349543	\N	2025-10-15	135.0	1636440.0	\N	\N	\N	135.0	\N	\N	\N	270.0	\N	135.0	\N	\N	1636845.0	1636845.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+74	1418	783349565	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	VIJAY NAGAR	RUDRA GROUP ISPACE TOWER	2025-10-11	783349565	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+75	1419	783349574	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	SHEETAL MEGHDOOT	OTTOBOCK CARE	2025-10-11	783349574	\N	2025-10-15	100.0	883375.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	883675.0	883675.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+76	1420	783348485	Mumbai	Maharashtra	Mumbai	KW	Co-Built	25-26	MUM_Route_111	MUMU26RA111	\N	\N	MCGM	KW	MAHARANA PRATAP ROAD	SILVER SPRING	GREEN ACRES	2025-10-06	783348485	\N	2025-10-14	145.0	2165720.0	1082860.0	\N	\N	145.0	\N	\N	\N	290.0	\N	145.0	\N	\N	3249015.0	3249015.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+77	1421	783349582	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	VAN UDYAN ROAD	HIBISCUS WATER SUPPLIER	SHEETAL MEGHDOOT	2025-10-11	783349582	\N	2025-10-15	85.0	865895.0	\N	\N	\N	85.0	\N	\N	\N	170.0	\N	85.0	\N	\N	866150.0	866150.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+78	1422	783349589	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	CHANDAVARKAR ROAD	ROYAL EKSAR CHS	OM GAJANAN  KRUPA CHS	2025-10-11	783349589	\N	2025-10-15	103.0	1357868.0	\N	\N	\N	103.0	\N	\N	\N	206.0	\N	103.0	\N	\N	1358177.0	1358177.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+79	1423	783349590	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	CHANDAVARKAR ROAD	RAIL NAGAR CHS	KARMA YOG BUILDING NO.4	2025-10-11	783349590	\N	2025-10-15	105.0	1568280.0	\N	\N	\N	105.0	\N	\N	\N	210.0	\N	105.0	\N	\N	1568595.0	1568595.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+80	1424	783349598	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	RUDRA GROUP ISPACE TOWER	MUMBAI MILK CENTRE	2025-10-11	783349598	\N	2025-10-15	100.0	1018700.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1019000.0	1019000.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+81	1425	783349601	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	EKSAR ROAD	RBI SAHAYOG APARTMENT	MAYUR TOWER	2025-10-11	783349601	\N	2025-10-15	90.0	916830.0	\N	\N	\N	90.0	\N	\N	\N	180.0	\N	90.0	\N	\N	917100.0	917100.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+82	1426	783349602	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	CHANDAVARKAR ROAD	VEG TREAT ROYAL HOTEL	ROYAL EKSAR CHS	2025-10-11	783349602	\N	2025-10-15	100.0	1493600.0	\N	\N	\N	100.0	\N	\N	\N	200.0	\N	100.0	\N	\N	1493900.0	1493900.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+83	1427	783349611	Mumbai	Maharashtra	Mumbai	RC	Co-Built	25-26	Mumbai_Coverage_Route35	MUMU26RC035	\N	\N	MCGM	RC	BABURAO PARANJPE MARG	KARMA YOG BUILDING NO.4	AKSAR BIRYANI CENTER	2025-10-11	783349611	\N	2025-10-15	120.0	1792320.0	\N	\N	\N	120.0	\N	\N	\N	240.0	\N	120.0	\N	\N	1792680.0	1792680.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+84	1429	KDMC/KA/Const./165	Mumbai	Maharashtra	Mumbai	KD	Co-Built	\N	Mumbai_Coverage_Route13	MUMU26RC013	\N	\N	KDMC	KD	\N	Near KDMC Garden	Near Jhulelal Chowk	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.4/493 Mtrs	\N	\N	493.0	4945789.4	494579.309	741868.9635	\N	493.0	\N	\N	\N	98600.0	\N	0.0	0.0	0.0	6280841.6725	6280841.6725	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+85	1430	KDMC/KA/Const./177	Mumbai	Maharashtra	Mumbai	KD	Co-Built	\N	Mumbai_Coverage_Route13	MUMU26RC013	\N	\N	KDMC	KD	\N	Near Hotel Maintals Restaurant	Near KDMC Garden	\N	Airtel/OSP/2025-26/HDD/Kalyan/Mumbai_Coverage_Route13.3/570 Mtrs	\N	\N	570.0	295836.0	29583.600000000002	44375.4	\N	570.0	\N	\N	\N	114000.0	\N	0.0	0.0	0.0	483795.0	483795.0	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+\.
+
+
+--
+-- Data for Name: po_master; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.po_master (id, route_id_site_id, parent_route, route_type, uid, po_no_cobuild, po_length_cobuild, po_no_ip1, po_length_ip1, route_routelm_metrolm_lmcstandalone, "route_routeLM_metroLM_LMCStandalone") FROM stdin;
+1	1000	Fibmax	LMC routes (stand alone) 	MU-1000	10004699	90.0	\N	\N	\N	LMC (Standalone)
+2	1008	Fibmax	LMC routes (stand alone) 	MU-1008	10004709	67.0	\N	\N	\N	LMC (Standalone)
+3	1027	Fibmax	LMC routes (stand alone) 	MU-1027	10004864	146.0	\N	\N	\N	LMC (Standalone)
+4	1029	MUM_Route_10	Route LM	MU-1029	\N	\N	\N	\N	\N	Route LM
+5	1041	Mumbai_Coverage_Route30	Route LM	MU-1041	10004573	160.0	\N	\N	\N	Route LM
+6	1046	Mumbai_Coverage_Route29	Route LM	MU-1046	10004519	10.0	\N	\N	\N	Route LM
+7	109	MUM_Route_68	Route LM	MU-109	10004657	60.0	\N	\N	\N	Route LM
+8	111	Fibmax	LMC routes (stand alone) 	MU-111	\N	\N	\N	\N	\N	LMC (Standalone)
+9	1135	MUM_Route_54	Route LM	MU-1135	10004637	60.0	\N	\N	\N	Route LM
+10	1144	MUM_Route_99	Route LM	MU-1144	10004622	70.0	\N	\N	\N	Route LM
+11	1148	MUM_Route_27	Route LM	MU-1148	10004594	480.0	\N	\N	\N	Route LM
+12	1191	Mumbai_Coverage_Route35	Route LM	MU-1191	10004583	60.0	\N	\N	\N	Route LM
+13	1251	Fibmax	LMC routes (stand alone) 	MU-1251	10004763	168.0	\N	\N	\N	LMC (Standalone)
+14	1256	Fibmax	LMC routes (stand alone) 	MU-1256	\N	\N	\N	\N	\N	LMC (Standalone)
+15	1262	Mumbai_Coverage_Route21	Route LM	MU-1262	10004548	400.0	\N	\N	\N	Route LM
+16	1264	Fibmax	LMC routes (stand alone) 	MU-1264	10004784	30.0	\N	\N	\N	LMC (Standalone)
+17	1277	MUM_Route_90	Route LM	MU-1277	\N	\N	\N	\N	\N	Route LM
+18	1297	Fibmax	LMC routes (stand alone) 	MU-1297	10004760	422.0	\N	\N	\N	LMC (Standalone)
+19	1303	MUM_Route_123	Route LM	MU-1303	10004664	170.0	\N	\N	\N	Route LM
+20	1308	Fibmax	LMC routes (stand alone) 	MU-1308	10004808	78.0	\N	\N	\N	LMC (Standalone)
+21	1342	Fibmax	LMC routes (stand alone) 	MU-1342	10004703	56.0	\N	\N	\N	LMC (Standalone)
+22	1365	Fibmax	LMC routes (stand alone) 	MU-1365	10004888	134.0	\N	\N	\N	LMC (Standalone)
+23	1371	Fibmax	LMC routes (stand alone) 	MU-1371	10004832	66.0	\N	\N	\N	LMC (Standalone)
+24	1387	Fibmax	LMC routes (stand alone) 	MU-1387	10004863	78.0	\N	\N	\N	LMC (Standalone)
+25	139	MUM_Route_27	Route LM	MU-139	10004594	210.0	\N	\N	\N	Route LM
+26	1392	MUM_Route_81	Route LM	MU-1392	10004680	180.0	\N	\N	\N	Route LM
+27	141	MUM_Route_23	Route LM	MU-141	10004959	80.0	\N	\N	\N	Route LM
+28	142	Fibmax	LMC routes (stand alone) 	MU-142	10004705	146.0	\N	\N	\N	LMC (Standalone)
+29	1420	Fibmax	LMC routes (stand alone) 	MU-1420	\N	\N	\N	\N	\N	LMC (Standalone)
+30	1455	MUM_Route_115	Route LM	MU-1455	10004538	10.0	\N	\N	\N	Route LM
+31	1456	MUM_Route_54	Route LM	MU-1456	10004637	230.0	\N	\N	\N	Route LM
+32	1467	Fibmax	LMC routes (stand alone) 	MU-1467	\N	\N	\N	\N	\N	LMC (Standalone)
+33	1471	Fibmax	LMC routes (stand alone) 	MU-1471	\N	\N	\N	\N	\N	LMC (Standalone)
+34	1474	Fibmax	LMC routes (stand alone) 	MU-1474	10004770	33.0	\N	\N	\N	LMC (Standalone)
+35	148	Fibmax	LMC routes (stand alone) 	MU-148	10004692	67.0	\N	\N	\N	LMC (Standalone)
+36	1490	Fibmax	LMC routes (stand alone) 	MU-1490	10004888	280.0	\N	\N	\N	LMC (Standalone)
+37	1508	Mumbai_Coverage_Route23	Route LM	MU-1508	10004556	40.0	\N	\N	\N	Route LM
+38	1532	MUM_Route_97	Route LM	MU-1532	10004672	70.0	\N	\N	\N	Route LM
+39	1536	MUM_Route_97	Route LM	MU-1536	10004672	70.0	\N	\N	\N	Route LM
+40	1550	Fibmax	LMC routes (stand alone) 	MU-1550	\N	\N	\N	\N	\N	LMC (Standalone)
+41	1562	MUM_Route_23	Route LM	MU-1562	10004959	50.0	\N	\N	\N	Route LM
+42	1640	Fibmax	LMC routes (stand alone) 	MU-1640	10004888	168.0	\N	\N	\N	LMC (Standalone)
+43	1641	MUM_Route_90	Route LM	MU-1641	10004960	300.0	\N	\N	\N	Route LM
+44	1659	Fibmax	LMC routes (stand alone) 	MU-1659	10004696	224.0	\N	\N	\N	LMC (Standalone)
+45	1670	Fibmax	LMC routes (stand alone) 	MU-1670	10004770	104.0	\N	\N	\N	LMC (Standalone)
+46	1677	MUM_Route_45	Route LM	MU-1677	10004670	220.0	\N	\N	\N	Route LM
+47	1694	MUM_Route_68	Route LM	MU-1694	10004657	200.0	\N	\N	\N	Route LM
+48	1734	Fibmax	LMC routes (stand alone) 	MU-1734	10004811	302.0	\N	\N	\N	LMC (Standalone)
+49	174	Fibmax	LMC routes (stand alone) 	MU-174	10004711	190.0	\N	\N	\N	LMC (Standalone)
+50	1742	Mumbai_Coverage_Route29	Route LM	MU-1742	10004519	30.0	\N	\N	\N	Route LM
+51	175	Mumbai_Coverage_Route13	Route LM	MU-175	10004559	800.0	\N	\N	\N	Route LM
+52	1777	MUM_Route_160	Route LM	MU-1777	10004654	110.0	\N	\N	\N	Route LM
+53	1788	Fibmax	LMC routes (stand alone) 	MU-1788	10004700	168.0	\N	\N	\N	LMC (Standalone)
+54	1797	Fibmax	LMC routes (stand alone) 	MU-1797	10004888	460.0	\N	\N	\N	LMC (Standalone)
+55	1831	Mumbai_Coverage_Route29	Route LM	MU-1831	10004519	100.0	\N	\N	\N	Route LM
+56	1852	Fibmax	LMC routes (stand alone) 	MU-1852	\N	\N	\N	\N	\N	LMC (Standalone)
+57	1863	MUM_Route_68	Route LM	MU-1863	\N	\N	\N	\N	\N	Route LM
+58	1924	Fibmax	LMC routes (stand alone) 	MU-1924	10005005	280.0	\N	\N	\N	LMC (Standalone)
+59	194	Fibmax	LMC routes (stand alone) 	MU-194	10004770	99.0	\N	\N	\N	LMC (Standalone)
+60	1949	MUM_Route_112	Route LM	MU-1949	10004539	90.0	\N	\N	\N	Route LM
+61	1955	Mumbai_Coverage_Route3	Route LM	MU-1955	10004549	170.0	\N	\N	\N	Route LM
+62	1956	Mumbai_Coverage_Route35	Route LM	MU-1956	10004583	310.0	\N	\N	\N	Route LM
+63	2 Africa 0001	MUM_Route_501	DC Route	MUM_Route_501	\N	\N	20202020	200.0	\N	Route LM
+64	2010	Fibmax	LMC routes (stand alone) 	MU-2010	10004779	251.0	\N	\N	\N	LMC (Standalone)
+65	2074	MUM_Route_122	Route LM	MU-2074	10004534	70.0	\N	\N	\N	Route LM
+66	2122	Fibmax	LMC routes (stand alone) 	MU-2122	10004759	112.0	\N	\N	\N	LMC (Standalone)
+67	2161	MUM_Route_62	Route LM	MU-2161	10004595	100.0	\N	\N	\N	Route LM
+68	2213	MUM_Route_45	Route LM	MU-2213	10004670	350.0	\N	\N	\N	Route LM
+69	2234	MUM_Route_81	Route LM	MU-2234	10004680	610.0	\N	\N	\N	Route LM
+70	2245	Fibmax	LMC routes (stand alone) 	MU-2245	\N	\N	\N	\N	\N	LMC (Standalone)
+71	2253	MUM_Route_81	Route LM	MU-2253	10004680	60.0	\N	\N	\N	Route LM
+72	2257	MUM_Route_142	Route LM	MU-MUM_Route_142	10004528	70.0	\N	\N	\N	Route LM
+73	2263	MUM_Route_25	Route LM	MU-2263	10004651	170.0	\N	\N	\N	Route LM
+74	2283	MUM_Route_27	Route LM	MU-2283	10004594	150.0	\N	\N	\N	Route LM
+75	2309	Mumbai_Coverage_Route1	Route LM	MU-2309	10004966	150.0	\N	\N	\N	Route LM
+76	2317	Fibmax	LMC routes (stand alone) 	MU-2317	10004847	157.0	\N	\N	\N	LMC (Standalone)
+77	2322	Fibmax	LMC routes (stand alone) 	MU-2322	10004710	101.0	\N	\N	\N	LMC (Standalone)
+78	2342	MUM_Route_81	Route LM	MU-2342	10004680	110.0	\N	\N	\N	Route LM
+79	2351	MUM_Route_23	Route LM	MU-2351	10004959	50.0	\N	\N	\N	Route LM
+80	2359	MUM_Route_109	Route LM	MU-2359	10004597	130.0	\N	\N	\N	Route LM
+81	2366	Fibmax	LMC routes (stand alone) 	MU-2366	\N	\N	\N	\N	\N	LMC (Standalone)
+82	2367	Fibmax	LMC routes (stand alone) 	MU-2367	\N	\N	\N	\N	\N	LMC (Standalone)
+83	2369	Mumbai_Coverage_Route17	Route LM	MU-2369	10004547	250.0	\N	\N	\N	Route LM
+84	2372	Fibmax	LMC routes (stand alone) 	MU-2372	10004816	360.0	\N	\N	\N	LMC (Standalone)
+85	2452	Mumbai_Coverage_Route31	Route LM	MU-2452	10004580	30.0	\N	\N	\N	Route LM
+86	2460	Mumbai_Coverage_Route25	Route LM	MU-2460	10004582	300.0	\N	\N	\N	Route LM
+87	247	Fibmax	LMC routes (stand alone) 	MU-MM247	10004888	112.0	\N	\N	\N	LMC (Standalone)
+88	2475	MUM_Route_90	Route LM	MU-2475	10004960	60.0	\N	\N	\N	Route LM
+89	2477	Fibmax	LMC routes (stand alone) 	MU-2477	10004820	134.0	\N	\N	\N	LMC (Standalone)
+90	2510	Fibmax	LMC routes (stand alone) 	MU-2510	10004694	134.0	\N	\N	\N	LMC (Standalone)
+91	2587	MUM_Route_42	Route LM	MU-2587	10004961	120.0	\N	\N	\N	Route LM
+92	2610	Fibmax	LMC routes (stand alone) 	MU-2610	10004769	168.0	\N	\N	\N	LMC (Standalone)
+93	2628	Fibmax	LMC routes (stand alone) 	MU-2628	10004713	168.0	\N	\N	\N	LMC (Standalone)
+94	2643	Fibmax	LMC routes (stand alone) 	MU-2643	10004770	16.0	\N	\N	\N	LMC (Standalone)
+95	273	Fibmax	LMC routes (stand alone) 	MU-273	10004888	448.0	\N	\N	\N	LMC (Standalone)
+96	2730	MUM_Route_97	Route LM	MU-2730	10004672	70.0	\N	\N	\N	Route LM
+97	2731	MUM_Route_19	Route LM	MU-2731	10004663	220.0	\N	\N	\N	Route LM
+98	274	Fibmax	LMC routes (stand alone) 	MU-274	10004742	224.0	\N	\N	\N	LMC (Standalone)
+99	2763	MUM_Route_10	Route LM	MU-2763	10004641	50.0	\N	\N	\N	Route LM
+100	278	MUM_Route_35	Route LM	MU-278	10004671	70.0	\N	\N	\N	Route LM
+101	2798	Fibmax	LMC routes (stand alone) 	MU-2798	10004753	168.0	\N	\N	\N	LMC (Standalone)
+102	2825	MUM_Route_122	Route LM	MU-2825	10004534	170.0	\N	\N	\N	Route LM
+103	2895	MUM_Route_13	Route LM	MU-2895	10004600	130.0	\N	\N	\N	Route LM
+104	2910	Mumbai_Coverage_Route9	Route LM	MU-2910	\N	\N	\N	\N	\N	Route LM
+105	2931	Fibmax	LMC routes (stand alone) 	MU-2931	10004855	372.0	\N	\N	\N	LMC (Standalone)
+106	2946	MUM_Route_115	Route LM	MU-2946	10004538	250.0	\N	\N	\N	Route LM
+107	2958	Fibmax	LMC routes (stand alone) 	MU-2958	10004801	224.0	\N	\N	\N	LMC (Standalone)
+108	297	MUM_Route_4	Route LM	MU-297	10004541	170.0	\N	\N	\N	Route LM
+109	2996	Fibmax	LMC routes (stand alone) 	MU-2996	\N	\N	\N	\N	\N	LMC (Standalone)
+110	3019	Mumbai_Coverage_Route28	Route LM	MU-3019	10004512	60.0	\N	\N	\N	Route LM
+111	3023	MUM_Route_23	Route LM	MU-3023	10004959	110.0	\N	\N	\N	Route LM
+112	304	Mumbai_Coverage_Route3	Route LM	MU-304	10004549	100.0	\N	\N	\N	Route LM
+113	3054	MUM_Route_10	Route LM	MU-3054	10004641	30.0	\N	\N	\N	Route LM
+114	3058	MUM_Route_8	Route LM	MU-3058	10004619	70.0	\N	\N	\N	Route LM
+115	306	Fibmax	LMC routes (stand alone) 	MU-306	\N	\N	\N	\N	\N	LMC (Standalone)
+116	3068	Mumbai_Coverage_Route29	Route LM	MU-3068	10004523	10.0	\N	\N	\N	Route LM
+117	3071	Fibmax	LMC routes (stand alone) 	MU-3071	10004848	157.0	\N	\N	\N	LMC (Standalone)
+118	3075	MUM_Route_38	Route LM	MU-3075	10004674	260.0	\N	\N	\N	Route LM
+119	3090	MUM_Route_99	Route LM	MU-3090	10004624	10.0	\N	\N	\N	Route LM
+120	3099	Fibmax	LMC routes (stand alone) 	MU-3099	10004760	517.0	\N	\N	\N	LMC (Standalone)
+121	3107	Fibmax	LMC routes (stand alone) 	MU-3107	10004724	291.0	\N	\N	\N	LMC (Standalone)
+122	3120	MUM_Route_55	Route LM	MU-3120	10004628	110.0	\N	\N	\N	Route LM
+123	3123	Fibmax	LMC routes (stand alone) 	MU-3123	10004825	280.0	\N	\N	\N	LMC (Standalone)
+124	3128	Fibmax	LMC routes (stand alone) 	MU-3128	10004760	165.0	\N	\N	\N	LMC (Standalone)
+125	3144	Fibmax	LMC routes (stand alone) 	MU-3144	10004888	460.0	\N	\N	\N	LMC (Standalone)
+126	3151	Fibmax	LMC routes (stand alone) 	MU-3151	10004729	78.0	\N	\N	\N	LMC (Standalone)
+127	3166	Fibmax	LMC routes (stand alone) 	MU-3166	10004781	67.0	\N	\N	\N	LMC (Standalone)
+128	3170	MUM_Route_110	Route LM	MU-3170	10004593	220.0	\N	\N	\N	Route LM
+129	3177	MUM_Route_55	Route LM	MU-3177	10004628	20.0	\N	\N	\N	Route LM
+130	319	Fibmax	LMC routes (stand alone) 	MU-319	\N	\N	\N	\N	\N	LMC (Standalone)
+131	3258	MUM_Route_55	Route LM	MU-3258	10004628	160.0	\N	\N	\N	Route LM
+132	3273	Fibmax	LMC routes (stand alone) 	MU-3273	10004888	480.0	\N	\N	\N	LMC (Standalone)
+133	3292	Fibmax	LMC routes (stand alone) 	MU-3292	\N	\N	\N	\N	\N	LMC (Standalone)
+134	3310	MUM_Route_99	Route LM	MU-3310	10004624	120.0	\N	\N	\N	Route LM
+135	333	Fibmax	LMC routes (stand alone) 	MU-333	\N	\N	\N	\N	\N	LMC (Standalone)
+136	3330	Fibmax	LMC routes (stand alone) 	MU-3330	10004874	45.0	\N	\N	\N	LMC (Standalone)
+137	334	Fibmax	LMC routes (stand alone) 	MU-334	10004804	112.0	\N	\N	\N	LMC (Standalone)
+138	3354	MUM_Route_42	Route LM	MU-3354	10004961	110.0	\N	\N	\N	Route LM
+139	3386	Fibmax	LMC routes (stand alone) 	MU-3386	10004879	280.0	\N	\N	\N	LMC (Standalone)
+140	3389	Mumbai_Coverage_Route17	Route LM	MU-3389	10004547	20.0	\N	\N	\N	Route LM
+141	3398	Fibmax	LMC routes (stand alone) 	MU-3398	10004862	134.0	\N	\N	\N	LMC (Standalone)
+142	341	Fibmax	LMC routes (stand alone) 	MU-341	10004721	121.0	\N	\N	\N	LMC (Standalone)
+143	3411	Fibmax	LMC routes (stand alone) 	MU-3411	10004831	17.0	\N	\N	\N	LMC (Standalone)
+144	3463	Fibmax	LMC routes (stand alone) 	MU-3463	\N	\N	\N	\N	\N	LMC (Standalone)
+145	3511	Mumbai_Coverage_Route5	Route LM	MU-3511	10004514	30.0	\N	\N	\N	Route LM
+146	356	Fibmax	LMC routes (stand alone) 	MU-356	10004728	123.0	\N	\N	\N	LMC (Standalone)
+147	358	MUM_Route_55	Route LM	MU-358	10004628	160.0	\N	\N	\N	Route LM
+148	3589	Fibmax	LMC routes (stand alone) 	MU-3589	10004782	280.0	\N	\N	\N	LMC (Standalone)
+149	3604	Fibmax	LMC routes (stand alone) 	MU-3604	10004707	56.0	\N	\N	\N	LMC (Standalone)
+150	3625	MUM_Route_90	Route LM	MU-3625	10004960	50.0	\N	\N	\N	Route LM
+151	3645	Fibmax	LMC routes (stand alone) 	MU-3645	10004790	476.0	\N	\N	\N	LMC (Standalone)
+152	370	Fibmax	LMC routes (stand alone) 	MU-370	10004760	66.0	\N	\N	\N	LMC (Standalone)
+153	3700	Mumbai_Coverage_Route25	Route LM	MU-3700	10004582	300.0	\N	\N	\N	Route LM
+154	379	Fibmax	LMC routes (stand alone) 	MU-379	10004813	190.0	\N	\N	\N	LMC (Standalone)
+155	3817	MUM_Route_45	Route LM	MU-3817	10004670	150.0	\N	\N	\N	Route LM
+156	3879	MUM_Route_8	Route LM	MU-3879	10004619	180.0	\N	\N	\N	Route LM
+157	3901	Fibmax	LMC routes (stand alone) 	MU-3901	10004755	280.0	\N	\N	\N	LMC (Standalone)
+158	3989	Fibmax	LMC routes (stand alone) 	MU-3989	\N	\N	\N	\N	\N	LMC (Standalone)
+159	400	Fibmax	LMC routes (stand alone) 	MU-400	10004795	157.0	\N	\N	\N	LMC (Standalone)
+160	4004	Mumbai_Coverage_Route10	Route LM	MU-4004	10004558	50.0	\N	\N	\N	Route LM
+161	4014	Fibmax	LMC routes (stand alone) 	MU-4014	10004737	168.0	\N	\N	\N	LMC (Standalone)
+162	4019	Fibmax	LMC routes (stand alone) 	MU-4019	\N	\N	\N	\N	\N	LMC (Standalone)
+163	403	Fibmax	LMC routes (stand alone) 	MU-403	\N	\N	\N	\N	\N	LMC (Standalone)
+164	4070	MUM_Route_110	Route LM	MU-4070	10004593	220.0	\N	\N	\N	Route LM
+165	4081	Fibmax	LMC routes (stand alone) 	MU-4081	10004760	165.0	\N	\N	\N	LMC (Standalone)
+166	4088	Fibmax	LMC routes (stand alone) 	MU-4088	10004770	253.0	\N	\N	\N	LMC (Standalone)
+167	4093	Fibmax	LMC routes (stand alone) 	MU-4093	10004770	165.0	\N	\N	\N	LMC (Standalone)
+168	4131	Fibmax	LMC routes (stand alone) 	MU-4131	\N	\N	\N	\N	\N	LMC (Standalone)
+169	4139	MUM_Route_81	Route LM	MU-4139	\N	\N	\N	\N	\N	Route LM
+170	4198	Fibmax	LMC routes (stand alone) 	MU-4198	10004806	168.0	\N	\N	\N	LMC (Standalone)
+171	4207	MUM_Route_8	Route LM	MU-4207	10004619	280.0	\N	\N	\N	Route LM
+172	4213	MUM_Route_19	Route LM	MU-4213	10004663	150.0	\N	\N	\N	Route LM
+173	423	Fibmax	LMC routes (stand alone) 	MU-423	\N	\N	\N	\N	\N	LMC (Standalone)
+174	4234	Fibmax	LMC routes (stand alone) 	MU-4234	10004714	56.0	\N	\N	\N	LMC (Standalone)
+175	4295	Fibmax	LMC routes (stand alone) 	MU-4295	\N	\N	\N	\N	\N	LMC (Standalone)
+176	4324	MUM_Route_106	Route LM	MU-4324	10004621	80.0	\N	\N	\N	Route LM
+177	4337	Fibmax	LMC routes (stand alone) 	MU-4337	10004883	133.0	\N	\N	\N	LMC (Standalone)
+178	434	Fibmax	LMC routes (stand alone) 	MU-434	10004725	56.0	\N	\N	\N	LMC (Standalone)
+179	4378	MUM_Route_42	Route LM	MU-4378	10004961	60.0	\N	\N	\N	Route LM
+180	4381	Fibmax	LMC routes (stand alone) 	MU-4381	10004777	56.0	\N	\N	\N	LMC (Standalone)
+181	4409	Fibmax	LMC routes (stand alone) 	MU-4409	10004841	110.0	\N	\N	\N	LMC (Standalone)
+182	4427	Mumbai_Coverage_Route3	Route LM	MU-4427	10004549	20.0	\N	\N	\N	Route LM
+183	4436	Mumbai_Coverage_Route37	Route LM	MU-4436	10004574	60.0	\N	\N	\N	Route LM
+184	4449	Fibmax	LMC routes (stand alone) 	MU-4449	10004818	1202.0	\N	\N	\N	LMC (Standalone)
+185	4474	MUM_Route_19	Route LM	MU-4474	10004663	80.0	\N	\N	\N	Route LM
+186	4485	Fibmax	LMC routes (stand alone) 	MU-4485	10004854	20.0	\N	\N	\N	LMC (Standalone)
+187	4488	Mumbai_Coverage_Route10	Route LM	MU-4488	10004558	50.0	\N	\N	\N	Route LM
+188	4495	Fibmax	LMC routes (stand alone) 	MU-4495	10004743	134.0	\N	\N	\N	LMC (Standalone)
+189	4501	Fibmax	LMC routes (stand alone) 	MU-4501	10004837	64.0	\N	\N	\N	LMC (Standalone)
+190	4506	MUM_Route_19	Route LM	MU-4506	10004663	80.0	\N	\N	\N	Route LM
+191	4509	Mumbai_Coverage_Route29	Route LM	MU-4509	10004519	190.0	\N	\N	\N	Route LM
+192	4525	Mumbai_Coverage_Route17	Route LM	MU-4525	\N	\N	\N	\N	\N	Route LM
+193	4534	Fibmax	LMC routes (stand alone) 	MU-4534	10004807	220.0	\N	\N	\N	LMC (Standalone)
+194	4545	MUM_Route_8	Route LM	MU-4545	10004619	280.0	\N	\N	\N	Route LM
+195	4546	Fibmax	LMC routes (stand alone) 	MU-4546	10004770	200.0	\N	\N	\N	LMC (Standalone)
+196	4553	Mumbai_Coverage_Route9	Route LM	MU-4553	10004537	60.0	\N	\N	\N	Route LM
+197	4558	Mumbai_Coverage_Route3	Route LM	MU-4558	10004549	10.0	\N	\N	\N	Route LM
+198	4609	Fibmax	LMC routes (stand alone) 	MU-4609	10004810	224.0	\N	\N	\N	LMC (Standalone)
+199	4634	Mumbai_Coverage_Route28	Route LM	MU-4634	10004512	10.0	\N	\N	\N	Route LM
+200	4670	MUM_Route_110	Route LM	MU-4670	10004593	150.0	\N	\N	\N	Route LM
+201	4690	Fibmax	LMC routes (stand alone) 	MU-4690	10004760	11.0	\N	\N	\N	LMC (Standalone)
+202	4719	Fibmax	LMC routes (stand alone) 	MU-4719	10004773	112.0	\N	\N	\N	LMC (Standalone)
+203	4750	MUM_Route_58	Route LM	MU-4750	10004658	330.0	\N	\N	\N	Route LM
+204	4779	MUM_Route_4	Route LM	MU-4779	10004541	110.0	\N	\N	\N	Route LM
+205	4794	Mumbai_Coverage_Route9	Route LM	MU-4794	10004537	220.0	\N	\N	\N	Route LM
+206	4847	MUM_Route_10	Route LM	MU-4847	10004641	10.0	\N	\N	\N	Route LM
+207	4858	Fibmax	LMC routes (stand alone) 	MU-4858	\N	\N	\N	\N	\N	LMC (Standalone)
+208	4859	MUM_Route_10	Route LM	MU-4859	10004641	50.0	\N	\N	\N	Route LM
+209	4871	Mumbai_Coverage_Route15	Route LM	MU-4871	10004562	20.0	\N	\N	\N	Route LM
+210	4880	Fibmax	LMC routes (stand alone) 	MU-4880	\N	\N	\N	\N	\N	LMC (Standalone)
+211	4883	Fibmax	LMC routes (stand alone) 	MU-4883	10004778	50.0	\N	\N	\N	LMC (Standalone)
+212	4913	MUM_Route_55	Route LM	MU-4913	10004628	50.0	\N	\N	\N	Route LM
+213	4917	Fibmax	LMC routes (stand alone) 	MU-4917	10004766	11.0	\N	\N	\N	LMC (Standalone)
+214	4919	Mumbai_Coverage_Route5	Route LM	MU-4919	10004514	120.0	\N	\N	\N	Route LM
+215	4929	MUM_Route_55	Route LM	MU-4929	\N	\N	\N	\N	\N	Route LM
+216	4932	MUM_Route_55	Route LM	MU-4932	10004628	120.0	\N	\N	\N	Route LM
+217	4936	Fibmax	LMC routes (stand alone) 	MU-4936	10004760	25.0	\N	\N	\N	LMC (Standalone)
+218	4941	MUM_Route_123	Route LM	MU-4941	10004664	150.0	\N	\N	\N	Route LM
+219	4952	MUM_Route_123	Route LM	MU-4952	\N	\N	\N	\N	\N	Route LM
+220	496	MUM_Route_45	Route LM	MU-496	10004670	50.0	\N	\N	\N	Route LM
+221	4971	Fibmax	LMC routes (stand alone) 	MU-4971	10004888	100.0	\N	\N	\N	LMC (Standalone)
+222	4973	MUM_Route_81	Route LM	MU-4973	10004680	380.0	\N	\N	\N	Route LM
+223	4981	MUM_Route_10	Route LM	MU-4981	10004641	30.0	\N	\N	\N	Route LM
+224	4986	MUM_Route_55	Route LM	MU-4986	10004628	60.0	\N	\N	\N	Route LM
+225	4991	Mumbai_Coverage_Route31	Route LM	MU-4991	10004580	50.0	\N	\N	\N	Route LM
+226	4997	Fibmax	LMC routes (stand alone) 	MU-4997	\N	\N	\N	\N	\N	LMC (Standalone)
+227	4998	Fibmax	LMC routes (stand alone) 	MU-4998	10004770	300.0	\N	\N	\N	LMC (Standalone)
+228	5029	MUM_Route_10	Route LM	MU-5029	10004641	70.0	\N	\N	\N	Route LM
+229	5032	MUM_Route_99	Route LM	MU-5032	10004622	80.0	\N	\N	\N	Route LM
+230	5055	MUM_Route_10	Route LM	MU-5055	10004641	10.0	\N	\N	\N	Route LM
+231	5095	Fibmax	LMC routes (stand alone) 	MU-5095	\N	\N	\N	\N	\N	LMC (Standalone)
+232	5154	MUM_Route_122	Route LM	MU-5154	10004534	170.0	\N	\N	\N	Route LM
+233	5155	Fibmax	LMC routes (stand alone) 	MU-5155	\N	\N	\N	\N	\N	LMC (Standalone)
+234	5158	Fibmax	LMC routes (stand alone) 	MU-5158	10004770	253.0	\N	\N	\N	LMC (Standalone)
+235	5181	Mumbai_Coverage_Route5	Route LM	MU-5181	10004514	50.0	\N	\N	\N	Route LM
+236	5225	Fibmax	LMC routes (stand alone) 	MU-5225	10004760	100.0	\N	\N	\N	LMC (Standalone)
+237	5235	MUM_Route_23	Route LM	MU-5235	10004959	50.0	\N	\N	\N	Route LM
+238	5237	Fibmax	LMC routes (stand alone) 	MU-5237	10004840	11.0	\N	\N	\N	LMC (Standalone)
+239	5256	MUM_Route_10	Route LM	MU-5256	10004641	150.0	\N	\N	\N	Route LM
+240	5274	MUM_Route_4	Route LM	MU-5274	10004541	60.0	\N	\N	\N	Route LM
+241	5286	Fibmax	LMC routes (stand alone) 	MU-5286	10004702	56.0	\N	\N	\N	LMC (Standalone)
+242	5294	MUM_Route_114	Route LM	MU-5294	10004516	30.0	\N	\N	\N	Route LM
+243	5307	MUM_Route_90	Route LM	MU-5307	10004960	300.0	\N	\N	\N	Route LM
+244	5331	Fibmax	LMC routes (stand alone) 	MU-5331	\N	\N	\N	\N	\N	LMC (Standalone)
+245	5339	MUM_Route_112	Route LM	MU-5339	10004539	140.0	\N	\N	\N	Route LM
+246	5342	MUM_Route_107	Route LM	MU-5342	10004626	20.0	\N	\N	\N	Route LM
+247	5357	MUM_Route_42	Route LM	MU-5357	10004961	360.0	\N	\N	\N	Route LM
+248	5372	MUM_Route_106	Route LM	MU-5372	10004621	60.0	\N	\N	\N	Route LM
+249	5385	MUM_Route_8	Route LM	MU-5385	10004619	70.0	\N	\N	\N	Route LM
+250	5387	Fibmax	LMC routes (stand alone) 	MU-5387	\N	\N	\N	\N	\N	LMC (Standalone)
+251	5392	Mumbai_Coverage_Route4	Route LM	MU-5392	10004546	100.0	\N	\N	\N	Route LM
+252	5395	Fibmax	LMC routes (stand alone) 	MU-5395	10004760	38.0	\N	\N	\N	LMC (Standalone)
+253	5436	Fibmax	LMC routes (stand alone) 	MU-5436	10004780	106.0	\N	\N	\N	LMC (Standalone)
+254	5451	MUM_Route_10	Route LM	MU-5451	10004641	120.0	\N	\N	\N	Route LM
+255	5504	Fibmax	LMC routes (stand alone) 	MU-5504	10004851	25.0	\N	\N	\N	LMC (Standalone)
+256	5508	Fibmax	LMC routes (stand alone) 	MU-5508	10004760	435.0	\N	\N	\N	LMC (Standalone)
+257	5525	Fibmax	LMC routes (stand alone) 	MU-5525	10004776	338.0	\N	\N	\N	LMC (Standalone)
+258	5541	Fibmax	LMC routes (stand alone) 	MU-5541	10004701	235.0	\N	\N	\N	LMC (Standalone)
+259	5568	Tamil Sangham to Guru Teg Bahadur Nagar Station	Route LM	MU-5568	10004971	60.0	\N	\N	\N	Route LM
+260	5579	MUM_Route_33	Route LM	MU-5579	10004523	100.0	\N	\N	\N	Route LM
+261	5590	Fibmax	LMC routes (stand alone) 	MU-5590	10004800	224.0	\N	\N	\N	LMC (Standalone)
+262	5592	Fibmax	LMC routes (stand alone) 	MU-5592	10004748	280.0	\N	\N	\N	LMC (Standalone)
+263	5604	MUM_Route_55	Route LM	MU-5604	10004628	70.0	\N	\N	\N	Route LM
+264	5606	MUM_Route_10	Route LM	MU-5606	\N	\N	\N	\N	\N	Route LM
+265	5618	MUM_Route_68	Route LM	MU-5618	10004657	50.0	\N	\N	\N	Route LM
+266	5619	Mumbai_Coverage_Route25	Route LM	MU-5619	10004582	230.0	\N	\N	\N	Route LM
+267	5627	Fibmax	LMC routes (stand alone) 	MU-5627	10004861	161.0	\N	\N	\N	LMC (Standalone)
+268	5665	MUM_Route_114	Route LM	MU-5665	10004516	70.0	\N	\N	\N	Route LM
+269	5682	Fibmax	LMC routes (stand alone) 	MU-5682	10004758	224.0	\N	\N	\N	LMC (Standalone)
+270	5687	Fibmax	LMC routes (stand alone) 	MU-5687	10004793	280.0	\N	\N	\N	LMC (Standalone)
+271	5709	Fibmax	LMC routes (stand alone) 	MU-5709	10004767	112.0	\N	\N	\N	LMC (Standalone)
+272	5741	Mumbai_Coverage_Route35	Route LM	MU-5741	10004583	100.0	\N	\N	\N	Route LM
+273	5761	Mumbai_Coverage_Route35	Route LM	MU-5761	10004583	120.0	\N	\N	\N	Route LM
+274	5767	Fibmax	LMC routes (stand alone) 	MU-5767	\N	\N	\N	\N	\N	LMC (Standalone)
+275	5768	MUM_Route_33	Route LM	MU-5768	10004523	300.0	\N	\N	\N	Route LM
+276	5769	MUM_Route_25	Route LM	MU-5769	10004651	280.0	\N	\N	\N	Route LM
+277	5814	MUM_Route_90	Route LM	MU-5814	10004960	180.0	\N	\N	\N	Route LM
+278	5827	MUM_Route_109	Route LM	MU-5827	10004597	140.0	\N	\N	\N	Route LM
+279	583	MUM_Route_90	Route LM	MU-583	10004960	60.0	\N	\N	\N	Route LM
+280	5831	Fibmax	LMC routes (stand alone) 	MU-5831	10004791	67.0	\N	\N	\N	LMC (Standalone)
+281	5856	MUM_Route_142	Route LM	MU-MM5856	10004528	10.0	\N	\N	\N	Route LM
+282	5886	Fibmax	LMC routes (stand alone) 	MU-5886	10004815	140.0	\N	\N	\N	LMC (Standalone)
+283	5898	Fibmax	LMC routes (stand alone) 	MU-5898	\N	\N	\N	\N	\N	LMC (Standalone)
+284	5959	MUM_Route_10	Route LM	MU-5959	10005003	100.0	\N	\N	\N	Route LM
+285	596	Fibmax	LMC routes (stand alone) 	MU-596	10004695	134.0	\N	\N	\N	LMC (Standalone)
+286	5979	Fibmax	LMC routes (stand alone) 	MU-5979	10004744	280.0	\N	\N	\N	LMC (Standalone)
+287	5980	Fibmax	LMC routes (stand alone) 	MU-5980	10004762	45.0	\N	\N	\N	LMC (Standalone)
+288	5987	MUM_Route_68	Route LM	MU-5987	\N	\N	\N	\N	\N	Route LM
+289	5995	Mumbai_Coverage_Route6	Route LM	MU-5995	10004550	100.0	\N	\N	\N	Route LM
+290	6006	Fibmax	LMC routes (stand alone) 	MU-6006	10005004	150.0	\N	\N	\N	LMC (Standalone)
+291	6015	Fibmax	LMC routes (stand alone) 	MU-6015	\N	\N	\N	\N	\N	LMC (Standalone)
+292	6021	Fibmax	LMC routes (stand alone) 	MU-6021	10004827	112.0	\N	\N	\N	LMC (Standalone)
+293	6027	Tamil Sangham to Guru Teg Bahadur Nagar Station	Route LM	MU-6027	10004971	100.0	\N	\N	\N	Route LM
+294	6033	MUM_Route_36	Route LM	MU-6033	\N	\N	\N	\N	\N	Route LM
+295	6056	MUM_Route_23	Route LM	MU-6056	10004959	80.0	\N	\N	\N	Route LM
+296	6062	Mumbai_Coverage_Route38	Route LM	MU-6062	10004967	80.0	\N	\N	\N	Route LM
+297	6087	Fibmax	LMC routes (stand alone) 	MU-MM6087	10004888	112.0	\N	\N	\N	LMC (Standalone)
+298	6094	MUM_Route_42	Route LM	MU-6094	10004961	170.0	\N	\N	\N	Route LM
+299	6102	MUM_Route_8	Route LM	MU-6102	10004619	110.0	\N	\N	\N	Route LM
+300	6138	Fibmax	LMC routes (stand alone) 	MU-6138	\N	\N	\N	\N	\N	LMC (Standalone)
+301	6154	Fibmax	LMC routes (stand alone) 	MU-6154	10004760	246.0	\N	\N	\N	LMC (Standalone)
+302	6164	Mumbai_Coverage_Route12	Route LM	MU-6164	10004561	30.0	\N	\N	\N	Route LM
+303	6169	Fibmax	LMC routes (stand alone) 	MU-6169	10004745	280.0	\N	\N	\N	LMC (Standalone)
+304	6172	Fibmax	LMC routes (stand alone) 	MU-6172	\N	\N	\N	\N	\N	LMC (Standalone)
+305	6177	Fibmax	LMC routes (stand alone) 	MU-6177	\N	\N	\N	\N	\N	LMC (Standalone)
+306	6179	Mumbai_Coverage_Route30	Route LM	MU-6179	10004573	30.0	\N	\N	\N	Route LM
+307	6180	Mumbai_Coverage_Route6	Route LM	MU-6180	10004550	70.0	\N	\N	\N	Route LM
+308	6194	Mumbai_Coverage_Route12	Route LM	MU-6194	10004561	60.0	\N	\N	\N	Route LM
+309	6195	Fibmax	LMC routes (stand alone) 	MU-6195	10004835	242.0	\N	\N	\N	LMC (Standalone)
+310	6213	Fibmax	LMC routes (stand alone) 	MU-6213	\N	\N	\N	\N	\N	LMC (Standalone)
+311	6224	MUM_Route_81	Route LM	MU-6224	10004680	150.0	\N	\N	\N	Route LM
+312	6239	MUM_Route_8	Route LM	MU-6239	10004619	60.0	\N	\N	\N	Route LM
+313	6279	Fibmax	LMC routes (stand alone) 	MU-6279	\N	\N	\N	\N	\N	LMC (Standalone)
+314	6281	Fibmax	LMC routes (stand alone) 	MU-6281	10004760	165.0	\N	\N	\N	LMC (Standalone)
+315	6323	Fibmax	LMC routes (stand alone) 	MU-6323	10004785	224.0	\N	\N	\N	LMC (Standalone)
+316	6359	MUM_Route_19	Route LM	MU-6359	10004663	130.0	\N	\N	\N	Route LM
+317	636	Fibmax	LMC routes (stand alone) 	MU-636	10004770	253.0	\N	\N	\N	LMC (Standalone)
+318	6369	MUM_Route_99	Route LM	MU-6369	10004624	40.0	\N	\N	\N	Route LM
+319	6394	Mumbai_Coverage_Route21	Route LM	MU-6394	10004548	30.0	\N	\N	\N	Route LM
+320	6407	Mumbai_Coverage_Route35	Route LM	MU-6407	10004583	50.0	\N	\N	\N	Route LM
+321	6463	MUM_Route_8	Route LM	MU-6463	10004619	280.0	\N	\N	\N	Route LM
+322	6479	Fibmax	LMC routes (stand alone) 	MU-6479	10004888	190.0	\N	\N	\N	LMC (Standalone)
+323	6502	MUM_Route_30	Route LM	MU-6502	10004669	260.0	\N	\N	\N	Route LM
+324	6518	MUM_Route_110	Route LM	MU-6518	\N	\N	\N	\N	\N	Route LM
+325	6520	Fibmax	LMC routes (stand alone) 	MU-6520	10004774	224.0	\N	\N	\N	LMC (Standalone)
+326	660	Fibmax	LMC routes (stand alone) 	MU-660	\N	\N	\N	\N	\N	LMC (Standalone)
+327	679	Fibmax	LMC routes (stand alone) 	MU-679	\N	\N	\N	\N	\N	LMC (Standalone)
+328	686	Mumbai_Coverage_Route32	Route LM	MU-686	10004555	20.0	\N	\N	\N	Route LM
+329	721	Fibmax	LMC routes (stand alone) 	MU-721	10004799	112.0	\N	\N	\N	LMC (Standalone)
+330	744	Fibmax	LMC routes (stand alone) 	MU-744	10004708	112.0	\N	\N	\N	LMC (Standalone)
+331	8	Fibmax	LMC routes (stand alone) 	MU-8	10004809	171.0	\N	\N	\N	LMC (Standalone)
+332	810	MUM_Route_8	Route LM	MU-810	10004619	230.0	\N	\N	\N	Route LM
+333	855	Fibmax	LMC routes (stand alone) 	MU-855	10004888	168.0	\N	\N	\N	LMC (Standalone)
+334	859	Mumbai_Coverage_Route39	Route LM	MU-859	10004571	70.0	\N	\N	\N	Route LM
+335	879	MUM_Route_122	Route LM	MU-879	10004534	60.0	\N	\N	\N	Route LM
+336	880	Fibmax	LMC routes (stand alone) 	MU-880	10004760	420.0	\N	\N	\N	LMC (Standalone)
+337	907	MUM_Route_99	Route LM	MU-907	10004624	100.0	\N	\N	\N	Route LM
+338	999	MUM_Route_117	Route LM	MU-999	10004590	120.0	\N	\N	\N	Route LM
+339	AGG BSN 903	MUM_Route_115	Additional Route	MUM_Route_115	10004538	125.0	\N	\N	\N	Route
+340	AGG_TVL_903	MUM_Route_142	Additional Route	MUM_Route_142	10004528	100.0	\N	\N	\N	Route
+341	BSE India_LM	MUM_Route_99	Additional Route	MUM_Route_99	10004624	1000.0	\N	\N	\N	Route
+342	CapitaLand Data Centre (CDC)_LM	MUM_Route_68	Additional Route	MUM_Route_68	10004657	180.0	\N	\N	\N	Route
+343	Center Point to Mint Colony Station	Center Point to Mint Colony Station	Mono Rail Additional Route	Center Point to Mint Colony Station	10004973	200.0	10004973	550.0	\N	Route
+344	Gopi Cinema_AGG_LM	Mumbai_Coverage_Route32	Additional Route	Mumbai_Coverage_Route32	10004555	380.0	\N	\N	\N	Route
+345	Jairamdas to VNP & RC Marg Junction Station	Jairamdas to VNP & RC Marg Junction Station	Mono Rail Additional Route	Jairamdas to VNP & RC Marg Junction Station	10004972	1000.0	\N	\N	\N	Route
+346	MA1036	MUM_Route_42	Route LM	MU-MA1036	10004961	280.0	\N	\N	\N	Route LM
+347	MA1044	Fibmax	LMC routes (stand alone) 	MU-MA1044	10004866	168.0	\N	\N	\N	LMC (Standalone)
+348	MA1048	Fibmax	LMC routes (stand alone) 	MU-MA1048	10004830	280.0	\N	\N	\N	LMC (Standalone)
+349	MA1056	Fibmax	LMC routes (stand alone) 	MU-MA1056	\N	\N	\N	\N	\N	LMC (Standalone)
+350	MA1059	MUM_Route_10	Route LM	MU-MA1059	10004641	80.0	\N	\N	\N	Route LM
+351	MA1119	MUM_Route_55	Route LM	MU-MA1119	10005007	350.0	\N	\N	\N	Route LM
+352	MA1156	Fibmax	LMC routes (stand alone) 	MU-MA1156	10004760	50.0	\N	\N	\N	LMC (Standalone)
+353	MA1165	MUM_Route_19	Route LM	MU-MA1165	10004663	290.0	\N	\N	\N	Route LM
+354	MA118	MUM_Route_115	Route LM	MU-MA118	10004538	20.0	\N	\N	\N	Route LM
+355	MA1227	Fibmax	LMC routes (stand alone) 	MU-MA1227	\N	\N	\N	\N	\N	LMC (Standalone)
+356	MA1260	Mumbai_Coverage_Route25	Route LM	MU-MA1260	10004582	400.0	\N	\N	\N	Route LM
+357	MA1265	Mumbai_Coverage_Route37	Route LM	MU-MA1265	10004574	40.0	\N	\N	\N	Route LM
+358	MA129	Fibmax	LMC routes (stand alone) 	MU-MA129	10004803	28.0	\N	\N	\N	LMC (Standalone)
+359	MA13	MUM_Route_108	Route LM	MU-MA13	\N	\N	\N	\N	\N	Route LM
+360	MA1336	Fibmax	LMC routes (stand alone) 	MU-MA1336	10004760	11.0	\N	\N	\N	LMC (Standalone)
+361	MA1352	Mumbai_Coverage_Route17	Route LM	MU-MA1352	10004547	40.0	\N	\N	\N	Route LM
+362	MA1356	Mumbai_Coverage_Route2	Route LM	MU-MA1356	10004557	10.0	\N	\N	\N	Route LM
+363	MA138	Mumbai_Coverage_Route30	Route LM	MU-MA138	10004573	30.0	\N	\N	\N	Route LM
+364	MA1400	Mumbai_Coverage_Route31	Route LM	MU-MA1400	10004580	180.0	\N	\N	\N	Route LM
+365	MA1436	Fibmax	LMC routes (stand alone) 	MU-MA1436	\N	\N	\N	\N	\N	LMC (Standalone)
+366	MA1484	MUM_Route_33	Route LM	MU-MA1484	10004523	140.0	\N	\N	\N	Route LM
+367	MA1542	MUM_Route_54	Route LM	MU-MA1542	10004637	220.0	\N	\N	\N	Route LM
+368	MA1621	Fibmax	LMC routes (stand alone) 	MU-MA1621	10004882	165.0	\N	\N	\N	LMC (Standalone)
+369	MA1669	MUM_Route_16	Route LM	MU-MA1669	10004588	220.0	\N	\N	\N	Route LM
+370	MA1730	Fibmax	LMC routes (stand alone) 	MU-MA1730	\N	\N	\N	\N	\N	LMC (Standalone)
+371	MA1751	MUM_Route_42	Route LM	MU-MA1751	10004961	180.0	\N	\N	\N	Route LM
+372	MA1794	Fibmax	LMC routes (stand alone) 	MU-MA1794	10004824	187.0	\N	\N	\N	LMC (Standalone)
+373	MA18	Fibmax	LMC routes (stand alone) 	MU-MA18	10004730	123.0	\N	\N	\N	LMC (Standalone)
+374	MA1806	MUM_Route_115	Route LM	MU-MA1806	10004538	170.0	\N	\N	\N	Route LM
+375	MA1811	Fibmax	LMC routes (stand alone) 	MU-MA1811	10004697	78.0	\N	\N	\N	LMC (Standalone)
+376	MA1813	Fibmax	LMC routes (stand alone) 	MU-MA1813	10004888	100.0	\N	\N	\N	LMC (Standalone)
+377	MA183	Fibmax	LMC routes (stand alone) 	MU-MA183	10004693	106.0	\N	\N	\N	LMC (Standalone)
+378	MA184	Fibmax	LMC routes (stand alone) 	MU-MA184	10004698	291.0	\N	\N	\N	LMC (Standalone)
+379	MA1840	Fibmax	LMC routes (stand alone) 	MU-MA1840	10004770	253.0	\N	\N	\N	LMC (Standalone)
+380	MA1855	Fibmax	LMC routes (stand alone) 	MU-MA1855	10004760	110.0	\N	\N	\N	LMC (Standalone)
+381	MA1878	MUM_Route_30	Route LM	MU-MUM_Route_30	10004669	60.0	\N	\N	\N	Route LM
+382	MA1885	MUM_Route_10	Route LM	MU-MA1885	10004641	40.0	\N	\N	\N	Route LM
+383	MA1907	MUM_Route_45	Route LM	MU-MA1907	10004670	20.0	\N	\N	\N	Route LM
+384	MA1934	Mumbai_Coverage_Route6	Route LM	MU-MA1934	\N	\N	\N	\N	\N	Route LM
+385	MA1939	Fibmax	LMC routes (stand alone) 	MU-MA1939	\N	\N	\N	\N	\N	LMC (Standalone)
+386	MA2	Fibmax	LMC routes (stand alone) 	MU-MA2	10004770	78.0	\N	\N	\N	LMC (Standalone)
+387	MA2014	MUM_Route_80	Route LM	MU-MA2014	10004627	520.0	\N	\N	\N	Route LM
+388	MA2028	Mumbai_Coverage_Route33	Route LM	MU-MA2028	10004572	60.0	\N	\N	\N	Route LM
+389	MA2049	Fibmax	LMC routes (stand alone) 	MU-MA2049	10004754	224.0	\N	\N	\N	LMC (Standalone)
+390	MA2088	Fibmax	LMC routes (stand alone) 	MU-MA2088	10004770	58.0	\N	\N	\N	LMC (Standalone)
+391	MA2096	Fibmax	LMC routes (stand alone) 	MU-MA2096	\N	\N	\N	\N	\N	LMC (Standalone)
+392	MA2115	Fibmax	LMC routes (stand alone) 	MU-MA2115	10004833	34.0	\N	\N	\N	LMC (Standalone)
+393	MA2131	MUM_Route_25	Route LM	MU-MA2131	10004651	60.0	\N	\N	\N	Route LM
+394	MA2152	MUM_Route_42	Route LM	MU-MA2152	10004961	110.0	\N	\N	\N	Route LM
+395	MA2181	MUM_Route_50	Route LM	MU-MA2181	10004765	400.0	\N	\N	\N	Route LM
+396	MA2194	Fibmax	LMC routes (stand alone) 	MU-MA2194	10004760	517.0	\N	\N	\N	LMC (Standalone)
+397	MA2218	Mumbai_Coverage_Route7	Route LM	MU-MA2218	10004531	20.0	\N	\N	\N	Route LM
+398	MA2221	Mumbai_Coverage_Route25	Route LM	MU-MA2221	\N	\N	\N	\N	\N	Route LM
+399	MA2281	MUM_Route_110	Route LM	MU-MA2281	10004593	170.0	\N	\N	\N	Route LM
+400	MA2282	Fibmax	LMC routes (stand alone) 	MU-MA2282	10004823	90.0	\N	\N	\N	LMC (Standalone)
+401	MA2370	Fibmax	LMC routes (stand alone) 	MU-MA2370	10004872	224.0	\N	\N	\N	LMC (Standalone)
+402	MA2383	MUM_Route_55	Route LM	MU-MA2383	10004628	170.0	\N	\N	\N	Route LM
+403	MA2398	Fibmax	LMC routes (stand alone) 	MU-MA2398	10004787	346.0	\N	\N	\N	LMC (Standalone)
+404	MA241	Fibmax	LMC routes (stand alone) 	MU-MA241	10004857	297.0	\N	\N	\N	LMC (Standalone)
+405	MA2463	Mumbai_Coverage_Route33	Route LM	MU-MA2463	10004572	100.0	\N	\N	\N	Route LM
+406	MA25	MUM_Route_105	Route LM	MU-MA25	10004638	60.0	\N	\N	\N	Route LM
+407	MA2512	Fibmax	LMC routes (stand alone) 	MU-MA2512	10004727	56.0	\N	\N	\N	LMC (Standalone)
+408	MA2545	Fibmax	LMC routes (stand alone) 	MU-MA2545	10004858	113.0	\N	\N	\N	LMC (Standalone)
+409	MA2559	Mumbai_Coverage_Route33	Route LM	MU-MA2559	10004572	100.0	\N	\N	\N	Route LM
+410	MA256	MUM_Route_8	Route LM	MU-MA256	10004619	110.0	\N	\N	\N	Route LM
+411	MA2576	Fibmax	LMC routes (stand alone) 	MU-MA2576	10004884	39.0	\N	\N	\N	LMC (Standalone)
+412	MA2578	MUM_Route_97	Route LM	MU-MA2578	10004672	40.0	\N	\N	\N	Route LM
+413	MA2586	MUM_Route_19	Route LM	MU-MA2586	10004663	110.0	\N	\N	\N	Route LM
+414	MA2619	MUM_Route_81	Route LM	MU-MA2619	10004680	170.0	\N	\N	\N	Route LM
+415	MA2726	Mumbai_Coverage_Route39	Route LM	MU-MA2726	10004571	660.0	\N	\N	\N	Route LM
+416	MA2736	Fibmax	LMC routes (stand alone) 	MU-MA2736	10004770	22.0	\N	\N	\N	LMC (Standalone)
+417	MA28	Fibmax	LMC routes (stand alone) 	MU-MA28	10004783	168.0	\N	\N	\N	LMC (Standalone)
+418	MA2816	Fibmax	LMC routes (stand alone) 	MU-MA2816	10004706	112.0	\N	\N	\N	LMC (Standalone)
+419	MA2824	MUM_Route_45	Route LM	MU-MA2824	10004670	150.0	\N	\N	\N	Route LM
+420	MA285	Mumbai_Coverage_Route31	Route LM	MU-MA285	10004580	70.0	\N	\N	\N	Route LM
+421	MA2866	Fibmax	LMC routes (stand alone) 	MU-MA2866	10004738	246.0	\N	\N	\N	LMC (Standalone)
+422	MA2877	Fibmax	LMC routes (stand alone) 	MU-MA2877	10004821	78.0	\N	\N	\N	LMC (Standalone)
+423	MA2903	MUM_Route_8	Route LM	MU-MA2903	\N	\N	\N	\N	\N	Route LM
+424	MA2915	MUM_Route_4	Route LM	MU-MA2915	10004541	110.0	\N	\N	\N	Route LM
+425	MA2917	MUM_Route_4	Route LM	MU-MA2917	10004541	240.0	\N	\N	\N	Route LM
+426	MA2938	MUM_Route_4	Route LM	MU-MA2938	10004541	170.0	\N	\N	\N	Route LM
+427	MA2979	Mumbai_Coverage_Route34	Route LM	MU-MA2979	10004968	70.0	\N	\N	\N	Route LM
+428	MA3052	Fibmax	LMC routes (stand alone) 	MU-MA3052	\N	\N	\N	\N	\N	LMC (Standalone)
+429	MA3055	Fibmax	LMC routes (stand alone) 	MU-MA3055	10004752	280.0	\N	\N	\N	LMC (Standalone)
+430	MA312	Fibmax	LMC routes (stand alone) 	MU-MA312	10004690	112.0	\N	\N	\N	LMC (Standalone)
+431	MA3132	Fibmax	LMC routes (stand alone) 	MU-MA3132	10004760	100.0	\N	\N	\N	LMC (Standalone)
+432	MA3180	Fibmax	LMC routes (stand alone) 	MU-MA3180	\N	\N	\N	\N	\N	LMC (Standalone)
+433	MA3332	Mumbai_Coverage_Route23	Route LM	MU-MA3332	10004556	50.0	\N	\N	\N	Route LM
+434	MA3372	Fibmax	LMC routes (stand alone) 	MU-MA3372	10004865	45.0	\N	\N	\N	LMC (Standalone)
+435	MA3407	MUM_Route_48	Route LM	MU-MA3407	\N	\N	\N	\N	\N	Route LM
+436	MA3417	MUM_Route_110	Route LM	MU-MA3417	10004593	140.0	\N	\N	\N	Route LM
+437	MA3428	Fibmax	LMC routes (stand alone) 	MU-MA3428	10004817	55.0	\N	\N	\N	LMC (Standalone)
+438	MA3429	Mumbai_Coverage_Route12	Route LM	MU-MA3429	10004561	40.0	\N	\N	\N	Route LM
+439	MA3442	Fibmax	LMC routes (stand alone) 	MU-MA3442	10004826	168.0	\N	\N	\N	LMC (Standalone)
+440	MA3485	MUM_Route_57	Route LM	MU-MA3485	10004659	130.0	\N	\N	\N	Route LM
+441	MA3495	MUM_Route_42	Route LM	MU-MA3495	10004961	110.0	\N	\N	\N	Route LM
+442	MA3548	MUM_Route_10	Route LM	MU-MA3548	\N	\N	\N	\N	\N	Route LM
+443	MA3567	Fibmax	LMC routes (stand alone) 	MU-MA3567	10004888	280.0	\N	\N	\N	LMC (Standalone)
+444	MA3580	Fibmax	LMC routes (stand alone) 	MU-MA3580	10004798	190.0	\N	\N	\N	LMC (Standalone)
+445	MA3597	MUM_Route_23	Route LM	MU-MA3597	10004959	110.0	\N	\N	\N	Route LM
+446	MA3601	Fibmax	LMC routes (stand alone) 	MU-MA3601	\N	\N	\N	\N	\N	LMC (Standalone)
+447	MA3616	MUM_Route_115	Route LM	MU-MA3616	10004538	280.0	\N	\N	\N	Route LM
+448	MA3631	MUM_Route_36	Route LM	MU-MA3631	\N	\N	\N	\N	\N	Route LM
+449	MA3655	MUM_Route_106	Route LM	MU-MA3655	10004997	50.0	\N	\N	\N	Route LM
+450	MA366	Fibmax	LMC routes (stand alone) 	MU-MA366	10004722	224.0	\N	\N	\N	LMC (Standalone)
+451	MA3668	MUM_Route_8	Route LM	MU-MA3668	10004619	50.0	\N	\N	\N	Route LM
+452	MA3670	Fibmax	LMC routes (stand alone) 	MU-MA3670	10004876	67.0	\N	\N	\N	LMC (Standalone)
+453	MA3675	Fibmax	LMC routes (stand alone) 	MU-MA3675	10004770	187.0	\N	\N	\N	LMC (Standalone)
+454	MA3683	Fibmax	LMC routes (stand alone) 	MU-MA3683	\N	\N	\N	\N	\N	LMC (Standalone)
+455	MA3718	Mumbai_Coverage_Route28	Route LM	MU-MA3718	\N	\N	\N	\N	\N	Route LM
+456	MA3759	Fibmax	LMC routes (stand alone) 	MU-MA3759	10004870	450.0	\N	\N	\N	LMC (Standalone)
+457	MA3795	Fibmax	LMC routes (stand alone) 	MU-MA3795	\N	\N	\N	\N	\N	LMC (Standalone)
+458	MA3827	Fibmax	LMC routes (stand alone) 	MU-MA3827	10004760	22.0	\N	\N	\N	LMC (Standalone)
+459	MA3828	Fibmax	LMC routes (stand alone) 	MU-MA3828	10004760	682.0	\N	\N	\N	LMC (Standalone)
+460	MA3832	Fibmax	LMC routes (stand alone) 	MU-MA3832	10004736	112.0	\N	\N	\N	LMC (Standalone)
+461	MA3841	Fibmax	LMC routes (stand alone) 	MU-MA3841	\N	\N	\N	\N	\N	LMC (Standalone)
+462	MA3897	Fibmax	LMC routes (stand alone) 	MU-MA3897	10004888	224.0	\N	\N	\N	LMC (Standalone)
+463	MA3916	Fibmax	LMC routes (stand alone) 	MU-MA3916	10004746	280.0	\N	\N	\N	LMC (Standalone)
+464	MA3984	Mumbai_Coverage_Route6	Route LM	MU-MA3984	10004550	30.0	\N	\N	\N	Route LM
+465	MA3996	MUM_Route_19	Route LM	MU-MA3996	10004663	280.0	\N	\N	\N	Route LM
+466	MA4005	Mumbai_Coverage_Route38	Route LM	MU-MA4005	10004967	150.0	\N	\N	\N	Route LM
+467	MA4011	Fibmax	LMC routes (stand alone) 	MU-MA4011	10004828	224.0	\N	\N	\N	LMC (Standalone)
+468	MA4012	Fibmax	LMC routes (stand alone) 	MU-MA4012	10004846	112.0	\N	\N	\N	LMC (Standalone)
+469	MA4021	MUM_Route_54	Route LM	MU-MA4021	10004637	70.0	\N	\N	\N	Route LM
+470	MA4035	MUM_Route_36	Route LM	MU-MA4035	10004962	90.0	\N	\N	\N	Route LM
+471	MA4076	Fibmax	LMC routes (stand alone) 	MU-MA4076	10004814	90.0	\N	\N	\N	LMC (Standalone)
+472	MA4100	Fibmax	LMC routes (stand alone) 	MU-MA4100	10004691	280.0	\N	\N	\N	LMC (Standalone)
+473	MA4114	Fibmax	LMC routes (stand alone) 	MU-MA4114	10004819	726.0	\N	\N	\N	LMC (Standalone)
+474	MA4127	Fibmax	LMC routes (stand alone) 	MU-MA4127	10004868	146.0	\N	\N	\N	LMC (Standalone)
+475	MA4138	MUM_Route_42	Route LM	MU-MA4138	10004961	50.0	\N	\N	\N	Route LM
+476	MA4147	MUM_Route_68	Route LM	MU-MA4147	10004657	50.0	\N	\N	\N	Route LM
+477	MA4210	Fibmax	LMC routes (stand alone) 	MU-MA4210	10004881	11.0	\N	\N	\N	LMC (Standalone)
+478	MA4226	MUM_Route_10	Route LM	MU-MA4226	10004641	20.0	\N	\N	\N	Route LM
+479	MA4247	Fibmax	LMC routes (stand alone) 	MU-MA4247	10004719	179.0	\N	\N	\N	LMC (Standalone)
+480	MA4248	MUM_Route_38	Route LM	MU-MA4248	10004674	250.0	\N	\N	\N	Route LM
+481	MA4315	MUM_Route_97	Route LM	MU-MA4315	10004672	100.0	\N	\N	\N	Route LM
+482	MA4376	Mumbai_Coverage_Route37	Route LM	MU-MA4376	10004574	100.0	\N	\N	\N	Route LM
+483	MA4382	MUM_Route_122	Route LM	MU-MA4382	10004534	220.0	\N	\N	\N	Route LM
+484	MA4416	Fibmax	LMC routes (stand alone) 	MU-MA4416	10004792	280.0	\N	\N	\N	LMC (Standalone)
+485	MA4450	MUM_Route_157	Route LM	MU-MA4450	10004656	20.0	\N	\N	\N	Route LM
+486	MA4466	MUM_Route_55	Route LM	MU-MA4466	10004628	60.0	\N	\N	\N	Route LM
+487	MA4523	MUM_Route_81	Route LM	MU-MA4523	\N	\N	\N	\N	\N	Route LM
+488	MA4535	Fibmax	LMC routes (stand alone) 	MU-MA4535	10004768	280.0	\N	\N	\N	LMC (Standalone)
+489	MA4570	MUM_Route_55	Route LM	MU-MA4570	\N	\N	\N	\N	\N	Route LM
+490	MA4575	Fibmax	LMC routes (stand alone) 	MU-MA4575	10004760	286.0	\N	\N	\N	LMC (Standalone)
+491	MA4606	Mumbai_Coverage_Route3	Route LM	MU-MA4606	10004549	10.0	\N	\N	\N	Route LM
+492	MA4620	MUM_Route_157	Route LM	MU-MA4620	10004656	70.0	\N	\N	\N	Route LM
+493	MA4632	Fibmax	LMC routes (stand alone) 	MU-MA4632	10004704	291.0	\N	\N	\N	LMC (Standalone)
+494	MA4640	MUM_Route_90	Route LM	MU-MA4640	10004960	70.0	\N	\N	\N	Route LM
+495	MA4659	Fibmax	LMC routes (stand alone) 	MU-MA4659	10004822	67.0	\N	\N	\N	LMC (Standalone)
+496	MA4669	Mumbai_Coverage_Route12	Route LM	MU-MA4669	10004561	40.0	\N	\N	\N	Route LM
+497	MA4735	Fibmax	LMC routes (stand alone) 	MU-MA4735	10004871	858.0	\N	\N	\N	LMC (Standalone)
+498	MA4786	Fibmax	LMC routes (stand alone) 	MU-MA4786	10004720	291.0	\N	\N	\N	LMC (Standalone)
+499	MA4828	Fibmax	LMC routes (stand alone) 	MU-MA4828	10004723	231.0	\N	\N	\N	LMC (Standalone)
+500	MA4846	MUM_Route_38	Route LM	MU-MA4846	10004674	120.0	\N	\N	\N	Route LM
+501	MA4901	MUM_Route_27	Route LM	MU-MA4901	10004594	250.0	\N	\N	\N	Route LM
+502	MA4977	Fibmax	LMC routes (stand alone) 	MU-MA4977	10004747	258.0	\N	\N	\N	LMC (Standalone)
+503	MA5034	Fibmax	LMC routes (stand alone) 	MU-MA5034	10004770	110.0	\N	\N	\N	LMC (Standalone)
+504	MA5051	Mumbai_Coverage_Route7	Route LM	MU-MA5051	10004531	20.0	\N	\N	\N	Route LM
+505	MA5091	Fibmax	LMC routes (stand alone) 	MU-MA5091	\N	\N	\N	\N	\N	LMC (Standalone)
+506	MA5099	Fibmax	LMC routes (stand alone) 	MU-MA5099	10004842	224.0	\N	\N	\N	LMC (Standalone)
+507	MA5118	MUM_Route_80	Route LM	MU-MA5118	10004627	60.0	\N	\N	\N	Route LM
+508	MA5138	Mumbai_Coverage_Route13	Route LM	MU-MA5138	10004559	190.0	\N	\N	\N	Route LM
+509	MA5147	Mumbai_Coverage_Route7	Route LM	MU-MA5147	10004531	140.0	\N	\N	\N	Route LM
+510	MA5153	Mumbai_Coverage_Route13	Route LM	MU-MA5153	10004559	280.0	\N	\N	\N	Route LM
+511	MA5208	Mumbai_Coverage_Route21	Route LM	MU-MA5208	10004548	120.0	\N	\N	\N	Route LM
+512	MA5212	MUM_Route_42	Route LM	MU-MA5212	10004961	280.0	\N	\N	\N	Route LM
+513	MA5223	MUM_Route_25	Route LM	MU-MA5223	10004656	200.0	\N	\N	\N	Route LM
+514	MA5231	Mumbai_Coverage_Route23	Route LM	MU-MA5231	10004556	40.0	\N	\N	\N	Route LM
+515	MA5238	Fibmax	LMC routes (stand alone) 	MU-MA5238	10004716	90.0	\N	\N	\N	LMC (Standalone)
+516	MA5269	MUM_Route_8	Route LM	MU-MA5269	10004619	170.0	\N	\N	\N	Route LM
+517	MA5287	MUM_Route_36	Route LM	MU-MA5287	10004962	150.0	\N	\N	\N	Route LM
+518	MA5407	Fibmax	LMC routes (stand alone) 	MU-MA5407	10004770	11.0	\N	\N	\N	LMC (Standalone)
+519	MA5495	Fibmax	LMC routes (stand alone) 	MU-MA5495	10004751	134.0	\N	\N	\N	LMC (Standalone)
+520	MA5500	MUM_Route_110	Route LM	MU-MA5500	10004593	170.0	\N	\N	\N	Route LM
+521	MA5523	Mumbai_Coverage_Route13	Route LM	MU-MA5523	10004559	60.0	\N	\N	\N	Route LM
+522	MA5557	MUM_Route_38	Route LM	MU-MA5557	10004674	150.0	\N	\N	\N	Route LM
+523	MA5656	MUM_Route_68	Route LM	MU-MA5656	10004657	20.0	\N	\N	\N	Route LM
+524	MA5673	MUM_Route_97	Route LM	MU-MA5673	10004672	40.0	\N	\N	\N	Route LM
+525	MA5707	Mumbai_Coverage_Route17	Route LM	MU-MA5707	10004547	50.0	\N	\N	\N	Route LM
+526	MA5750	Fibmax	LMC routes (stand alone) 	MU-MA5750	10004888	168.0	\N	\N	\N	LMC (Standalone)
+527	MA5851	Mumbai_Coverage_Route10	Route LM	MU-MA5851	10004558	190.0	\N	\N	\N	Route LM
+528	MA5877	MUM_Route_58	Route LM	MU-MA5877	\N	\N	\N	\N	\N	Route LM
+529	MA5982	Fibmax	LMC routes (stand alone) 	MU-MA5982	10004770	11.0	\N	\N	\N	LMC (Standalone)
+530	MA599	Mumbai_Coverage_Route13	Route LM	MU-MA599	10004559	450.0	\N	\N	\N	Route LM
+531	MA6019	Fibmax	LMC routes (stand alone) 	MU-MA6019	10004867	280.0	\N	\N	\N	LMC (Standalone)
+532	MA6036	MUM_Route_113	Route LM	MU-MA6036	10004598	150.0	\N	\N	\N	Route LM
+533	MA6080	Mumbai_Coverage_Route29	Route LM	MU-MA6080	10004519	300.0	\N	\N	\N	Route LM
+534	MA609	MUM_Route_37	Route LM	MU-MA609	10004525	110.0	\N	\N	\N	Route LM
+535	MA6103	Fibmax	LMC routes (stand alone) 	MU-MA6103	\N	\N	\N	\N	\N	LMC (Standalone)
+536	MA6116	MUM_Route_113	Route LM	MU-MA6116	10004598	150.0	\N	\N	\N	Route LM
+537	MA6156	MUM_Route_23	Route LM	MU-MA6156	10004959	80.0	\N	\N	\N	Route LM
+538	MA6227	Fibmax	LMC routes (stand alone) 	MU-MA6227	10004850	154.0	\N	\N	\N	LMC (Standalone)
+539	MA6274	Fibmax	LMC routes (stand alone) 	MU-MA6274	10004712	157.0	\N	\N	\N	LMC (Standalone)
+540	MA6295	MUM_Route_10	Route LM	MU-MA6295	10004641	30.0	\N	\N	\N	Route LM
+541	MA6340	Fibmax	LMC routes (stand alone) 	MU-MA6340	\N	\N	\N	\N	\N	LMC (Standalone)
+542	MA6341	MUM_Route_33	Route LM	MU-MA6341	10004523	20.0	\N	\N	\N	Route LM
+543	MA638	MUM_Route_45	Route LM	MU-MA638	10004670	200.0	\N	\N	\N	Route LM
+544	MA6472	Mumbai_Coverage_Route3	Route LM	MU-MA6472	\N	\N	\N	\N	\N	Route LM
+545	MA649	Fibmax	LMC routes (stand alone) 	MU-MA649	10004802	542.0	\N	\N	\N	LMC (Standalone)
+546	MA6498	Fibmax	LMC routes (stand alone) 	MU-MA6498	10004878	168.0	\N	\N	\N	LMC (Standalone)
+547	MA6505	Fibmax	LMC routes (stand alone) 	MU-MA6505	\N	\N	\N	\N	\N	LMC (Standalone)
+548	MA6540	MUM_Route_10	Route LM	MU-MA6540	10004641	270.0	\N	\N	\N	Route LM
+549	MA6546	Fibmax	LMC routes (stand alone) 	MU-MA6546	\N	\N	\N	\N	\N	LMC (Standalone)
+550	MA658	Fibmax	LMC routes (stand alone) 	MU-MA658	\N	\N	\N	\N	\N	LMC (Standalone)
+551	MA699	Fibmax	LMC routes (stand alone) 	MU-MA699	\N	\N	\N	\N	\N	LMC (Standalone)
+552	MA701	Fibmax	LMC routes (stand alone) 	MU-MA701	\N	\N	\N	\N	\N	LMC (Standalone)
+553	MA72	Fibmax	LMC routes (stand alone) 	MU-MA72	10004844	112.0	\N	\N	\N	LMC (Standalone)
+554	MA728	MUM_Route_55	Route LM	MU-MA728	10004628	100.0	\N	\N	\N	Route LM
+555	MA73	Fibmax	LMC routes (stand alone) 	MU-MA73	10004740	280.0	\N	\N	\N	LMC (Standalone)
+556	MA742	MUM_Route_8	Route LM	MU-MA742	10004619	280.0	\N	\N	\N	Route LM
+557	MA751	Fibmax	LMC routes (stand alone) 	MU-MA751	\N	\N	\N	\N	\N	LMC (Standalone)
+558	MA769	Fibmax	LMC routes (stand alone) 	MU-MA769	\N	\N	\N	\N	\N	LMC (Standalone)
+559	MA818	Mumbai_Coverage_Route3	Route LM	MU-MA818	10004549	50.0	\N	\N	\N	Route LM
+560	MA882	Fibmax	LMC routes (stand alone) 	MU-MA882	10004760	11.0	\N	\N	\N	LMC (Standalone)
+561	MA928	Fibmax	LMC routes (stand alone) 	MU-MA928	10004856	368.0	\N	\N	\N	LMC (Standalone)
+562	MA943	Fibmax	LMC routes (stand alone) 	MU-MA943	10004757	168.0	\N	\N	\N	LMC (Standalone)
+563	MA954	Mumbai_Coverage_Route31	Route LM	MU-MA954	10004580	100.0	\N	\N	\N	Route LM
+564	MA960	Fibmax	LMC routes (stand alone) 	MU-MA960	10004888	235.0	\N	\N	\N	LMC (Standalone)
+565	MA981	Fibmax	LMC routes (stand alone) 	MU-MA981	10004770	110.0	\N	\N	\N	LMC (Standalone)
+566	MB1084	Fibmax	LMC routes (stand alone) 	MU-MB1084	10004853	220.0	\N	\N	\N	LMC (Standalone)
+567	MB1103	MUM_Route_38	Route LM	MU-MB1103	10004674	70.0	\N	\N	\N	Route LM
+568	MB1134	Fibmax	LMC routes (stand alone) 	MU-MB1134	\N	\N	\N	\N	\N	LMC (Standalone)
+569	MB1155	Fibmax	LMC routes (stand alone) 	MU-MB1155	10004843	78.0	\N	\N	\N	LMC (Standalone)
+570	MB1179	MUM_Route_23	Route LM	MU-MB1179	10004959	50.0	\N	\N	\N	Route LM
+571	MB1187	Mumbai_Coverage_Route13	Route LM	MU-MB1187	10004559	100.0	\N	\N	\N	Route LM
+572	MB1250	MUM_Route_27	Route LM	MU-MB1250	10004594	200.0	\N	\N	\N	Route LM
+573	MB1259	Mumbai_Coverage_Route7	Route LM	MU-MB1259	10004531	30.0	\N	\N	\N	Route LM
+574	MB1266	MUM_Route_81	Route LM	MU-MB1266	10004680	150.0	\N	\N	\N	Route LM
+575	MB1311	Fibmax	LMC routes (stand alone) 	MU-MB1311	10004877	373.0	\N	\N	\N	LMC (Standalone)
+576	MB1348	MUM_Route_23	Route LM	MU-MB1348	10004959	110.0	\N	\N	\N	Route LM
+577	MB1349	Mumbai_Coverage_Route3	Route LM	MU-MB1349	10004549	10.0	\N	\N	\N	Route LM
+578	MB1435	MUM_Route_115	Route LM	MU-MB1435	10004538	110.0	\N	\N	\N	Route LM
+579	MB1450	Mumbai_Coverage_Route39	Route LM	MU-MB1450	\N	\N	\N	\N	\N	Route LM
+580	MB1466	Mumbai_Coverage_Route3	Route LM	MU-MB1466	10004549	10.0	\N	\N	\N	Route LM
+581	MB1474	Fibmax	LMC routes (stand alone) 	MU-MB1474	\N	\N	\N	\N	\N	LMC (Standalone)
+582	MB1481	Fibmax	LMC routes (stand alone) 	MU-MB1481	10004756	280.0	\N	\N	\N	LMC (Standalone)
+583	MB1504	MUM_Route_99	Route LM	MU-MB1504	\N	\N	\N	\N	\N	Route LM
+584	MB1581	Mumbai_Coverage_Route31	Route LM	MU-MB1581	10004580	40.0	\N	\N	\N	Route LM
+585	MB1584	Fibmax	LMC routes (stand alone) 	MU-MB1584	10004888	112.0	\N	\N	\N	LMC (Standalone)
+586	MB1585	Fibmax	LMC routes (stand alone) 	MU-MB1585	10004873	112.0	\N	\N	\N	LMC (Standalone)
+587	MB1589	Mumbai_Coverage_Route7	Route LM	MU-MB1589	10004531	90.0	\N	\N	\N	Route LM
+588	MB1591	Fibmax	LMC routes (stand alone) 	MU-MB1591	10004880	280.0	\N	\N	\N	LMC (Standalone)
+589	MB1595	MUM_Route_19	Route LM	MU-MB1595	10004663	130.0	\N	\N	\N	Route LM
+590	MB1608	Fibmax	LMC routes (stand alone) 	MU-MB1608	10004869	56.0	\N	\N	\N	LMC (Standalone)
+591	MB1615	Fibmax	LMC routes (stand alone) 	MU-MB1615	10004834	482.0	\N	\N	\N	LMC (Standalone)
+592	MB1626	Mumbai_Coverage_Route36	Route LM	MU-MB1626	10004568	30.0	\N	\N	\N	Route LM
+593	MB1703	MUM_Route_114	Route LM	MU-MB1703	10004516	10.0	\N	\N	\N	Route LM
+594	MB1711	MUM_Route_45	Route LM	MU-MB1711	10004670	150.0	\N	\N	\N	Route LM
+595	MB1714	MUM_Route_152	Route LM	MU-MB1714	10004959	60.0	\N	\N	\N	Route LM
+596	MB1718	MUM_Route_57	Route LM	MU-MB1718	10004659	160.0	\N	\N	\N	Route LM
+597	MB1723	Fibmax	LMC routes (stand alone) 	MU-MB1723	\N	\N	\N	\N	\N	LMC (Standalone)
+598	MB1727	Mumbai_Coverage_Route38	Route LM	MU-MB1727	10004967	40.0	\N	\N	\N	Route LM
+599	MB1728	Fibmax	LMC routes (stand alone) 	MU-MB1728	10004805	112.0	\N	\N	\N	LMC (Standalone)
+600	MB1785	Fibmax	LMC routes (stand alone) 	MU-MB1785	10004888	163.0	\N	\N	\N	LMC (Standalone)
+601	MB1795	MUM_Route_81	Route LM	MU-MB1795	10004680	170.0	\N	\N	\N	Route LM
+602	MB1882	MUM_Route_19	Route LM	MU-MB1882	10004663	60.0	\N	\N	\N	Route LM
+603	MB1917	Mumbai_Coverage_Route39	Route LM	MU-MB1917	10004571	60.0	\N	\N	\N	Route LM
+604	MB1935	Fibmax	LMC routes (stand alone) 	MU-MB1935	\N	\N	\N	\N	\N	LMC (Standalone)
+605	MB2148	Fibmax	LMC routes (stand alone) 	MU-MB2148	10004849	45.0	\N	\N	\N	LMC (Standalone)
+606	MB2153	Mumbai_Coverage_Route32	Route LM	MU-MB2153	10004555	110.0	\N	\N	\N	Route LM
+607	MB2213	Mumbai_Coverage_Route21	Route LM	MU-MB2213	10004548	130.0	\N	\N	\N	Route LM
+608	MB2224	MUM_Route_19	Route LM	MU-MB2224	10004663	60.0	\N	\N	\N	Route LM
+609	MB2225	MUM_Route_10	Route LM	MU-MB2225	\N	\N	\N	\N	\N	Route LM
+610	MB2229	Fibmax	LMC routes (stand alone) 	MU-MB2229	\N	\N	\N	\N	\N	LMC (Standalone)
+611	MB2230	MUM_Route_97	Route LM	MU-MB2230	\N	\N	\N	\N	\N	Route LM
+612	MB2233	MUM_Route_97	Route LM	MU-MB2233	\N	\N	\N	\N	\N	Route LM
+613	MB2236	MUM_Route_25	Route LM	MU-MB2236	10004651	80.0	\N	\N	\N	Route LM
+614	MB2238	MUM_Route_23	Route LM	MU-MB2238	\N	\N	\N	\N	\N	Route LM
+615	MB2239	MUM_Route_97	Route LM	MU-MB2239	\N	\N	\N	\N	\N	Route LM
+616	MB2245	MUM_Route_23	Route LM	MU-MB2245	\N	\N	\N	\N	\N	Route LM
+617	MB2246	MUM_Route_68	Route LM	MU-MB2246	10004657	80.0	\N	\N	\N	Route LM
+618	MB2248	MUM_Route_80	Route LM	MU-MB2248	\N	\N	\N	\N	\N	Route LM
+619	MB2250	MUM_Route_13	Route LM	MU-MB2250	\N	\N	\N	\N	\N	Route LM
+620	MB2282	MUM_Route_49	Route LM	MU-MB2282	10004665	60.0	\N	\N	\N	Route LM
+621	MB2355	Fibmax	LMC routes (stand alone) 	MU-MB2355	10004836	102.0	\N	\N	\N	LMC (Standalone)
+622	MB2367	Fibmax	LMC routes (stand alone) 	MU-MB2367	10004760	143.0	\N	\N	\N	LMC (Standalone)
+623	MB2378	MUM_Route_108	Route LM	MU-MB2378	10004634	250.0	\N	\N	\N	Route LM
+624	MB2459	MUM_Route_81	Route LM	MU-MB2459	10004680	150.0	\N	\N	\N	Route LM
+625	MB2460	Fibmax	LMC routes (stand alone) 	MU-MB2460	10004739	168.0	\N	\N	\N	LMC (Standalone)
+626	MB2462	MUM_Route_19	Route LM	MU-MB2462	10004663	80.0	\N	\N	\N	Route LM
+627	MB2466	Fibmax	LMC routes (stand alone) 	MU-MB2466	10004770	110.0	\N	\N	\N	LMC (Standalone)
+628	MB2484	Fibmax	LMC routes (stand alone) 	MU-MB2484	10004794	30.0	\N	\N	\N	LMC (Standalone)
+629	MB2489	Fibmax	LMC routes (stand alone) 	MU-MB2489	10004789	34.0	\N	\N	\N	LMC (Standalone)
+630	MB2495	Fibmax	LMC routes (stand alone) 	MU-MB2495	10004717	224.0	\N	\N	\N	LMC (Standalone)
+631	MB2505	Fibmax	LMC routes (stand alone) 	MU-MB2505	10004750	257.0	\N	\N	\N	LMC (Standalone)
+632	MB2509	Fibmax	LMC routes (stand alone) 	MU-MB2509	10004839	102.0	\N	\N	\N	LMC (Standalone)
+633	MB2619	Fibmax	LMC routes (stand alone) 	MU-MB2619	\N	\N	\N	\N	\N	LMC (Standalone)
+634	MB2632	Fibmax	LMC routes (stand alone) 	MU-MB2632	10004760	123.0	\N	\N	\N	LMC (Standalone)
+635	MB2649	MUM_Route_97	Route LM	MU-MB2649	10004672	220.0	\N	\N	\N	Route LM
+636	MB2693	Fibmax	LMC routes (stand alone) 	MU-MB2693	\N	\N	\N	\N	\N	LMC (Standalone)
+637	MB2765	Fibmax	LMC routes (stand alone) 	MU-MB2765	10004786	560.0	\N	\N	\N	LMC (Standalone)
+638	MB2815	MUM_Route_45	Route LM	MU-MB2815	10004670	180.0	\N	\N	\N	Route LM
+639	MB2836	Mumbai_Coverage_Route21	Route LM	MU-MB2836	10004548	180.0	\N	\N	\N	Route LM
+640	MB2863	Fibmax	LMC routes (stand alone) 	MU-MB2863	10004726	112.0	\N	\N	\N	LMC (Standalone)
+641	MB2875	MUM_Route_27	Route LM	MU-MB2875	10004594	60.0	\N	\N	\N	Route LM
+642	MB2903	MUM_Route_81	Route LM	MU-MB2903	10004680	190.0	\N	\N	\N	Route LM
+643	MB2965	Mumbai_Coverage_Route9	Route LM	MU-MB2965	10004537	120.0	\N	\N	\N	Route LM
+644	MB2981	Fibmax	LMC routes (stand alone) 	MU-MB2981	10004845	258.0	\N	\N	\N	LMC (Standalone)
+645	MB2983	Fibmax	LMC routes (stand alone) 	MU-MB2983	10004888	112.0	\N	\N	\N	LMC (Standalone)
+646	MB3106	Fibmax	LMC routes (stand alone) 	MU-MB3106	10004689	190.0	\N	\N	\N	LMC (Standalone)
+647	MB3135	MUM_Route_10	Route LM	MU-MB3135	10004641	130.0	\N	\N	\N	Route LM
+648	MB3183	Fibmax	LMC routes (stand alone) 	MU-MB3183	10004788	40.0	\N	\N	\N	LMC (Standalone)
+649	MB3220	MUM_Route_81	Route LM	MU-MB3220	10004680	110.0	\N	\N	\N	Route LM
+650	MB3226	Fibmax	LMC routes (stand alone) 	MU-MB3226	10004875	168.0	\N	\N	\N	LMC (Standalone)
+651	MB3249	MUM_Route_23	Route LM	MU-MB3249	10004959	90.0	\N	\N	\N	Route LM
+652	MB3271	MUM_Route_81	Route LM	MU-MB3271	10004680	100.0	\N	\N	\N	Route LM
+653	MB328	Fibmax	LMC routes (stand alone) 	MU-MB328	\N	\N	\N	\N	\N	LMC (Standalone)
+654	MB3309	Mumbai_Coverage_Route9	Route LM	MU-MB3309	10004537	140.0	\N	\N	\N	Route LM
+655	MB3311	Fibmax	LMC routes (stand alone) 	MU-MB3311	10004761	224.0	\N	\N	\N	LMC (Standalone)
+656	MB3372	MUM_Route_27	Route LM	MU-MB3372	10004594	90.0	\N	\N	\N	Route LM
+657	MB3457	Fibmax	LMC routes (stand alone) 	MU-MB3457	10004812	78.0	\N	\N	\N	LMC (Standalone)
+658	MB3478	Fibmax	LMC routes (stand alone) 	MU-MB3478	10004718	112.0	\N	\N	\N	LMC (Standalone)
+659	MB3502	Fibmax	LMC routes (stand alone) 	MU-MB3502	10004888	224.0	\N	\N	\N	LMC (Standalone)
+660	MB3510	Fibmax	LMC routes (stand alone) 	MU-MB3510	10004760	110.0	\N	\N	\N	LMC (Standalone)
+661	MB3514	Tamil Sangham to Guru Teg Bahadur Nagar Station	Route LM	MU-MB3514	10004971	250.0	\N	\N	\N	Route LM
+662	MB36	Fibmax	LMC routes (stand alone) 	MU-MB36	\N	\N	\N	\N	\N	LMC (Standalone)
+663	MB3667	MUM_Route_50	Route LM	MU-MB3667	10004765	280.0	\N	\N	\N	Route LM
+664	MB3864	MUM_Route_113	Route LM	MU-MB3864	10004598	260.0	\N	\N	\N	Route LM
+665	MB3890	Fibmax	LMC routes (stand alone) 	MU-MB3890	\N	\N	\N	\N	\N	LMC (Standalone)
+666	MB3940	MUM_Route_106	Route LM	MU-MB3940	10005007	350.0	\N	\N	\N	Route LM
+667	MB3948	MUM_Route_10	Route LM	MU-MB3948	\N	\N	\N	\N	\N	Route LM
+668	MB4276	Mumbai_Coverage_Route34	Route LM	MU-MB4276	10004968	100.0	\N	\N	\N	Route LM
+669	MB4281	Fibmax	LMC routes (stand alone) 	MU-MB4281	10004852	220.0	\N	\N	\N	LMC (Standalone)
+670	MB4330	Fibmax	LMC routes (stand alone) 	MU-MB4330	10004796	228.0	\N	\N	\N	LMC (Standalone)
+671	MB4458	MUM_Route_80	Route LM	MU-MB4458	\N	\N	\N	\N	\N	Route LM
+672	MB4464	MUM_Route_80	Route LM	MU-MB4464	\N	\N	\N	\N	\N	Route LM
+673	MB4482	Fibmax	LMC routes (stand alone) 	MU-MB4482	10004749	112.0	\N	\N	\N	LMC (Standalone)
+674	MB4699	Fibmax	LMC routes (stand alone) 	MU-MB4699	10004715	134.0	\N	\N	\N	LMC (Standalone)
+675	MB4811	MUM_Route_109	Route LM	MU-MB4811	10004597	30.0	\N	\N	\N	Route LM
+676	MB5402	MUM_Route_109	Route LM	MU-MB5402	10004597	220.0	\N	\N	\N	Route LM
+677	MB5491	Fibmax	LMC routes (stand alone) 	MU-MB5491	10004797	224.0	\N	\N	\N	LMC (Standalone)
+678	MB5740	MUM_Route_107	Route LM	MU-MB5740	\N	\N	\N	\N	\N	Route LM
+679	MB5951	Mumbai_Coverage_Route23	Route LM	MU-MB5951	10004556	50.0	\N	\N	\N	Route LM
+680	MB5991	MUM_Route_81	Route LM	MU-MB5991	10004680	200.0	\N	\N	\N	Route LM
+681	MB5997	MUM_Route_8	Route LM	MU-MB5997	10004619	60.0	\N	\N	\N	Route LM
+682	MB6015	MUM_Route_99	Route LM	MU-MB6015	10004624	30.0	\N	\N	\N	Route LM
+683	MB6017	MUM_Route_99	Route LM	MU-MB6017	10004624	70.0	\N	\N	\N	Route LM
+684	MB6122	MUM_Route_122	Route LM	MU-MB6122	10004534	280.0	\N	\N	\N	Route LM
+685	MB6174	Mumbai_Coverage_Route39	Route LM	MU-MB6174	10004571	90.0	\N	\N	\N	Route LM
+686	MB6370	Fibmax	LMC routes (stand alone) 	MU-MB6370	10004838	33.0	\N	\N	\N	LMC (Standalone)
+687	MB6371	MUM_Route_57	Route LM	MU-MB6371	10004659	100.0	\N	\N	\N	Route LM
+688	MB640	Fibmax	LMC routes (stand alone) 	MU-MB640	10004829	112.0	\N	\N	\N	LMC (Standalone)
+689	MB6417	MUM_Route_42	Route LM	MU-MB6417	10004961	220.0	\N	\N	\N	Route LM
+690	MB6428	MUM_Route_122	Route LM	MU-MB6428	10004534	280.0	\N	\N	\N	Route LM
+691	MB6431	Mumbai_Coverage_Route15	Route LM	MU-MB6431	10004562	170.0	\N	\N	\N	Route LM
+692	MB6434	MUM_Route_27	Route LM	MU-MB6434	10004594	60.0	\N	\N	\N	Route LM
+693	MB6450	MUM_Route_4	Route LM	MU-MB6450	10004541	60.0	\N	\N	\N	Route LM
+694	MB817	Fibmax	LMC routes (stand alone) 	MU-MB817	\N	\N	\N	\N	\N	LMC (Standalone)
+695	Mercury Tower AGG_LM	MUM_Route_68	Additional Route	MUM_Route_68	10004657	1200.0	\N	\N	\N	Route
+696	MU-Metro Rail LM	Mumbai_Coverage_Route28	Route LM	MU-3019	10004512	60.0	\N	\N	\N	Route LM
+697	MU-Metro Rail LM_1	\N	Metro_LM	MU-Metro Rail LM	10004981	100.0	\N	\N	\N	Metro_LM
+698	MU-Metro Rail LM_10	\N	Metro_LM	MU-Metro Rail LM	10004984	120.0	\N	\N	\N	Metro_LM
+699	MU-Metro Rail LM_2	\N	Metro_LM	MU-Metro Rail LM	10004980	120.0	\N	\N	\N	Metro_LM
+700	MU-Metro Rail LM_3	\N	Metro_LM	MU-Metro Rail LM	10004979	90.0	\N	\N	\N	Metro_LM
+701	MU-Metro Rail LM_4	\N	Metro_LM	MU-Metro Rail LM	10004978	290.0	\N	\N	\N	Metro_LM
+702	MU-Metro Rail LM_5	\N	Metro_LM	MU-Metro Rail LM	10004976	160.0	\N	\N	\N	Metro_LM
+703	MU-Metro Rail LM_6	\N	Metro_LM	MU-Metro Rail LM	10004975	100.0	\N	\N	\N	Metro_LM
+704	MU-Metro Rail LM_7	\N	Metro_LM	MU-Metro Rail LM	10004977	200.0	\N	\N	\N	Metro_LM
+705	MU-Metro Rail LM_8	\N	Metro_LM	MU-Metro Rail LM	10004983	200.0	\N	\N	\N	Metro_LM
+706	MU-Metro Rail LM_9	\N	Metro_LM	MU-Metro Rail LM	10004982	110.0	\N	\N	\N	Metro_LM
+707	MUM_AND_933_LM	MUM_Route_113	Additional Route	MUM_Route_113	10004598	100.0	\N	\N	\N	Route
+708	MUM_BKC_906_LM	MUM_Route_108	Additional Route	MUM_Route_108	10004634	480.0	\N	\N	\N	Route
+709	MUM_KAI_901_LM	MUM_Route_109	DC Route	MUM_Route_109	10004597	100.0	\N	\N	\N	Route
+710	MUM_LBS_906_LM	MUM_Route_117	Additional Route	MUM_Route_117	10004590	120.0	\N	\N	\N	Route
+711	MUM_Route_10	MUM_Route_10	DC Route	MUM_Route_10	\N	\N	10004633	10280.0	\N	Route
+712	MUM_Route_101	MUM_Route_101	Additional Route	MUM_Route_101	\N	\N	10004640	800.0	\N	Route
+713	MUM_Route_102	MUM_Route_102	Additional Route	MUM_Route_102	\N	\N	\N	\N	\N	Route
+714	MUM_Route_103	MUM_Route_10	DC Route	MUM_Route_10	10004641	190.0	\N	\N	\N	Route
+715	MUM_Route_104	MUM_Route_10	DC Route	MUM_Route_10	10004641	190.0	\N	\N	\N	Route
+716	MUM_Route_105	MUM_Route_105	Additional Route	MUM_Route_105	\N	\N	10004630	1000.0	\N	Route
+717	MUM_Route_106	MUM_Route_106	Additional Route	MUM_Route_106	\N	\N	10004997	3490.0	\N	Route
+718	MUM_Route_107	MUM_Route_107	Additional Route	MUM_Route_107	10004623	650.0	10004626	1768.0	\N	Route
+719	MUM_Route_108	MUM_Route_108	Additional Route	MUM_Route_108	10004634	600.0	10004643	2787.0	\N	Route
+720	MUM_Route_109	MUM_Route_109	DC Route	MUM_Route_109	10004585	2900.0	\N	\N	\N	Route
+721	MUM_Route_11	MUM_Route_11	Additional Route	MUM_Route_11	10004625	1000.0	10004642	390.0	\N	Route
+722	MUM_Route_110	MUM_Route_110	Additional Route	MUM_Route_110	10004589	6220.0	\N	\N	\N	Route
+723	MUM_Route_111	MUM_Route_111	Additional Route	MUM_Route_111	10004515	841.0	\N	\N	\N	Route
+724	MUM_Route_112	MUM_Route_112	Additional Route	MUM_Route_112	10004515	1020.0	\N	\N	\N	Route
+725	MUM_Route_113	MUM_Route_113	Additional Route	MUM_Route_113	10004596	1890.0	\N	\N	\N	Route
+726	MUM_Route_114	MUM_Route_114	Additional Route	MUM_Route_114	10004526	3720.0	\N	\N	\N	Route
+727	MUM_Route_115	MUM_Route_115	Additional Route	MUM_Route_115	10004533	4550.0	\N	\N	\N	Route
+728	MUM_Route_116	MUM_Route_116	Additional Route	MUM_Route_116	10004579	940.0	\N	\N	\N	Route
+729	MUM_Route_117	MUM_Route_117	Additional Route	MUM_Route_117	10004591	1760.0	\N	\N	\N	Route
+730	MUM_Route_118	MUM_Route_68	Additional Route	MUM_Route_68	10004657	720.0	\N	\N	\N	Route
+731	MUM_Route_121	MUM_Route_122	Additional Route	MUM_Route_122	10004530	2080.0	\N	\N	\N	Route
+732	MUM_Route_122	MUM_Route_122	Additional Route	MUM_Route_122	10004530	2670.0	\N	\N	\N	Route
+733	MUM_Route_123	MUM_Route_123	Additional Route	MUM_Route_123	10004664	1500.0	\N	\N	\N	Route
+734	MUM_Route_124	MUM_Route_123	Additional Route	MUM_Route_123	10004664	200.0	\N	\N	\N	Route
+735	MUM_Route_125	MUM_Route_125	Additional Route	MUM_Route_125	10004684	190.0	\N	\N	\N	Route
+736	MUM_Route_126	MUM_Route_126	Additional Route	MUM_Route_126	\N	\N	\N	\N	\N	Route
+737	MUM_Route_127	MUM_Route_127	Additional Route	MUM_Route_127	10004577	1190.0	\N	\N	\N	Route
+738	MUM_Route_13	MUM_Route_13	DC Route	MUM_Route_13	10004586	3030.0	\N	\N	\N	Route
+739	MUM_Route_131	MUM_Route_10	DC Route	MUM_Route_131	10004641	200.0	\N	\N	\N	Route
+740	MUM_Route_133	MUM_Route_133	Additional Route	MUM_Route_133	10004686	120.0	\N	\N	\N	Route
+741	MUM_Route_134	MUM_Route_134	Additional Route	MUM_Route_134	10004679	1370.0	\N	\N	\N	Route
+742	MUM_Route_135	MUM_Route_113	Additional Route	MUM_Route_113	10004596	440.0	\N	\N	\N	Route
+743	MUM_Route_136	MUM_Route_113	Additional Route	MUM_Route_113	10004596	140.0	\N	\N	\N	Route
+744	MUM_Route_137	MUM_Route_38	DC Route	MUM_Route_38	10004674	300.0	\N	\N	\N	Route
+745	MUM_Route_138	MUM_Route_139	Additional Route	MUM_Route_139	10004653	50.0	\N	\N	\N	Route
+746	MUM_Route_139	MUM_Route_139	Additional Route	MUM_Route_139	10004653	50.0	\N	\N	\N	Route
+747	MUM_Route_140	MUM_Route_140	Additional Route	MUM_Route_140	10004655	70.0	\N	\N	\N	Route
+748	MUM_Route_141	MUM_Route_141	Additional Route	MUM_Route_141	10004513	2280.0	\N	\N	\N	Route
+749	MUM_Route_142	MUM_Route_142	Additional Route	MUM_Route_142	10004517	2760.0	\N	\N	\N	Route
+750	MUM_Route_143	MUM_Route_4	DC Route	MUM_Route_4	10004541	110.0	\N	\N	\N	Route
+751	MUM_Route_144	MUM_Route_4	DC Route	MUM_Route_4	10004541	100.0	\N	\N	\N	Route
+752	MUM_Route_145	MUM_Route_4	DC Route	MUM_Route_4	10004541	200.0	\N	\N	\N	Route
+753	MUM_Route_146	MUM_Route_4	DC Route	MUM_Route_4	10004541	500.0	\N	\N	\N	Route
+754	MUM_Route_147	MUM_Route_147	Additional Route	MUM_Route_147	10004676	180.0	\N	\N	\N	Route
+755	MUM_Route_148	MUM_Route_23	DC Route	MUM_Route_23	10004959	280.0	\N	\N	\N	Route
+756	MUM_Route_149	MUM_Route_23	DC Route	MUM_Route_23	10004959	400.0	\N	\N	\N	Route
+757	MUM_Route_150 & 151	MUM_Route_150 & 151	Additional Route	MUM_Route_150 & 151	10004667	420.0	\N	\N	\N	Route
+758	MUM_Route_152	MUM_Route_23	DC Route	MUM_Route_23	10004959	500.0	\N	\N	\N	Route
+759	MUM_Route_153	MUM_Route_23	DC Route	MUM_Route_23	10004959	520.0	\N	\N	\N	Route
+760	MUM_Route_155	MUM_Route_155	Additional Route	MUM_Route_155	10004683	1500.0	\N	\N	\N	Route
+761	MUM_Route_156	MUM_Route_156	Additional Route	MUM_Route_156	10004673	500.0	\N	\N	\N	Route
+762	MUM_Route_157	MUM_Route_157	Additional Route	MUM_Route_157	10004668	1930.0	\N	\N	\N	Route
+763	MUM_Route_158	MUM_Route_25	DC Route	MUM_Route_25	10004650	220.0	\N	\N	\N	Route
+764	MUM_Route_159	MUM_Route_25	DC Route	MUM_Route_25	10004650	390.0	\N	\N	\N	Route
+765	MUM_Route_16	MUM_Route_16	DC Route	MUM_Route_16	10004592	1830.0	\N	\N	\N	Route
+766	MUM_Route_160	MUM_Route_160	Additional Route	MUM_Route_160	10004654	1430.0	\N	\N	\N	Route
+767	MUM_Route_161	MUM_Route_161	Additional Route	MUM_Route_161	10004685	300.0	\N	\N	\N	Route
+768	MUM_Route_162	MUM_Route_161	Additional Route	MUM_Route_161	10004685	180.0	\N	\N	\N	Route
+769	MUM_Route_163	MUM_Route_48	DC Route	MUM_Route_48	10004682	231.0	\N	\N	\N	Route
+770	MUM_Route_164 & 165	MUM_Route_48	DC Route	MUM_Route_48	10004682	560.0	\N	\N	\N	Route
+771	MUM_Route_166	MUM_Route_90	DC Route	MUM_Route_90	10004960	1684.0	\N	\N	\N	Route
+772	MUM_Route_167	MUM_Route_48	DC Route	MUM_Route_48	10004681	110.0	\N	\N	\N	Route
+773	MUM_Route_168	MUM_Route_48	DC Route	MUM_Route_48	10004681	110.0	\N	\N	\N	Route
+774	MUM_Route_169	MUM_Route_169	Additional Route	MUM_Route_169	10004666	1110.0	\N	\N	\N	Route
+775	MUM_Route_170	MUM_Route_170	Additional Route	MUM_Route_170	10004652	1110.0	\N	\N	\N	Route
+776	MUM_Route_171 & 172	MUM_Route_171 & 172	Additional Route	MUM_Route_171 & 172	10004660	220.0	\N	\N	\N	Route
+777	MUM_Route_173	MUM_Route_23	DC Route	MUM_Route_23	10004959	550.0	\N	\N	\N	Route
+778	MUM_Route_19	MUM_Route_19	DC Route	MUM_Route_19	10004663	5920.0	\N	\N	\N	Route
+779	MUM_Route_23	MUM_Route_23	DC Route	MUM_Route_23	10004959	12500.0	10004631	6420.0	\N	Route
+780	MUM_Route_24	MUM_Route_45	DC Route	MUM_Route_45	10004670	960.0	\N	\N	\N	Route
+781	MUM_Route_25	MUM_Route_25	DC Route	MUM_Route_25	10004650	8500.0	\N	\N	\N	Route
+782	MUM_Route_27	MUM_Route_27	DC Route	MUM_Route_27	10004587	9230.0	\N	\N	\N	Route
+783	MUM_Route_30	MUM_Route_30	DC Route	MUM_Route_30	10004669	1150.0	\N	\N	\N	Route
+784	MUM_Route_31	MUM_Route_31	DC Route	MUM_Route_31	10004662	970.0	\N	\N	\N	Route
+785	MUM_Route_33	MUM_Route_33	DC Route	MUM_Route_33	10004524	4230.0	\N	\N	\N	Route
+786	MUM_Route_35	MUM_Route_35	DC Route	MUM_Route_35	10004671	360.0	\N	\N	\N	Route
+787	MUM_Route_36	MUM_Route_36	DC Route	MUM_Route_36	10004962	3600.0	\N	\N	\N	Route
+788	MUM_Route_37	MUM_Route_37	DC Route	MUM_Route_37	10004535	2620.0	\N	\N	\N	Route
+789	MUM_Route_38	MUM_Route_38	DC Route	MUM_Route_38	10004674	3080.0	\N	\N	\N	Route
+790	MUM_Route_4	MUM_Route_4	DC Route	MUM_Route_4	10004522	6820.0	\N	\N	\N	Route
+791	MUM_Route_42	MUM_Route_42	DC Route	MUM_Route_42	10004961	7770.0	\N	\N	\N	Route
+792	MUM_Route_45	MUM_Route_45	DC Route	MUM_Route_45	10004670	6432.0	10004678	11930.0	\N	Route
+793	MUM_Route_46	MUM_Route_81	DC Route	MUM_Route_81	10004680	480.0	\N	\N	\N	Route
+794	MUM_Route_48	MUM_Route_48	DC Route	MUM_Route_48	\N	\N	10004681	3300.0	\N	Route
+795	MUM_Route_49	MUM_Route_49	DC Route	MUM_Route_49	10004665	2800.0	\N	\N	\N	Route
+796	MUM_Route_50	MUM_Route_50	DC Route	MUM_Route_50	\N	\N	10004765	6030.0	\N	Route
+797	MUM_Route_54	MUM_Route_54	DC Route	MUM_Route_54	\N	\N	10004637	5060.0	\N	Route
+798	MUM_Route_55	MUM_Route_55	DC Route	MUM_Route_55	10005002	2040.0	10004629	11962.0	\N	Route
+799	MUM_Route_57	MUM_Route_57	DC Route	MUM_Route_57	10004659	4860.0	\N	\N	\N	Route
+800	MUM_Route_58	MUM_Route_58	DC Route	MUM_Route_58	10004658	4790.0	\N	\N	\N	Route
+801	MUM_Route_62	MUM_Route_62	DC Route	MUM_Route_62	10004599	900.0	\N	\N	\N	Route
+802	MUM_Route_68	MUM_Route_68	Additional Route	MUM_Route_68	10004657	3950.0	\N	\N	\N	Route
+803	MUM_Route_74	MUM_Route_68	Additional Route	MUM_Route_68	10004657	390.0	\N	\N	\N	Route
+804	MUM_Route_75	MUM_Route_68	Additional Route	MUM_Route_68	10004657	563.0	\N	\N	\N	Route
+805	MUM_Route_8	MUM_Route_8	DC Route	MUM_Route_8	10004619	2424.0	10004632	11771.0	\N	Route
+806	MUM_Route_80	MUM_Route_80	DC Route	MUM_Route_80	\N	\N	10004639	5070.0	\N	Route
+807	MUM_Route_81	MUM_Route_81	DC Route	MUM_Route_81	10004680	12010.0	\N	\N	\N	Route
+808	MUM_Route_89	MUM_Route_89	DC Route	MUM_Route_89	10004675	4890.0	\N	\N	\N	Route
+809	MUM_Route_90	MUM_Route_90	DC Route	MUM_Route_90	10004960	14270.0	10004771	4900.0	\N	Route
+810	MUM_Route_97	MUM_Route_97	DC Route	MUM_Route_97	10004672	12000.0	\N	\N	\N	Route
+811	MUM_Route_99	MUM_Route_99	Additional Route	MUM_Route_99	\N	\N	10004622	1970.0	\N	Route
+812	MUM_STS_901 AGG	MUM_Route_45	DC Route	MUM_Route_45	10004670	150.0	\N	\N	\N	Route
+813	MUM_VRL_901_LM	MUM_Route_27	DC Route	MUM_Route_27	10004594	200.0	\N	\N	\N	Route
+814	MUM_XNQ_901_LM	MUM_Route_55	DC Route	MUM_Route_55	10004628	100.0	\N	\N	\N	Route
+815	MUM/FTB/915_LM	MUM_Route_25	DC Route	MUM_Route_25	10004651	150.0	\N	\N	\N	Route
+816	MUM/GOE/908_LM	MUM_Route_114	Additional Route	MUM_Route_114	10004516	50.0	\N	\N	\N	Route
+817	MUM/LBS/904_LM	MUM_Route_157	Additional Route	MUM_Route_157	\N	\N	\N	\N	\N	Route
+818	Mumbai_Coverage_Route1	Mumbai_Coverage_Route1	Additional Route	Mumbai_Coverage_Route1	10004966	1210.0	\N	\N	\N	Route
+819	Mumbai_Coverage_Route10	Mumbai_Coverage_Route10	Additional Route	Mumbai_Coverage_Route10	10004527	1430.0	\N	\N	\N	Route
+820	Mumbai_Coverage_Route12	Mumbai_Coverage_Route12	Additional Route	Mumbai_Coverage_Route12	10004542	4400.0	\N	\N	\N	Route
+821	Mumbai_Coverage_Route13	Mumbai_Coverage_Route13	Additional Route	Mumbai_Coverage_Route13	10004545	3030.0	\N	\N	\N	Route
+822	Mumbai_Coverage_Route15	Mumbai_Coverage_Route15	Additional Route	Mumbai_Coverage_Route15	10004551	1580.0	\N	\N	\N	Route
+823	Mumbai_Coverage_Route17	Mumbai_Coverage_Route17	Additional Route	Mumbai_Coverage_Route17	10004552	1320.0	\N	\N	\N	Route
+824	Mumbai_Coverage_Route2	Mumbai_Coverage_Route2	Additional Route	Mumbai_Coverage_Route2	10004553	910.0	\N	\N	\N	Route
+825	Mumbai_Coverage_Route21	Mumbai_Coverage_Route21	Additional Route	Mumbai_Coverage_Route21	10004564	2000.0	\N	\N	\N	Route
+826	Mumbai_Coverage_Route23	Mumbai_Coverage_Route23	Additional Route	Mumbai_Coverage_Route23	10004554	1760.0	\N	\N	\N	Route
+827	Mumbai_Coverage_Route25	Mumbai_Coverage_Route25	Additional Route	Mumbai_Coverage_Route25	10004569	1650.0	\N	\N	\N	Route
+828	Mumbai_Coverage_Route28	Mumbai_Coverage_Route28	Additional Route	Mumbai_Coverage_Route28	10004511	1860.0	\N	\N	\N	Route
+829	Mumbai_Coverage_Route29	Mumbai_Coverage_Route29	Additional Route	Mumbai_Coverage_Route29	10004540	2400.0	\N	\N	\N	Route
+830	Mumbai_Coverage_Route3	Mumbai_Coverage_Route3	Additional Route	Mumbai_Coverage_Route3	10004544	2200.0	\N	\N	\N	Route
+831	Mumbai_Coverage_Route30	Mumbai_Coverage_Route30	Additional Route	Mumbai_Coverage_Route30	10004566	2050.0	\N	\N	\N	Route
+832	Mumbai_Coverage_Route31	Mumbai_Coverage_Route31	Additional Route	Mumbai_Coverage_Route31	10004578	2200.0	\N	\N	\N	Route
+833	Mumbai_Coverage_Route32	Mumbai_Coverage_Route32	Additional Route	Mumbai_Coverage_Route32	10004543	6750.0	\N	\N	\N	Route
+834	Mumbai_Coverage_Route33	Mumbai_Coverage_Route33	Additional Route	Mumbai_Coverage_Route33	10004565	4860.0	\N	\N	\N	Route
+835	Mumbai_Coverage_Route34	Mumbai_Coverage_Route34	Additional Route	Mumbai_Coverage_Route34	10004968	1600.0	\N	\N	\N	Route
+836	Mumbai_Coverage_Route35	Mumbai_Coverage_Route35	Additional Route	Mumbai_Coverage_Route35	10004963	4070.0	\N	\N	\N	Route
+837	Mumbai_Coverage_Route36	Mumbai_Coverage_Route36	Additional Route	Mumbai_Coverage_Route36	10004584	870.0	\N	\N	\N	Route
+838	Mumbai_Coverage_Route37	Mumbai_Coverage_Route37	Additional Route	Mumbai_Coverage_Route37	10004575	1900.0	\N	\N	\N	Route
+839	Mumbai_Coverage_Route38	Mumbai_Coverage_Route38	Additional Route	Mumbai_Coverage_Route38	10004967	2300.0	\N	\N	\N	Route
+840	Mumbai_Coverage_Route39	Mumbai_Coverage_Route39	Additional Route	Mumbai_Coverage_Route39	10004570	2310.0	\N	\N	\N	Route
+841	Mumbai_Coverage_Route4	Mumbai_Coverage_Route4	Additional Route	Mumbai_Coverage_Route4	10004560	1500.0	\N	\N	\N	Route
+842	Mumbai_Coverage_Route5	Mumbai_Coverage_Route5	Additional Route	Mumbai_Coverage_Route5	10004529	1900.0	\N	\N	\N	Route
+843	Mumbai_Coverage_Route6	Mumbai_Coverage_Route6	Additional Route	Mumbai_Coverage_Route6	10004563	1980.0	\N	\N	\N	Route
+844	Mumbai_Coverage_Route7	Mumbai_Coverage_Route7	Additional Route	Mumbai_Coverage_Route7	10004531	2590.0	\N	\N	\N	Route
+845	Mumbai_Coverage_Route9	Mumbai_Coverage_Route9	Additional Route	Mumbai_Coverage_Route9	10004532	3770.0	\N	\N	\N	Route
+846	Netmagic DC7_LM	MUM_Route_23	DC Route	MUM_Route_23	10004959	100.0	\N	\N	\N	Route
+847	NSE Mumbai_LM	MUM_Route_55	DC Route	MUM_Route_55	10004628	500.0	\N	\N	\N	Route
+848	ROM1533	Fibmax	LMC routes (stand alone) 	MH-ROM1533	\N	\N	\N	\N	\N	LMC (Standalone)
+849	Route55 to Route 107 	Route55 to Route 107 	Additional Route	Route55 to Route 107 	\N	\N	10004623	600.0	\N	Route
+850	Sant Gadge Maharaj Chowk to NM Joshi Marg	Sant Gadge Maharaj Chowk to NM Joshi Marg	Mono Rail Additional Route	Sant Gadge Maharaj Chowk to NM Joshi Marg	\N	\N	10004974	880.0	\N	Route
+851	Sapata Sangam_LM	MUM_Route_90	DC Route	MUM_Route_90	10004960	1200.0	\N	\N	\N	Route
+852	Satyam Agg_LM	MUM_Route_19	DC Route	MUM_Route_19	10004663	200.0	\N	\N	\N	Route
+853	Supreme Chamber_LM	MUM_Route_23	DC Route	MUM_Route_23	10004959	800.0	\N	\N	\N	Route
+854	Tamil Sangham to Guru Teg Bahadur Nagar Station	Tamil Sangham to Guru Teg Bahadur Nagar Station	Mono Rail Additional Route	Tamil Sangham to Guru Teg Bahadur Nagar Station	\N	\N	10004971	2273.0	\N	Route
+\.
+
+
+--
+-- Name: budget_master_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.budget_master_id_seq', 815, true);
+
+
+--
+-- Name: dn_master_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.dn_master_id_seq', 89, true);
+
+
+--
+-- Name: master_tracker_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.master_tracker_id_seq', 85, true);
+
+
+--
+-- Name: po_master_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.po_master_id_seq', 858, true);
+
+
+--
+-- Name: budget_master budget_master_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.budget_master
+    ADD CONSTRAINT budget_master_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: dn_master dn_master_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.dn_master
+    ADD CONSTRAINT dn_master_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: master_tracker master_tracker_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.master_tracker
+    ADD CONSTRAINT master_tracker_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: po_master po_master_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.po_master
+    ADD CONSTRAINT po_master_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: idx_budget_route; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_budget_route ON public.budget_master USING btree (route_id_site_id);
+
+
+--
+-- Name: idx_budget_survey; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_budget_survey ON public.budget_master USING btree (survey_id);
+
+
+--
+-- Name: idx_dn_master_dn_number; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dn_master_dn_number ON public.dn_master USING btree (dn_number);
+
+
+--
+-- Name: idx_dn_route; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dn_route ON public.dn_master USING btree (route_id_site_id);
+
+
+--
+-- Name: idx_po_master_route_id_site_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_po_master_route_id_site_id ON public.po_master USING btree (route_id_site_id);
+
+
+--
+-- Name: idx_po_route; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_po_route ON public.po_master USING btree (route_id_site_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict nuDeHdYRa182Ap6IA8X9QWpa44wDUXGa9VLzBLIRRlXLDax4Qyy5L47F37sMGMx
+

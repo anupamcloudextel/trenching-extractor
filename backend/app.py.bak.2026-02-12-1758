@@ -1,0 +1,228 @@
+from fastapi import FastAPI, UploadFile, File, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from pathlib import Path
+import os
+import tempfile
+import re
+from datetime import datetime, date
+from decimal import Decimal
+
+from parsers import nmmc
+from parsers import mcgm_application_parser
+
+# Excel reader (needed for route analysis)
+try:
+    from openpyxl import load_workbook
+except Exception:
+    load_workbook = None
+
+app = FastAPI(
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json",
+    redoc_url="/api/redoc",
+)
+
+# -------------------------------------------------------------------
+# ROUTE IDS (for dropdown)
+# -------------------------------------------------------------------
+@app.get("/api/route-ids")
+def get_route_ids():
+    base = Path("/var/www/trenching-extractor-fresh/ROUTES")
+    route_ids = set()
+
+    if base.exists():
+        # Folders like: ROUTES/Route 48
+        for p in base.glob("Route *"):
+            m = re.search(r"Route\s+(\d+)", p.name, re.IGNORECASE)
+            if m:
+                route_ids.add(m.group(1))
+
+        # Folders like: ROUTES/Coverage Route13 or Coverage route 7
+        for p in base.glob("Coverage*"):
+            m = re.search(r"Route\s*([0-9]+)", p.name, re.IGNORECASE)
+            if m:
+                route_ids.add(m.group(1))
+
+    return {"route_ids": sorted(route_ids, key=lambda x: int(x))}
+
+
+# -------------------------------------------------------------------
+# CORS
+# -------------------------------------------------------------------
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# -------------------------------------------------------------------
+# MASTER FILE DOWNLOADS (static files)
+# -------------------------------------------------------------------
+#MASTER_BUDGET_PATH = Path("/var/www/trenching-extractor-fresh/Master_Budget_BACKUP.xlsx")
+MASTER_BUDGET_DB = Path("/var/www/trenching-extractor-fresh/master_files/master_budget.xlsx")
+
+# Pick ONE DN file as "master" for now (example: Route 45)
+MASTER_DN_PATH = Path("/var/www/trenching-extractor-fresh/ROUTES/Route 45/CE_DN_MUMU25R045.xlsx")
+
+# PO master file
+MASTER_PO_PATH = Path("/var/www/trenching-extractor-fresh/master_files/master_po.xlsx")
+
+
+@app.get("/api/download-master-po")
+def download_master_po():
+    if not MASTER_PO_PATH.exists():
+        raise HTTPException(status_code=404, detail=f"Missing file: {MASTER_PO_PATH}")
+    return FileResponse(
+        path=str(MASTER_PO_PATH),
+        filename="Master_PO.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@app.get("/api/download-master-budget")
+def download_master_budget():
+    if not MASTER_BUDGET_PATH.exists():
+        raise HTTPException(status_code=404, detail=f"Missing file: {MASTER_BUDGET_PATH}")
+    return FileResponse(
+        path=str(MASTER_BUDGET_PATH),
+        filename="Master_Budget.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+@app.get("/api/download-master-dn")
+def download_master_dn():
+    if not MASTER_DN_PATH.exists():
+        raise HTTPException(status_code=404, detail=f"Missing file: {MASTER_DN_PATH}")
+    return FileResponse(
+        path=str(MASTER_DN_PATH),
+        filename="Master_DN.xlsx",
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+
+# -------------------------------------------------------------------
+# ROUTE ANALYSIS (THIS WAS MISSING - fixes "Failed to fetch route analysis")
+# -------------------------------------------------------------------
+MASTER_BUDGET_DB = Path("/var/www/trenching-extractor-fresh/master_files/master_budget.xlsx")
+
+
+def _norm_key(s: str) -> str:
+    s = (s or "").strip().lower()
+    s = re.sub(r"[^a-z0-9]+", "_", s)
+    return s.strip("_")
+
+
+def _json_safe(v):
+    if v is None:
+        return None
+    if isinstance(v, (int, float, str, bool)):
+        return v
+    if isinstance(v, (datetime, date)):
+        return v.isoformat()
+    if isinstance(v, Decimal):
+        return float(v)
+    return str(v)
+
+
+@app.get("/api/route-analysis")
+def route_analysis(route_id_site_id: str = Query(...)):
+    # Dependency check
+    if load_workbook is None:
+        raise HTTPException(status_code=500, detail="openpyxl not installed in backend venv")
+
+    # File check
+    if not MASTER_BUDGET_DB.exists():
+        raise HTTPException(status_code=404, detail=f"Missing budget DB: {MASTER_BUDGET_DB}")
+
+    wb = load_workbook(str(MASTER_BUDGET_DB), data_only=True)
+
+    # pick a reasonable sheet (budget/master) otherwise active
+    ws = wb.active
+    for name in wb.sheetnames:
+        lname = name.lower()
+        if "budget" in lname or "master" in lname:
+            ws = wb[name]
+            break
+
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows or len(rows) < 2:
+        return {"data": []}
+
+    headers_raw = [str(h).strip() if h is not None else "" for h in rows[0]]
+    headers = [_norm_key(h) for h in headers_raw]
+
+    # find route column
+    route_col = None
+    for candidate in ["route_id_site_id", "route_id", "route", "site_id_route_id"]:
+        if candidate in headers:
+            route_col = headers.index(candidate)
+            break
+
+    if route_col is None:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Could not find route column in budget headers. Found: {headers[:40]} ..."
+        )
+
+    wanted = str(route_id_site_id).strip()
+    out = []
+
+    for r in rows[1:]:
+        if not r:
+            continue
+        val = r[route_col] if route_col < len(r) else None
+        if val is None:
+            continue
+        if str(val).strip() != wanted:
+            continue
+
+        item = {}
+        for i, key in enumerate(headers):
+            if not key:
+                continue
+            item[key] = _json_safe(r[i] if i < len(r) else None)
+        out.append(item)
+
+    return {"data": out}
+
+
+# -------------------------------------------------------------------
+# EXISTING APIs
+# -------------------------------------------------------------------
+@app.post("/api/nmmc-translate")
+async def nmmc_translate(file: UploadFile = File(...)):
+    suffix = os.path.splitext(file.filename or "")[1] or ".pdf"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp.write(await file.read())
+    tmp.close()
+
+    try:
+        translated_text = nmmc.translate_pdf_to_english(tmp.name)
+        return {"translated_text": translated_text}
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+
+@app.post("/api/debug-mcgm-application")
+async def debug_mcgm_application(file: UploadFile = File(...)):
+    temp = tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    temp.write(await file.read())
+    temp.close()
+
+    try:
+        doc = mcgm_application_parser.fitz.open(temp.name)
+        text = "\n".join(page.get_text() for page in doc)
+        doc.close()
+        return {"text": text}
+    finally:
+        try:
+            os.remove(temp.name)
+        except Exception:
+            pass
