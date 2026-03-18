@@ -16,6 +16,7 @@ import LmcPage from '@/components/budget-pages/lmc'
 import React from "react"
 import MasterTrackerSection from '@/components/budget-pages/MasterTracker';
 import RouteOverview from "@/components/budget-pages/route_overview";
+import RouteReport from "@/components/budget-pages/RouteReport";
 import DnManagementSection from "@/components/budget-pages/data_management";
 import ClientParserV2 from "@/components/budget-pages/ClientParserV2";
 
@@ -97,12 +98,14 @@ export default function Home() {
     <div className="min-h-screen bg-blue flex overflow-x-hidden">
       <AuthoritySidebar selected={activeAuthority} onSelect={setActiveAuthority} />
       <div className="flex-1 transition-all duration-300 sidebar-margin bg-[#101624] min-h-screen min-w-0">
-        <Header 
+          <Header 
           user={safeUser!} 
           analytics={analytics} 
           pageTitle={selectedAuthority ? selectedAuthority.name : (
             activeAuthority === 'budget-lmc' ? 'LMC Budget Upload' :
             activeAuthority === 'data-management' ? 'Data Management' :
+            activeAuthority === 'route-overview' ? 'Route Analysis' :
+            activeAuthority === 'route-report' ? 'Route Report' :
             activeAuthority === 'client-parser-v2' ? 'Client Parser V2' :
             "Master Dashboard"
           )} 
@@ -118,6 +121,8 @@ export default function Home() {
             <MasterTrackerSection />
           ) : activeAuthority === 'route-overview' ? (
             <RouteOverview />
+          ) : activeAuthority === 'route-report' ? (
+            <RouteReport />
           ) : activeAuthority === 'client-parser-v2' ? (
             <ClientParserV2 />
           ) : (

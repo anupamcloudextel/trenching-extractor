@@ -115,6 +115,18 @@ def init_tables(engine=None):
     _run_sql(engine, po_sql, fetch=False)
     _run_sql(engine, "CREATE UNIQUE INDEX IF NOT EXISTS idx_po_master_route_id_site_id ON po_master(route_id_site_id)", fetch=False)
 
+    planning_sql = """
+    CREATE TABLE IF NOT EXISTS planning_tracker (
+        id SERIAL PRIMARY KEY,
+        route_id_site_id VARCHAR(255) UNIQUE,
+        planning_date VARCHAR(50),
+        strategic_type VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    """
+    _run_sql(engine, planning_sql, fetch=False)
+    _run_sql(engine, "CREATE UNIQUE INDEX IF NOT EXISTS idx_planning_tracker_route_id_site_id ON planning_tracker(route_id_site_id)", fetch=False)
+
     logger.info("PostgreSQL tables initialized (dn_master, budget_master, po_master).")
 
 # ---- DN master ----
@@ -252,6 +264,12 @@ def upsert_po_master(row: Dict[str, Any]) -> None:
     upd = ", ".join(f"{c} = excluded.{c}" for c in cols if c != "route_id_site_id")
     sql = f"INSERT INTO po_master ({columns}) VALUES ({placeholders}) ON CONFLICT(route_id_site_id) DO UPDATE SET {upd}"
     _run_sql(engine, sql, params, fetch=False)
+
+# ---- Planning tracker ----
+def get_planning_tracker_by_route_id_site_id(route_id_site_id: str) -> Optional[Dict[str, Any]]:
+    engine = get_engine()
+    rows = _run_sql(engine, "SELECT * FROM planning_tracker WHERE route_id_site_id = :sid LIMIT 1", {"sid": route_id_site_id})
+    return rows[0] if rows else None
 
 def _serialize_row(row: Dict) -> Dict:
     out = {}

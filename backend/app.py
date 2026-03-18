@@ -439,9 +439,13 @@ def api_client_parser_authorities():
 @app.get("/api/client-parser-v2/dn-numbers")
 def api_client_parser_dn_numbers():
     """Return distinct DN numbers from dn_master for Client Parser V2."""
-    from sqlalchemy import text
     engine = local_db.get_engine()
-    rows = local_db._run_sql(engine, "SELECT DISTINCT dn_number FROM dn_master WHERE dn_number IS NOT NULL AND dn_number != '' ORDER BY dn_number")
+    rows = local_db._run_sql(
+        engine,
+        "SELECT DISTINCT dn_number FROM dn_master "
+        "WHERE dn_number IS NOT NULL AND dn_number != '' "
+        "ORDER BY dn_number",
+    )
     dn_numbers = [r.get("dn_number") for r in rows if r.get("dn_number")]
     return {"dn_numbers": dn_numbers}
 
@@ -465,6 +469,295 @@ async def api_client_parser_unified(
     if "error" in result:
         raise HTTPException(status_code=500, detail=result["error"])
     return result
+
+
+# -------------------------------------------------------------------
+# ROUTE REPORT API (Excel + JSON)
+# -------------------------------------------------------------------
+def _build_route_report_rows(route_id_site_id: str) -> List[Dict[str, Any]]:
+    """
+    Build per-DN rows for a route, combining budget_master, po_master, dn_master.
+    Keys are simple names for JSON; Excel uses table/column markers directly.
+    """
+    rid = (route_id_site_id or "").strip()
+    if not rid:
+        return []
+
+    budget_rows = local_db.query_budget_by_site_id_all(rid)
+    budget_row = budget_rows[0] if budget_rows else None
+    po_row = local_db.query_po_by_site_id(rid)
+    dn_rows = local_db.get_dn_by_route_id_site_id(rid)
+
+    rows: List[Dict[str, Any]] = []
+    for dn in dn_rows:
+        row: Dict[str, Any] = {}
+        # Core identifiers
+        row["route_id_site_id"] = rid
+        row["dn_number"] = dn.get("dn_number")
+        row["dn_length_mtr"] = dn.get("dn_length_mtr")
+        row["dn_received_date"] = dn.get("dn_received_date")
+        row["actual_total_non_refundable"] = dn.get("actual_total_non_refundable")
+
+        # Budget fields (example; extend as needed)
+        if budget_row:
+            row["budget_ce_length_mtr"] = budget_row.get("ce_length_mtr")
+            row["budget_ri_cost_per_meter"] = budget_row.get("ri_cost_per_meter")
+            row["budget_material_cost_per_meter"] = budget_row.get("material_cost_per_meter")
+            row["budget_build_cost_per_meter"] = budget_row.get("build_cost_per_meter")
+            row["budget_total_cost_without_deposit"] = budget_row.get("total_cost_without_deposit")
+
+        # PO fields (example; extend as needed)
+        if po_row:
+            row["po_route_type"] = po_row.get("route_type")
+            row["po_no_ip1"] = po_row.get("po_no_ip1")
+            row["po_no_cobuild"] = po_row.get("po_no_cobuild")
+            row["po_length_ip1"] = po_row.get("po_length_ip1")
+            row["po_length_cobuild"] = po_row.get("po_length_cobuild")
+
+        rows.append(row)
+
+    return rows
+
+
+def _build_route_report_workbook(route_id_site_id: str) -> "Any":
+    """
+    Open the template Excel and fill green cells whose values are
+    table_name(column_name) by pulling from budget_master, po_master, dn_master.
+    All formulas are left intact.
+    """
+    from pathlib import Path as _Path
+    import openpyxl as _openpyxl
+
+    rid = (route_id_site_id or "").strip()
+    if not rid:
+        raise HTTPException(status_code=400, detail="route_id_site_id is required")
+
+    # Fetch DB rows once
+    budget_rows = local_db.query_budget_by_site_id_all(rid)
+    budget_row = budget_rows[0] if budget_rows else None
+    po_row = local_db.query_po_by_site_id(rid)
+    planning_row = None
+    try:
+        planning_row = local_db.get_planning_tracker_by_route_id_site_id(rid)
+    except Exception:
+        planning_row = None
+    dn_rows = local_db.get_dn_by_route_id_site_id(rid)
+
+    # Template path from user
+    template_path = _Path(
+        r"D:\trenching-extractor-fresh\trenching-extractor-fresh\MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx"
+    )
+    if not template_path.exists():
+        raise HTTPException(status_code=404, detail=f"Template not found: {template_path}")
+
+    wb = _openpyxl.load_workbook(template_path)
+    sheet_name = "data-sheet"
+    if sheet_name not in wb.sheetnames:
+        raise HTTPException(status_code=500, detail=f"Sheet '{sheet_name}' not found in template")
+    ws = wb[sheet_name]
+
+    import re as _re
+
+    # This template has explicit mapping rows:
+    # - Row 2 contains green mapping cells for budget_master / po_master
+    #   and row 4 is the corresponding data row.
+    # - Row 18 contains green mapping cells for dn_master (dn_number, dn_length_mtr)
+    #   and the DN "Approval Required" summary rows (21, 30, ...) are filled.
+    map_pat = _re.compile(r"^[A-Za-z_]+\([A-Za-z0-9_]+\)$")
+
+    sources_common = {
+        "budget_master": budget_row or {},
+        "po_master": po_row or {},
+    }
+
+    # --- 1) Fill budget/po mapping (row 2 -> row 4) ---
+    mapping_row_budget = 2
+    target_row_budget = 4
+    for c in range(1, ws.max_column + 1):
+        marker = ws.cell(mapping_row_budget, c).value
+        if not (isinstance(marker, str) and map_pat.match(marker.strip())):
+            continue
+        table, col = marker.strip()[:-1].split("(", 1)
+        table = table.strip()
+        col = col.strip()
+        src = sources_common.get(table, {})
+        # Clear any template sample value first (but keep formulas if any)
+        tgt_cell = ws.cell(target_row_budget, c)
+        if not (isinstance(tgt_cell.value, str) and str(tgt_cell.value).startswith("=")):
+            tgt_cell.value = None
+        tgt_cell.value = src.get(col)
+
+    # Also fill planning_tracker values into fixed cells
+    # M4 -> planning_date, N4 -> strategic_type
+    if planning_row:
+        ws["M4"].value = planning_row.get("planning_date")
+        ws["N4"].value = planning_row.get("strategic_type")
+    else:
+        ws["M4"].value = None
+        ws["N4"].value = None
+
+    # Ensure deterministic DN order (and stable alignment in template blocks)
+    dn_rows = sorted(dn_rows, key=lambda x: str(x.get("dn_number") or ""))
+
+    # --- 2) DN block expansion + fill ---
+    # The template repeats a DN section starting with a header row where col A == "Approval Required"
+    # followed by a summary row (col A numeric). We ensure there are enough blocks for every DN,
+    # then fill each block with that DN's values.
+    def _find_dn_block_starts() -> List[int]:
+        starts: List[int] = []
+        for rr in range(2, ws.max_row + 1):
+            if ws.cell(rr, 1).value == "Approval Required":
+                starts.append(rr)
+        return starts
+
+    def _copy_block(src_start: int, src_height: int, dest_start: int) -> None:
+        """
+        Copy rows [src_start .. src_start+src_height-1] to start at dest_start,
+        including styles and values. Formulas are shifted by row offset.
+        """
+        from copy import copy as _copy
+        from openpyxl.formula.translate import Translator as _Translator
+
+        row_offset = dest_start - src_start
+        for r_src in range(src_start, src_start + src_height):
+            r_dst = r_src + row_offset
+            ws.row_dimensions[r_dst].height = ws.row_dimensions[r_src].height
+            for c in range(1, ws.max_column + 1):
+                src_cell = ws.cell(r_src, c)
+                dst_cell = ws.cell(r_dst, c)
+                # style
+                dst_cell._style = _copy(src_cell._style)
+                dst_cell.number_format = src_cell.number_format
+                dst_cell.font = _copy(src_cell.font)
+                dst_cell.fill = _copy(src_cell.fill)
+                dst_cell.border = _copy(src_cell.border)
+                dst_cell.alignment = _copy(src_cell.alignment)
+                dst_cell.protection = _copy(src_cell.protection)
+                dst_cell.comment = src_cell.comment
+
+                v = src_cell.value
+                if isinstance(v, str) and v.startswith("="):
+                    # shift formulas to new row positions
+                    dst_cell.value = _Translator(v, origin=src_cell.coordinate).translate_formula(row_shift=row_offset, col_shift=0)
+                else:
+                    dst_cell.value = v
+
+    dn_block_starts = _find_dn_block_starts()
+    if not dn_block_starts:
+        raise HTTPException(status_code=500, detail="DN block header ('Approval Required') not found in template.")
+
+    # Determine DN block height by distance to next block start (or fallback to 9 rows if only one exists)
+    if len(dn_block_starts) >= 2:
+        dn_block_height = dn_block_starts[1] - dn_block_starts[0]
+    else:
+        dn_block_height = 9
+
+    # Ensure enough DN blocks for every DN in dn_master
+    needed_blocks = len(dn_rows)
+    existing_blocks = len(dn_block_starts)
+    if needed_blocks > existing_blocks:
+        template_start = dn_block_starts[0]
+        # Insert/copy blocks after the last existing block
+        insert_at = dn_block_starts[-1] + dn_block_height
+        for _ in range(needed_blocks - existing_blocks):
+            # Insert blank rows for a new block
+            ws.insert_rows(insert_at, amount=dn_block_height)
+            # Copy template block into the inserted rows
+            _copy_block(template_start, dn_block_height, insert_at)
+            insert_at += dn_block_height
+        # Re-scan block starts after inserting
+        dn_block_starts = _find_dn_block_starts()
+    elif needed_blocks < existing_blocks:
+        # Remove extra pre-existing template blocks so we don't leak sample DN data.
+        # Delete from bottom to top so row indices remain valid while deleting.
+        for start in sorted(dn_block_starts[needed_blocks:], reverse=True):
+            ws.delete_rows(start, amount=dn_block_height)
+        dn_block_starts = _find_dn_block_starts()
+
+    # DN mapping row defines which columns to fill in the summary rows
+    mapping_row_dn = 18
+    dn_col_mappings: Dict[int, str] = {}  # excel_col -> dn_master column
+    for c in range(1, ws.max_column + 1):
+        marker = ws.cell(mapping_row_dn, c).value
+        if not (isinstance(marker, str) and map_pat.match(marker.strip())):
+            continue
+        table, col = marker.strip()[:-1].split("(", 1)
+        table = table.strip()
+        col = col.strip()
+        if table == "dn_master":
+            dn_col_mappings[c] = col
+
+    # Fill each DN into its own block (aligned vertically)
+    for idx, dn in enumerate(dn_rows):
+        if idx >= len(dn_block_starts):
+            break
+        # summary row is the row immediately below the header row
+        r = dn_block_starts[idx] + 1
+        # DN header cells in the summary row (as per template)
+        # B{r} -> dn_master(dn_number)
+        # D{r} -> dn_master(dn_length_mtr)
+        # Clear sample values first (preserve formulas elsewhere)
+        ws.cell(r, 2).value = None
+        ws.cell(r, 4).value = None
+        ws.cell(r, 2).value = dn.get("dn_number")
+        ws.cell(r, 4).value = dn.get("dn_length_mtr")
+
+        # DN breakup values (as per template)
+        # F{r+2} -> dn_master(dn_ri_amount)
+        # F{r+3} -> dn_master(ground_rent)
+        # F{r+4} -> dn_master(administrative_charge)
+        ws.cell(r + 2, 6).value = None
+        ws.cell(r + 3, 6).value = None
+        ws.cell(r + 4, 6).value = None
+        ws.cell(r + 2, 6).value = dn.get("dn_ri_amount")
+        ws.cell(r + 3, 6).value = dn.get("ground_rent")
+        ws.cell(r + 4, 6).value = dn.get("administrative_charge")
+
+        # Also fill any additional dn_master(...) mappings present in row 18
+        # (keeps compatibility if template is extended with more mapped columns)
+        for c, dn_col in dn_col_mappings.items():
+            # Avoid re-setting the ones we already hardcoded above, but it's harmless if same.
+            ws.cell(r, c).value = dn.get(dn_col)
+
+    # --- 3) Block totals ---
+    # As requested: data-sheet!D8 should be the sum of all dn_master.dn_length_mtr for this route.
+    try:
+        total_dn_length = 0.0
+        for dn in dn_rows:
+            v = dn.get("dn_length_mtr")
+            if v is None or v == "":
+                continue
+            total_dn_length += float(v)
+        ws["D8"].value = total_dn_length
+    except Exception:
+        # If any conversion fails, keep the template value/formula as-is.
+        pass
+
+    return wb
+
+
+@app.get("/api/route-report")
+def api_route_report(route_id_site_id: str = Query(..., alias="route_id_site_id")):
+    """Return combined route report data as JSON for on-screen table."""
+    rows = _build_route_report_rows(route_id_site_id)
+    return {"rows": rows}
+
+
+@app.get("/api/route-report/xlsx")
+def api_route_report_xlsx(route_id_site_id: str = Query(..., alias="route_id_site_id")):
+    """Return downloadable Excel route report based on template."""
+    import tempfile as _tempfile
+
+    wb = _build_route_report_workbook(route_id_site_id)
+    tmp = _tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
+    wb.save(tmp.name)
+    tmp.close()
+    filename = f"Route_Report_{route_id_site_id.strip() or 'route'}.xlsx"
+    return FileResponse(
+        tmp.name,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename=filename,
+    )
 
 
 # Field name from frontend validation table -> dn_master column
