@@ -519,7 +519,11 @@ def _build_route_report_rows(route_id_site_id: str) -> List[Dict[str, Any]]:
     return rows
 
 
-def _build_route_report_workbook(route_id_site_id: str) -> "Any":
+def _build_route_report_workbook(
+    route_id_site_id: str,
+    modality: Optional[str] = None,
+    rate_for: Optional[str] = None,
+) -> "Any":
     """
     Open the template Excel and fill green cells whose values are
     table_name(column_name) by pulling from budget_master, po_master, dn_master.
@@ -586,6 +590,19 @@ def _build_route_report_workbook(route_id_site_id: str) -> "Any":
         if not (isinstance(tgt_cell.value, str) and str(tgt_cell.value).startswith("=")):
             tgt_cell.value = None
         tgt_cell.value = src.get(col)
+
+    # Modality impacts C4 + which PO length goes into D4
+    mod = (modality or "").strip()
+    if mod:
+        ws["C4"].value = mod
+        try:
+            if po_row:
+                if mod.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built"):
+                    ws["D4"].value = po_row.get("po_length_cobuild")
+                else:
+                    ws["D4"].value = po_row.get("po_length_ip1")
+        except Exception:
+            pass
 
     # Also fill planning_tracker values into fixed cells
     # M4 -> planning_date, N4 -> strategic_type
@@ -670,7 +687,12 @@ def _build_route_report_workbook(route_id_site_id: str) -> "Any":
     elif needed_blocks < existing_blocks:
         # Remove extra pre-existing template blocks so we don't leak sample DN data.
         # Delete from bottom to top so row indices remain valid while deleting.
-        for start in sorted(dn_block_starts[needed_blocks:], reverse=True):
+        starts_to_delete = dn_block_starts[needed_blocks:]
+        # Special case: if there are 0 DNs, keep one empty block so fixed cells
+        # (like F21 in the first block) remain present in the output.
+        if needed_blocks == 0 and len(dn_block_starts) > 0:
+            starts_to_delete = dn_block_starts[1:]
+        for start in sorted(starts_to_delete, reverse=True):
             ws.delete_rows(start, amount=dn_block_height)
         dn_block_starts = _find_dn_block_starts()
 
@@ -706,18 +728,45 @@ def _build_route_report_workbook(route_id_site_id: str) -> "Any":
         # F{r+2} -> dn_master(dn_ri_amount)
         # F{r+3} -> dn_master(ground_rent)
         # F{r+4} -> dn_master(administrative_charge)
+        # F{r+5} -> Access Charges (template default 0; keep 0 unless present)
         ws.cell(r + 2, 6).value = None
         ws.cell(r + 3, 6).value = None
         ws.cell(r + 4, 6).value = None
         ws.cell(r + 2, 6).value = dn.get("dn_ri_amount")
         ws.cell(r + 3, 6).value = dn.get("ground_rent")
         ws.cell(r + 4, 6).value = dn.get("administrative_charge")
+        if ws.cell(r + 5, 6).value is None:
+            ws.cell(r + 5, 6).value = dn.get("access_charges", 0) if isinstance(dn, dict) else 0
 
         # Also fill any additional dn_master(...) mappings present in row 18
         # (keeps compatibility if template is extended with more mapped columns)
         for c, dn_col in dn_col_mappings.items():
             # Avoid re-setting the ones we already hardcoded above, but it's harmless if same.
             ws.cell(r, c).value = dn.get(dn_col)
+
+        # Some viewers (and certain download flows) don't evaluate Excel formulas.
+        # The template expects F{r} to be =SUM(F{r+2}:F{r+5}). We compute and set the value explicitly.
+        def _to_float(x: Any) -> float:
+            if x is None or x == "":
+                return 0.0
+            try:
+                return float(x)
+            except Exception:
+                return 0.0
+
+        f_total = (
+            _to_float(ws.cell(r + 2, 6).value)
+            + _to_float(ws.cell(r + 3, 6).value)
+            + _to_float(ws.cell(r + 4, 6).value)
+            + _to_float(ws.cell(r + 5, 6).value)
+        )
+        ws.cell(r, 6).value = f_total
+
+    # If no DN rows exist for this route, explicitly set the first block's total to 0
+    # so F21 (and equivalents) is not left uncomputed in non-Excel viewers.
+    if not dn_rows and dn_block_starts:
+        r0 = dn_block_starts[0] + 1
+        ws.cell(r0, 6).value = 0
 
     # --- 3) Block totals ---
     # As requested: data-sheet!D8 should be the sum of all dn_master.dn_length_mtr for this route.
@@ -733,22 +782,37 @@ def _build_route_report_workbook(route_id_site_id: str) -> "Any":
         # If any conversion fails, keep the template value/formula as-is.
         pass
 
+    # Hint Excel to recalc on open (useful for other dependent cells),
+    # while also setting key totals explicitly above.
+    try:
+        wb.calculation.fullCalcOnLoad = True
+    except Exception:
+        pass
+
     return wb
 
 
 @app.get("/api/route-report")
-def api_route_report(route_id_site_id: str = Query(..., alias="route_id_site_id")):
+def api_route_report(
+    route_id_site_id: str = Query(..., alias="route_id_site_id"),
+    modality: Optional[str] = Query(None),
+    rate_for: Optional[str] = Query(None),
+):
     """Return combined route report data as JSON for on-screen table."""
     rows = _build_route_report_rows(route_id_site_id)
-    return {"rows": rows}
+    return {"rows": rows, "modality": modality, "rate_for": rate_for}
 
 
 @app.get("/api/route-report/xlsx")
-def api_route_report_xlsx(route_id_site_id: str = Query(..., alias="route_id_site_id")):
+def api_route_report_xlsx(
+    route_id_site_id: str = Query(..., alias="route_id_site_id"),
+    modality: Optional[str] = Query(None),
+    rate_for: Optional[str] = Query(None),
+):
     """Return downloadable Excel route report based on template."""
     import tempfile as _tempfile
 
-    wb = _build_route_report_workbook(route_id_site_id)
+    wb = _build_route_report_workbook(route_id_site_id, modality=modality, rate_for=rate_for)
     tmp = _tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
     wb.save(tmp.name)
     tmp.close()

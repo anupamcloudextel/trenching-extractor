@@ -22,6 +22,8 @@ import { ChevronDown } from "lucide-react";
  */
 export default function RouteReport() {
   const [routeAnalysisId, setRouteAnalysisId] = useState("");
+  const [modality, setModality] = useState<"IP1" | "Co-build">("IP1");
+  const [rateFor, setRateFor] = useState<"Mastic Asphalt" | "Concrete">("Mastic Asphalt");
   const [routeOptions, setRouteOptions] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -61,16 +63,20 @@ export default function RouteReport() {
       let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
       backendUrl = backendUrl.replace(/\/$/, "");
 
+      const params = new URLSearchParams({
+        route_id_site_id: routeAnalysisId,
+        modality,
+        rate_for: rateFor,
+      });
+
       // 1) JSON for on-screen table
-      const jsonRes = await fetch(
-        `${backendUrl}/api/route-report?route_id_site_id=${encodeURIComponent(routeAnalysisId)}`
-      );
+      const jsonRes = await fetch(`${backendUrl}/api/route-report?${params.toString()}`);
       const json = await jsonRes.json();
       setReportRows(json.rows || []);
 
       // 2) Trigger Excel download in new tab
       window.open(
-        `${backendUrl}/api/route-report/xlsx?route_id_site_id=${encodeURIComponent(routeAnalysisId)}`,
+        `${backendUrl}/api/route-report/xlsx?${params.toString()}`,
         "_blank"
       );
     } catch (e: any) {
@@ -167,6 +173,35 @@ export default function RouteReport() {
                 )}
               </div>
             </div>
+
+            {/* Modality Dropdown */}
+            <div className="w-full md:w-[180px]">
+              <Label className="text-white text-base font-semibold mb-1 block">Modality</Label>
+              <select
+                value={modality}
+                onChange={(e) => setModality(e.target.value as "IP1" | "Co-build")}
+                className="w-full bg-[#181e2b] border border-slate-700 text-white h-12 px-4 text-base rounded-lg"
+                style={{ minHeight: 48 }}
+              >
+                <option value="IP1">IP1</option>
+                <option value="Co-build">Co-build</option>
+              </select>
+            </div>
+
+            {/* Rate For Dropdown */}
+            <div className="w-full md:w-[220px]">
+              <Label className="text-white text-base font-semibold mb-1 block">Rate for</Label>
+              <select
+                value={rateFor}
+                onChange={(e) => setRateFor(e.target.value as "Mastic Asphalt" | "Concrete")}
+                className="w-full bg-[#181e2b] border border-slate-700 text-white h-12 px-4 text-base rounded-lg"
+                style={{ minHeight: 48 }}
+              >
+                <option value="Mastic Asphalt">Mastic Asphalt</option>
+                <option value="Concrete">Concrete</option>
+              </select>
+            </div>
+
             <div>
               <Button
                 className="h-12 px-6 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg"
