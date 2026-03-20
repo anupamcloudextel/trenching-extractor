@@ -800,7 +800,13 @@ def api_route_report(
 ):
     """Return combined route report data as JSON for on-screen table."""
     rows = _build_route_report_rows(route_id_site_id)
-    return {"rows": rows, "modality": modality, "rate_for": rate_for}
+
+    # Build workbook so UI can mirror the Excel "Summary" + "Projection" values.
+    # Note: we also compute formula results into JSON (Excel itself will still
+    # keep formulas in the downloaded file).
+    wb = _build_route_report_workbook(route_id_site_id, modality=modality, rate_for=rate_for)
+    payload = _extract_route_report_summary_projection(wb)
+    return {"rows": rows, "modality": modality, "rate_for": rate_for, **payload}
 
 
 @app.get("/api/route-report/xlsx")
@@ -822,6 +828,262 @@ def api_route_report_xlsx(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         filename=filename,
     )
+
+
+def _extract_route_report_summary_projection(wb: "Any") -> Dict[str, Any]:
+    """
+    Extract the "Summary" sheet values into two grids:
+    - rows 2..5  => summary section
+    - rows 6..10 => projection section
+
+    The Summary sheet cells are mostly 1-level formulas that reference
+    data-sheet cells (and occasionally internal Summary cell references).
+    We also evaluate the referenced data-sheet formulas to provide
+    Excel-matching numeric values on the UI.
+    """
+    import re as _re
+    import openpyxl as _openpyxl
+    from openpyxl.utils import get_column_letter as _col_letter
+
+    ws_summary = wb["Summary"]
+    ws_data = wb["data-sheet"]
+
+    # ------------------------------
+    # Helpers
+    # ------------------------------
+    def _col_to_idx(col: str) -> int:
+        idx = 0
+        for ch in col.upper():
+            idx = idx * 26 + (ord(ch) - 64)
+        return idx
+
+    def _idx_to_col(idx: int) -> str:
+        out = ""
+        n = idx
+        while n > 0:
+            n, rem = divmod(n - 1, 26)
+            out = chr(65 + rem) + out
+        return out
+
+    def _to_json_value(v: Any) -> Any:
+        # Keep strings as-is so the UI shows labels correctly.
+        if v is None:
+            return ""
+        # openpyxl uses datetime objects for dates.
+        try:
+            import datetime as _dt
+
+            if isinstance(v, (_dt.date, _dt.datetime)):
+                return v.date().isoformat()
+        except Exception:
+            pass
+        # Avoid noisy floats in UI.
+        if isinstance(v, float):
+            # If it's effectively an integer, show as int.
+            if abs(v - round(v)) < 1e-9:
+                return int(round(v))
+            return v
+        return v
+
+    # ------------------------------
+    # Formula evaluation (data-sheet)
+    # ------------------------------
+    cache_data_num: Dict[str, float] = {}
+    cache_data_raw: Dict[str, Any] = {}
+
+    def _eval_cell_as_number(cell_addr: str, stack: "set[str]") -> float:
+        """
+        Evaluate a data-sheet cell to a number (used in arithmetic formulas).
+        Non-numeric labels become 0.
+        """
+        cell_addr = cell_addr.upper().replace("$", "")
+        if cell_addr in cache_data_num:
+            return cache_data_num[cell_addr]
+        if cell_addr in stack:
+            # Cycle guard (shouldn't happen in this template).
+            return 0.0
+        stack.add(cell_addr)
+
+        v = ws_data[cell_addr].value
+        if v is None or v == "":
+            out = 0.0
+        elif isinstance(v, (int, float)):
+            out = float(v)
+        elif isinstance(v, str) and v.startswith("="):
+            out = _eval_formula_to_number(v[1:], stack=stack)
+        else:
+            try:
+                out = float(v)
+            except Exception:
+                out = 0.0
+
+        cache_data_num[cell_addr] = out
+        stack.remove(cell_addr)
+        return out
+
+    def _eval_range_sum(range_a: str, range_b: str, stack: "set[str]") -> float:
+        # Both ends are like A1, B5.
+        m1 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", range_a.upper().replace("$", ""))
+        m2 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", range_b.upper().replace("$", ""))
+        if not (m1 and m2):
+            return 0.0
+        c1, r1 = m1.group(1), int(m1.group(2))
+        c2, r2 = m2.group(1), int(m2.group(2))
+        c1i, c2i = _col_to_idx(c1), _col_to_idx(c2)
+        rmin, rmax = min(r1, r2), max(r1, r2)
+        cmin, cmax = min(c1i, c2i), max(c1i, c2i)
+        s = 0.0
+        for rr in range(rmin, rmax + 1):
+            for cc in range(cmin, cmax + 1):
+                addr = _idx_to_col(cc) + str(rr)
+                s += _eval_cell_as_number(addr, stack)
+        return s
+
+    def _split_excel_args(s: str) -> List[str]:
+        """
+        Split function args by commas at top-level only.
+        Example: SUM(A1, (B2+C2), D3) => ["A1","(B2+C2)","D3"]
+        """
+        args: List[str] = []
+        depth = 0
+        start = 0
+        for i, ch in enumerate(s):
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth = max(0, depth - 1)
+            elif ch == "," and depth == 0:
+                args.append(s[start:i].strip())
+                start = i + 1
+        tail = s[start:].strip()
+        if tail:
+            args.append(tail)
+        return args
+
+    def _eval_expression_to_number(expr: str, stack: "set[str]") -> float:
+        expr = expr.strip()
+        expr = expr.replace("$", "")
+        if expr.startswith("(") and expr.endswith(")"):
+            # keep parentheses for eval
+            pass
+
+        # Convert Excel '^' to python exponent if any.
+        expr = expr.replace("^", "**")
+
+        cell_tokens = set(_re.findall(r"\b[A-Z]{1,3}[0-9]{1,7}\b", expr.upper()))
+        # Replace cell tokens with numeric values.
+        for tok in cell_tokens:
+            val = _eval_cell_as_number(tok, stack)
+            # Use a stable repr for eval.
+            expr = _re.sub(rf"\b{_re.escape(tok)}\b", repr(val), expr)
+
+        try:
+            return float(eval(expr, {"__builtins__": {}}, {}))
+        except Exception:
+            return 0.0
+
+    def _eval_formula_to_number(formula_body: str, stack: "set[str]") -> float:
+        body = formula_body.strip()
+        body_u = body.upper()
+
+        # SUM(...)
+        if body_u.startswith("SUM(") and body.endswith(")"):
+            inner = body[len("SUM(") : -1]
+            # SUM may have a single arg like "O21+O30+..."
+            args = _split_excel_args(inner)
+            total = 0.0
+            for arg in args:
+                arg = arg.strip()
+                m = _re.fullmatch(r"([A-Z]{1,3}[0-9]+):([A-Z]{1,3}[0-9]+)", arg.upper().replace("$", ""))
+                if m:
+                    total += _eval_range_sum(m.group(1), m.group(2), stack)
+                else:
+                    total += _eval_expression_to_number(arg, stack)
+            return total
+
+        # SUBTOTAL(3, ...)
+        if body_u.startswith("SUBTOTAL(") and body.endswith(")"):
+            inner = body[len("SUBTOTAL(") : -1]
+            args = _split_excel_args(inner)
+            if not args:
+                return 0.0
+            # args[0] is function_num (e.g. 3). Ignore and sum the rest.
+            rest = args[1:]
+            total = 0.0
+            for arg in rest:
+                arg = arg.strip()
+                m = _re.fullmatch(r"([A-Z]{1,3}[0-9]+):([A-Z]{1,3}[0-9]+)", arg.upper().replace("$", ""))
+                if m:
+                    total += _eval_range_sum(m.group(1), m.group(2), stack)
+                else:
+                    total += _eval_expression_to_number(arg, stack)
+            return total
+
+        # Default: arithmetic expression
+        return _eval_expression_to_number(body, stack)
+
+    def _eval_data_raw(cell_addr: str) -> Any:
+        """
+        Evaluate a data-sheet cell into either a string/label (if not formula)
+        or a numeric result (if formula).
+        """
+        cell_addr = cell_addr.upper().replace("$", "")
+        if cell_addr in cache_data_raw:
+            return cache_data_raw[cell_addr]
+        v = ws_data[cell_addr].value
+        if isinstance(v, str) and v.startswith("="):
+            num = _eval_cell_as_number(cell_addr, set())
+            # return numeric for UI.
+            cache_data_raw[cell_addr] = num
+        else:
+            cache_data_raw[cell_addr] = v
+        return cache_data_raw[cell_addr]
+
+    # ------------------------------
+    # Evaluate Summary cells
+    # ------------------------------
+    cache_summary_raw: Dict[str, Any] = {}
+
+    def _eval_summary_cell(coord: str, stack: "set[str]") -> Any:
+        coord = coord.upper()
+        if coord in cache_summary_raw:
+            return cache_summary_raw[coord]
+        if coord in stack:
+            return ""
+        stack.add(coord)
+
+        v = ws_summary[coord].value
+        if isinstance(v, str) and v.startswith("='data-sheet'!"):
+            addr = v.split("!", 1)[1].upper()
+            out = _eval_data_raw(addr)
+        elif isinstance(v, str) and v.startswith("="):
+            ref = v[1:].strip().upper().replace("$", "")
+            if _re.fullmatch(r"[A-Z]{1,3}[0-9]{1,7}", ref):
+                out = _eval_summary_cell(ref, stack)
+            else:
+                # Unknown formula in Summary -> best effort.
+                out = v
+        else:
+            out = v
+
+        cache_summary_raw[coord] = out
+        stack.remove(coord)
+        return out
+
+    def _make_grid(row_start: int, row_end: int) -> List[List[Any]]:
+        grid: List[List[Any]] = []
+        for r in range(row_start, row_end + 1):
+            row: List[Any] = []
+            for c in range(1, 13):  # A..L
+                coord = _col_letter(c) + str(r)
+                val = _eval_summary_cell(coord, set())
+                row.append(_to_json_value(val))
+            grid.append(row)
+        return grid
+
+    summary_grid = _make_grid(2, 5)
+    projection_grid = _make_grid(6, 10)
+    return {"summaryGrid": summary_grid, "projectionGrid": projection_grid}
 
 
 # Field name from frontend validation table -> dn_master column
@@ -878,7 +1140,12 @@ def send_to_master_dn(body: Dict[str, Any] = Body(...)):
     if existing and existing.get("route_id_site_id") and row.get("route_id_site_id") and existing.get("route_id_site_id") != row.get("route_id_site_id"):
         raise HTTPException(status_code=409, detail="A Demand Note with this number already exists in the master database.")
     local_db.upsert_dn_master(row)
-    return {"success": True, "message": "Saved to Master DN."}
+    after = None
+    try:
+        after = local_db.get_dn_by_number(str(row.get("dn_number")))
+    except Exception:
+        after = None
+    return {"success": True, "message": "Saved to Master DN.", "after": after}
 
 
 def _excel_to_dict_list(path: str, sheet_name=0):

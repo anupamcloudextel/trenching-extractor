@@ -10,7 +10,7 @@ import {
   CommandEmpty,
   CommandItem,
 } from "@/components/ui/command";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Zap } from "lucide-react";
 
 /**
  * Route Report (minimal)
@@ -31,6 +31,8 @@ export default function RouteReport() {
   const [reportRows, setReportRows] = useState<any[]>([]);
   const [reportError, setReportError] = useState<string | null>(null);
   const [reportLoading, setReportLoading] = useState(false);
+  const [summaryGrid, setSummaryGrid] = useState<any[][]>([]);
+  const [projectionGrid, setProjectionGrid] = useState<any[][]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Fetch Route IDs from the same backend endpoint used by Route Analysis
@@ -73,6 +75,8 @@ export default function RouteReport() {
       const jsonRes = await fetch(`${backendUrl}/api/route-report?${params.toString()}`);
       const json = await jsonRes.json();
       setReportRows(json.rows || []);
+      setSummaryGrid(Array.isArray(json.summaryGrid) ? json.summaryGrid : []);
+      setProjectionGrid(Array.isArray(json.projectionGrid) ? json.projectionGrid : []);
 
       // 2) Trigger Excel download in new tab
       window.open(
@@ -86,23 +90,100 @@ export default function RouteReport() {
     }
   };
 
+  function ExcelMergedGridTable({ grid }: { grid: any[][] }) {
+    if (!grid || grid.length === 0) return null;
+    const colCount = Math.max(...grid.map((r) => (Array.isArray(r) ? r.length : 0)));
+    if (colCount === 0) return null;
+
+    return (
+      <div className="w-full overflow-x-auto">
+        <table className="w-full text-xs bg-[#0f1626] rounded-lg overflow-hidden border-separate border-spacing-0">
+          <tbody>
+            {grid.map((row, rIdx) => {
+              return (
+                <tr key={rIdx} className={rIdx % 2 === 0 ? "bg-[#0f1626]" : "bg-[#111b2d]"}>
+                  {(() => {
+                    let cells: JSX.Element[] = [];
+                    let c = 0;
+                    while (c < colCount) {
+                      const current = row?.[c] ?? "";
+                      const currentStr = current === null || current === undefined ? "" : String(current);
+
+                      // Don't merge blanks.
+                      if (currentStr.trim() === "") {
+                        cells.push(
+                          <td
+                            key={`${rIdx}-${c}`}
+                            className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
+                          >
+                            {currentStr}
+                          </td>
+                        );
+                        c += 1;
+                        continue;
+                      }
+
+                      // Merge only label/header-like cells (avoid merging numeric columns).
+                      const isNumericOnly = /^-?\d+(\.\d+)?$/.test(currentStr.trim());
+                      const allowBlankMerge = rIdx < 2; // headers typically live near the top
+
+                      let span = 1;
+                      if (!isNumericOnly) {
+                        while (c + span < colCount) {
+                          const next = row?.[c + span] ?? "";
+                          const nextStr = next === null || next === undefined ? "" : String(next);
+                          if (nextStr === currentStr) {
+                            span += 1;
+                            continue;
+                          }
+                          if (allowBlankMerge && nextStr.trim() === "") {
+                            span += 1;
+                            continue;
+                          }
+                          break;
+                        }
+                      }
+
+                      cells.push(
+                        <td
+                          key={`${rIdx}-${c}`}
+                          colSpan={span}
+                          className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
+                        >
+                          {currentStr}
+                        </td>
+                      );
+                      c += span;
+                    }
+                    return cells;
+                  })()}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-4xl mx-auto px-6 pb-10">
-      <Card className="bg-[#101624] border border-slate-800 shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-white">Route Report</CardTitle>
-          <CardDescription className="text-slate-300">
-            Select a Route ID to view or export detailed reports in other tools.
+    <div className="w-full bg-[#101624] py-8" style={{ overflowX: "hidden" }}>
+      <Card className="w-full bg-[#101624] border-none shadow-2xl rounded-3xl backdrop-blur-md w-full mb-12">
+        <CardHeader className="border-b border-slate-700 pb-4">
+          <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+            <Zap className="h-7 w-7 text-green-400 drop-shadow-lg" />
+            Route Report
+          </CardTitle>
+          <CardDescription className="text-slate-400 mt-1 text-base font-normal leading-snug">
+            Select a Route ID and export the Excel report.
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col md:flex-row items-end gap-4 w-full mb-4 relative">
+
+        <CardContent className="pt-6 pb-8 px-12">
+          <div className="flex flex-col md:flex-row items-end gap-4 w-full mb-8 relative z-10 justify-between">
             {/* Route ID Dropdown (same look as Route Analysis) */}
             <div className="flex-1 w-full relative" ref={dropdownRef} style={{ maxWidth: 320 }}>
-              <Label
-                htmlFor="route-report-id-input"
-                className="text-white text-base font-semibold mb-1 block"
-              >
+              <Label htmlFor="route-report-id-input" className="text-white text-base font-semibold mb-1 block">
                 Route ID <span className="text-red-500">*</span>
               </Label>
               <div className="relative">
@@ -175,36 +256,42 @@ export default function RouteReport() {
             </div>
 
             {/* Modality Dropdown */}
-            <div className="w-full md:w-[180px]">
+            <div className="w-full md:w-[190px]">
               <Label className="text-white text-base font-semibold mb-1 block">Modality</Label>
-              <select
-                value={modality}
-                onChange={(e) => setModality(e.target.value as "IP1" | "Co-build")}
-                className="w-full bg-[#181e2b] border border-slate-700 text-white h-12 px-4 text-base rounded-lg"
-                style={{ minHeight: 48 }}
-              >
-                <option value="IP1">IP1</option>
-                <option value="Co-build">Co-build</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={modality}
+                  onChange={(e) => setModality(e.target.value as "IP1" | "Co-build")}
+                  className="w-full appearance-none bg-[#181e2b] border border-slate-700 text-white h-12 px-4 pr-10 text-base rounded-lg"
+                  style={{ minHeight: 48 }}
+                >
+                  <option value="IP1">IP1</option>
+                  <option value="Co-build">Co-build</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+              </div>
             </div>
 
             {/* Rate For Dropdown */}
-            <div className="w-full md:w-[220px]">
+            <div className="w-full md:w-[240px]">
               <Label className="text-white text-base font-semibold mb-1 block">Rate for</Label>
-              <select
-                value={rateFor}
-                onChange={(e) => setRateFor(e.target.value as "Mastic Asphalt" | "Concrete")}
-                className="w-full bg-[#181e2b] border border-slate-700 text-white h-12 px-4 text-base rounded-lg"
-                style={{ minHeight: 48 }}
-              >
-                <option value="Mastic Asphalt">Mastic Asphalt</option>
-                <option value="Concrete">Concrete</option>
-              </select>
+              <div className="relative">
+                <select
+                  value={rateFor}
+                  onChange={(e) => setRateFor(e.target.value as "Mastic Asphalt" | "Concrete")}
+                  className="w-full appearance-none bg-[#181e2b] border border-slate-700 text-white h-12 px-4 pr-10 text-base rounded-lg"
+                  style={{ minHeight: 48 }}
+                >
+                  <option value="Mastic Asphalt">Mastic Asphalt</option>
+                  <option value="Concrete">Concrete</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
+              </div>
             </div>
 
-            <div>
+            <div className="flex items-end">
               <Button
-                className="h-12 px-6 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg"
+                className="h-12 px-6 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg shadow-lg"
                 disabled={!routeAnalysisId || reportLoading}
                 onClick={handleCreateReport}
               >
@@ -215,6 +302,20 @@ export default function RouteReport() {
           {reportError && (
             <div className="text-red-400 text-sm mt-2">{reportError}</div>
           )}
+
+          {summaryGrid.length > 0 && (
+            <div className="mt-6 space-y-6">
+              <div>
+                <div className="text-white text-sm font-semibold mb-2">Summary</div>
+                <ExcelMergedGridTable grid={summaryGrid} />
+              </div>
+              <div>
+                <div className="text-white text-sm font-semibold mb-2">Projection</div>
+                <ExcelMergedGridTable grid={projectionGrid} />
+              </div>
+            </div>
+          )}
+
           {reportRows.length > 0 && (
             <div className="mt-6 overflow-x-auto">
               <Table className="w-full mx-auto text-xs bg-[#0f1626] rounded-lg overflow-hidden">
