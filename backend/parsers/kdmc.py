@@ -272,6 +272,78 @@ def extract_section_length_from_text(pages_texts):
     
     return ''
 
+
+def extract_surface_triplet_from_tables(pdf_path):
+    """
+    Extract surface-wise triples from KDMC DN table:
+      - Length in Mt.
+      - Rate in Rs.
+      - Multiplying factor
+
+    Returns: (surface_types, lengths, rates, factors) as slash-separated strings.
+    """
+    surface_vals = []
+    length_vals = []
+    rate_vals = []
+    factor_vals = []
+    try:
+        tables = camelot.read_pdf(pdf_path, pages="all", flavor="lattice")
+    except Exception:
+        tables = []
+
+    def _norm(s: str) -> str:
+        return re.sub(r"\s+", " ", (s or "").replace("\n", " ").strip()).lower()
+
+    def _num(s: str) -> str:
+        raw = marathi_to_english_digits((s or "").replace("\n", "").replace(",", "").strip())
+        m = re.search(r"-?\d+(?:\.\d+)?", raw)
+        return m.group(0) if m else ""
+
+    for t in tables:
+        df = t.df
+        if df is None or len(df) < 3:
+            continue
+
+        header = [_norm(str(x)) for x in df.iloc[0].tolist()]
+        particulars_idx = next((i for i, h in enumerate(header) if "particular" in h), None)
+        length_idx = next((i for i, h in enumerate(header) if "length" in h and ("mt" in h or "m" in h)), None)
+        rate_idx = next((i for i, h in enumerate(header) if "rate" in h and "rs" in h), None)
+        factor_idx = next((i for i, h in enumerate(header) if "multiply" in h and "factor" in h), None)
+
+        if length_idx is None or rate_idx is None or factor_idx is None:
+            continue
+
+        for r in range(2, len(df)):
+            row = [str(x) for x in df.iloc[r].tolist()]
+            first = _norm(row[0] if row else "")
+            if not first:
+                continue
+            if "total" in first:
+                continue
+
+            length = _num(row[length_idx] if length_idx < len(row) else "")
+            rate = _num(row[rate_idx] if rate_idx < len(row) else "")
+            factor = _num(row[factor_idx] if factor_idx < len(row) else "")
+            if not (length or rate or factor):
+                continue
+
+            surface = _norm(row[particulars_idx] if particulars_idx is not None and particulars_idx < len(row) else "")
+            if surface:
+                surface_vals.append(re.sub(r"\s+", " ", surface).strip().title())
+            if length:
+                length_vals.append(length)
+            if rate:
+                rate_vals.append(rate)
+            if factor:
+                factor_vals.append(factor)
+
+    return (
+        " / ".join(surface_vals),
+        " / ".join(length_vals),
+        " / ".join(rate_vals),
+        " / ".join(factor_vals),
+    )
+
 def extract_total_dn_amount_from_text(pages_texts):
     """
     Extract total DN amount from KDMC OCR text.
@@ -534,11 +606,14 @@ def extract_kdmc_all_fields(pdf_path):
     fields['ug_type'] = ''
     # Keep OT length blank for manual entry
     fields['ot_length'] = ''
+    # Prefer table-derived surface triplets; fallback to OCR text extraction.
+    table_surface, table_lengths, table_rates, table_factors = extract_surface_triplet_from_tables(pdf_path)
+
     # Add road types to output fields
-    fields['surface'] = road_types
-    # Add rate per meter to output fields (from all pages)
-    rate_per_meter = extract_rate_per_meter_from_text(pages_texts)
-    fields['rate_per_meter'] = ''  # Leave blank for now
+    fields['surface'] = table_surface or road_types
+    # Add rate per meter to output fields (from table or OCR text)
+    rate_per_meter = table_rates or extract_rate_per_meter_from_text(pages_texts)
+    fields['rate_per_meter'] = rate_per_meter
     # Add section length to output fields
     section_length = extract_section_length_from_text(pages_texts)
     fields['section_length'] = section_length
@@ -614,15 +689,9 @@ def extract_kdmc_all_fields(pdf_path):
     print(f"[DN_RI_AMOUNT DEBUG] Extracted ri_amount: '{ri_amount}'")
     fields['ri_amount'] = ri_amount
     # Add surface-wise length and RI amount (always set section_length if available)
-    if section_length:
-        fields['surface_wise_length'] = section_length
-    else:
-        fields['surface_wise_length'] = ''
-    
-    if ri_amount:
-        fields['surface_wise_ri_amount'] = ri_amount
-    else:
-        fields['surface_wise_ri_amount'] = ''
+    fields['surface_wise_length'] = table_lengths or section_length or ''
+    fields['surface_wise_ri_amount'] = rate_per_meter or ri_amount or ''
+    fields['surface_wise_multiplication_factor'] = table_factors or ''
     return fields
 
 def google_vision_ocr(pil_img, lang_hints=None):

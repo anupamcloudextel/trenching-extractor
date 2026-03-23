@@ -1311,9 +1311,19 @@ export default function DnManagementSection() {
       return "";
     }
     
-    // Special handling for surface_wise_length and surface_wise_ri_amount - keep blank for manual entry
-    if ((field === "surface_wise_length" || field === "surface_wise_ri_amount") && dnAuthority?.toLowerCase() === "kdmc") {
-      console.log(`🔧 KDMC ${field} - returning blank for manual entry`);
+    // For KDMC, prefer parsed surface-wise values when available.
+    // Keep blank only if parser didn't provide anything.
+    if (
+      (field === "surface_wise_length" ||
+        field === "surface_wise_ri_amount" ||
+        field === "surface_wise_multiplication_factor") &&
+      dnAuthority?.toLowerCase() === "kdmc"
+    ) {
+      const parsedValue = getValidateParserFieldValueRaw(field);
+      if (parsedValue !== null && parsedValue !== undefined && String(parsedValue).trim() !== "") {
+        return parsedValue;
+      }
+      console.log(`🔧 KDMC ${field} - no parsed value, keeping blank for manual entry`);
       return "";
     }
     

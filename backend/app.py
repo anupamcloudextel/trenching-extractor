@@ -522,7 +522,6 @@ def _build_route_report_rows(route_id_site_id: str) -> List[Dict[str, Any]]:
 def _build_route_report_workbook(
     route_id_site_id: str,
     modality: Optional[str] = None,
-    rate_for: Optional[str] = None,
 ) -> "Any":
     """
     Open the template Excel and fill green cells whose values are
@@ -796,7 +795,6 @@ def _build_route_report_workbook(
 def api_route_report(
     route_id_site_id: str = Query(..., alias="route_id_site_id"),
     modality: Optional[str] = Query(None),
-    rate_for: Optional[str] = Query(None),
 ):
     """Return combined route report data as JSON for on-screen table."""
     rows = _build_route_report_rows(route_id_site_id)
@@ -804,21 +802,20 @@ def api_route_report(
     # Build workbook so UI can mirror the Excel "Summary" + "Projection" values.
     # Note: we also compute formula results into JSON (Excel itself will still
     # keep formulas in the downloaded file).
-    wb = _build_route_report_workbook(route_id_site_id, modality=modality, rate_for=rate_for)
+    wb = _build_route_report_workbook(route_id_site_id, modality=modality)
     payload = _extract_route_report_summary_projection(wb)
-    return {"rows": rows, "modality": modality, "rate_for": rate_for, **payload}
+    return {"rows": rows, "modality": modality, **payload}
 
 
 @app.get("/api/route-report/xlsx")
 def api_route_report_xlsx(
     route_id_site_id: str = Query(..., alias="route_id_site_id"),
     modality: Optional[str] = Query(None),
-    rate_for: Optional[str] = Query(None),
 ):
     """Return downloadable Excel route report based on template."""
     import tempfile as _tempfile
 
-    wb = _build_route_report_workbook(route_id_site_id, modality=modality, rate_for=rate_for)
+    wb = _build_route_report_workbook(route_id_site_id, modality=modality)
     tmp = _tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
     wb.save(tmp.name)
     tmp.close()
@@ -1100,6 +1097,9 @@ SEND_TO_MASTER_DN_FIELD_MAP = {
     "total_dn_amount": "total_dn_amount",
     "gst": "gst",
     "surface": "surface",
+    "surface_wise_length": "surface_wise_length",
+    "surface_wise_ri_amount": "surface_wise_ri_amount",
+    "surface_wise_multiplication_factor": "surface_wise_multiplication_factor",
     "no_of_pits": "no_of_pits",
     "pit_ri_rate": "pit_ri_rate",
     "ot_length": "ot_length",

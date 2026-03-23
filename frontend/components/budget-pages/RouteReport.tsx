@@ -23,7 +23,6 @@ import { ChevronDown, Zap } from "lucide-react";
 export default function RouteReport() {
   const [routeAnalysisId, setRouteAnalysisId] = useState("");
   const [modality, setModality] = useState<"IP1" | "Co-build">("IP1");
-  const [rateFor, setRateFor] = useState<"Mastic Asphalt" | "Concrete">("Mastic Asphalt");
   const [routeOptions, setRouteOptions] = useState<string[]>([]);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,6 +32,7 @@ export default function RouteReport() {
   const [reportLoading, setReportLoading] = useState(false);
   const [summaryGrid, setSummaryGrid] = useState<any[][]>([]);
   const [projectionGrid, setProjectionGrid] = useState<any[][]>([]);
+  const [lastReportParams, setLastReportParams] = useState<{ route_id_site_id: string; modality: string } | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Fetch Route IDs from the same backend endpoint used by Route Analysis
@@ -68,7 +68,6 @@ export default function RouteReport() {
       const params = new URLSearchParams({
         route_id_site_id: routeAnalysisId,
         modality,
-        rate_for: rateFor,
       });
 
       // 1) JSON for on-screen table
@@ -77,17 +76,20 @@ export default function RouteReport() {
       setReportRows(json.rows || []);
       setSummaryGrid(Array.isArray(json.summaryGrid) ? json.summaryGrid : []);
       setProjectionGrid(Array.isArray(json.projectionGrid) ? json.projectionGrid : []);
-
-      // 2) Trigger Excel download in new tab
-      window.open(
-        `${backendUrl}/api/route-report/xlsx?${params.toString()}`,
-        "_blank"
-      );
+      setLastReportParams({ route_id_site_id: routeAnalysisId, modality });
     } catch (e: any) {
       setReportError(e?.message || "Failed to create report");
     } finally {
       setReportLoading(false);
     }
+  };
+
+  const handleDownloadReport = () => {
+    if (!lastReportParams) return;
+    let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
+    backendUrl = backendUrl.replace(/\/$/, "");
+    const params = new URLSearchParams(lastReportParams);
+    window.open(`${backendUrl}/api/route-report/xlsx?${params.toString()}`, "_blank");
   };
 
   function ExcelMergedGridTable({ grid }: { grid: any[][] }) {
@@ -180,9 +182,9 @@ export default function RouteReport() {
         </CardHeader>
 
         <CardContent className="pt-6 pb-8 px-12">
-          <div className="flex flex-col md:flex-row items-end gap-4 w-full mb-8 relative z-10 justify-between">
+          <div className="flex flex-col md:flex-row items-end gap-4 w-full mb-8 relative z-10 md:justify-start">
             {/* Route ID Dropdown (same look as Route Analysis) */}
-            <div className="flex-1 w-full relative" ref={dropdownRef} style={{ maxWidth: 320 }}>
+            <div className="w-full md:w-[320px] relative" ref={dropdownRef}>
               <Label htmlFor="route-report-id-input" className="text-white text-base font-semibold mb-1 block">
                 Route ID <span className="text-red-500">*</span>
               </Label>
@@ -272,24 +274,7 @@ export default function RouteReport() {
               </div>
             </div>
 
-            {/* Rate For Dropdown */}
-            <div className="w-full md:w-[240px]">
-              <Label className="text-white text-base font-semibold mb-1 block">Rate for</Label>
-              <div className="relative">
-                <select
-                  value={rateFor}
-                  onChange={(e) => setRateFor(e.target.value as "Mastic Asphalt" | "Concrete")}
-                  className="w-full appearance-none bg-[#181e2b] border border-slate-700 text-white h-12 px-4 pr-10 text-base rounded-lg"
-                  style={{ minHeight: 48 }}
-                >
-                  <option value="Mastic Asphalt">Mastic Asphalt</option>
-                  <option value="Concrete">Concrete</option>
-                </select>
-                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-              </div>
-            </div>
-
-            <div className="flex items-end">
+            <div className="flex items-end md:ml-2">
               <Button
                 className="h-12 px-6 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg shadow-lg"
                 disabled={!routeAnalysisId || reportLoading}
@@ -298,6 +283,16 @@ export default function RouteReport() {
                 {reportLoading ? "Creating..." : "Create Report"}
               </Button>
             </div>
+            {lastReportParams && (
+              <div className="flex items-end">
+                <Button
+                  className="h-12 px-6 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-lg shadow-lg"
+                  onClick={handleDownloadReport}
+                >
+                  Download Excel
+                </Button>
+              </div>
+            )}
           </div>
           {reportError && (
             <div className="text-red-400 text-sm mt-2">{reportError}</div>

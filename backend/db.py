@@ -53,6 +53,9 @@ def init_tables(engine=None):
         permit_end_date VARCHAR(50),
         permitted_length_by_ward_mts VARCHAR(50),
         surface VARCHAR(255),
+        surface_wise_length TEXT,
+        surface_wise_ri_amount TEXT,
+        surface_wise_multiplication_factor TEXT,
         no_of_pits VARCHAR(50),
         ground_rent NUMERIC(18,4),
         gst NUMERIC(18,4),
@@ -75,6 +78,10 @@ def init_tables(engine=None):
     );
     """
     _run_sql(engine, dn_sql, fetch=False)
+    # Backfill columns for already-existing dn_master tables created from older schema.
+    _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_length TEXT", fetch=False)
+    _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_ri_amount TEXT", fetch=False)
+    _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_multiplication_factor TEXT", fetch=False)
     _run_sql(engine, "CREATE UNIQUE INDEX IF NOT EXISTS idx_dn_master_dn_number ON dn_master(dn_number)", fetch=False)
 
     budget_sql = """
@@ -149,7 +156,8 @@ def get_dn_by_route_id_site_id(route_id_site_id: str) -> List[Dict[str, Any]]:
 def upsert_dn_master(row: Dict[str, Any]) -> None:
     engine = get_engine()
     allowed = {"dn_number", "route_id_site_id", "dn_length_mtr", "permission_receipt_date", "permit_no",
-               "permit_start_date", "permit_end_date", "permitted_length_by_ward_mts", "surface", "no_of_pits",
+               "permit_start_date", "permit_end_date", "permitted_length_by_ward_mts", "surface",
+               "surface_wise_length", "surface_wise_ri_amount", "surface_wise_multiplication_factor", "no_of_pits",
                "ground_rent", "gst", "deposit", "total_dn_amount", "application_date", "dn_received_date",
                "actual_total_non_refundable", "po_number", "pit_ri_rate", "ot_length", "dn_ri_amount",
                "administrative_charge", "supervision_charges", "chamber_fee", "hdd_length", "build_type", "category_type"}
