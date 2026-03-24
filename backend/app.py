@@ -1466,6 +1466,188 @@ async def parse_po(site_id: str = Form(...), po_number_type: Optional[str] = For
     }
 
 
+def _extract_po_essentials_from_text(text: str) -> Dict[str, Any]:
+    src = text or ""
+    po_number = ""
+    route_id_site_id = ""
+    po_value = ""
+    entries: List[Dict[str, str]] = []
+
+    # PO number appears like ".../10004960" in the sample.
+    m_po = re.search(r"\bPO\s*No\.?\s*:?\s*([^\n\r]+)", src, flags=re.IGNORECASE)
+    if m_po:
+        line = m_po.group(1).strip()
+        m_digits = re.search(r"(\d{6,12})(?!.*\d)", line)
+        if m_digits:
+            po_number = m_digits.group(1)
+    if not po_number:
+        m_fallback_po = re.search(r"/(\d{6,12})\b", src)
+        if m_fallback_po:
+            po_number = m_fallback_po.group(1)
+
+    # Route/Site id in sample appears as MA4640.
+    m_route = re.search(r"\b[A-Z]{2}\d{3,6}\b", src)
+    if m_route:
+        route_id_site_id = m_route.group(0)
+
+    def _looks_like_route_site_id(line: str) -> bool:
+        s = (line or "").strip()
+        if not s:
+            return False
+        s_low = s.lower()
+        if any(k in s_low for k in ("chapter heading", "hsn number", "sac number", "reference gbpa", "po no", "partner name")):
+            return False
+        if re.fullmatch(r"[A-Z]{2}\d{3,6}", s):
+            return True
+        # Numeric-only site ids are usually short (e.g., 2475), avoid long refs like 100016.
+        if re.fullmatch(r"\d{3,5}", s):
+            return True
+        if "/" in s and re.search(r"\broute\b", s, flags=re.IGNORECASE):
+            return True
+        if re.search(r"\broute\b", s, flags=re.IGNORECASE):
+            return True
+        return False
+
+    def _extract_route_for_item(window_text: str, fallback: str) -> str:
+        lines = [ln.strip() for ln in (window_text or "").splitlines()]
+        lines = [ln for ln in lines if ln]
+        if not lines:
+            return fallback
+
+        chapter_idxs = [i for i, ln in enumerate(lines) if re.search(r"chapter\s*heading", ln, flags=re.IGNORECASE)]
+        if chapter_idxs:
+            idx = chapter_idxs[-1]
+            # Primary rule: Route/Site id is the nearest useful line above "Chapter Heading".
+            def _is_noise(ln: str) -> bool:
+                t = (ln or "").strip().lower()
+                if not t:
+                    return True
+                return any(k in t for k in (
+                    "chapter heading",
+                    "hsn number",
+                    "sac number",
+                    "this line",
+                    "reference gbpa",
+                    "po no",
+                    "partner name",
+                    "purchase order continuation sheet",
+                ))
+
+            for j in range(idx - 1, max(-1, idx - 8), -1):
+                cand = lines[j].strip()
+                if _is_noise(cand):
+                    continue
+                # Prefer explicit route-like candidates, otherwise still accept nearest text line.
+                if _looks_like_route_site_id(cand):
+                    return cand
+                if len(cand) >= 3 and len(cand) <= 80:
+                    return cand
+
+            # Secondary rule: explicit route-like line in the nearby context.
+            for j in range(idx - 1, max(-1, idx - 7), -1):
+                cand = lines[j].strip()
+                if _looks_like_route_site_id(cand):
+                    return cand
+
+        # Fallback 1: last slash-route style token in local window.
+        route_like = re.findall(r"([A-Za-z0-9][A-Za-z0-9\s]*/\s*Route\s*/\s*\d+[^\n\r]*)", window_text, flags=re.IGNORECASE)
+        if route_like:
+            return route_like[-1].strip()
+
+        # Fallback 2: last compact code like MA4640 in local window.
+        compact = re.findall(r"\b[A-Z]{2}\d{3,6}\b", window_text)
+        if compact:
+            return compact[-1].strip()
+
+        return fallback
+
+    # Extract all table line items from the full PDF text:
+    # Qty -> UOM -> Unit Price -> Line Total
+    # Keep this format-driven (no value-specific assumptions).
+    line_item_pat = re.compile(
+        r"\b(?P<qty>\d{1,7})\s*\n\s*(?P<uom>[A-Za-z][A-Za-z ./-]{1,24})\s*\n\s*(?P<unit>\d[\d,]{2,})\s*\n\s*(?P<line>\d[\d,]{4,})\b",
+        flags=re.IGNORECASE,
+    )
+    for i, m in enumerate(line_item_pat.finditer(src), start=1):
+        qty = re.sub(r"[^\d]", "", m.group("qty"))
+        uom = m.group("uom")
+        unit_price = re.sub(r"[^\d]", "", m.group("unit"))
+        line_total = re.sub(r"[^\d]", "", m.group("line"))
+        route_window = src[max(0, m.start() - 2500): m.start()]
+        row_route = _extract_route_for_item(route_window, route_id_site_id)
+        entries.append(
+            {
+                "sr_no": str(i),
+                "po_number": po_number,
+                "route_id_site_id": row_route,
+                "qty": qty,
+                "uom": uom,
+                "unit_price": unit_price,
+                "po_value": line_total,
+            }
+        )
+
+    if entries:
+        # Keep top-level po_value as aggregate of all extracted line totals.
+        try:
+            po_value = str(sum(int(e.get("po_value") or "0") for e in entries))
+        except Exception:
+            po_value = entries[0].get("po_value") or ""
+    else:
+        # Fallback: single value near heading.
+        m_seq = re.search(
+            r"\b\d{1,6}\s*\n\s*(?:Meter|Metre)\s*\n\s*\d[\d,]{2,}\s*\n\s*(\d[\d,]{4,})\b",
+            src,
+            flags=re.IGNORECASE,
+        )
+        if m_seq:
+            po_value = re.sub(r"[^\d]", "", m_seq.group(1))
+        else:
+            m_heading = re.search(r"Line\s*Total", src, flags=re.IGNORECASE)
+            if m_heading:
+                window = src[m_heading.end(): m_heading.end() + 1500]
+                nums = [int(n.replace(",", "")) for n in re.findall(r"\b\d[\d,]{4,}\b", window)]
+                nums = [n for n in nums if n <= 500000000]
+                if nums:
+                    po_value = str(max(nums))
+
+    unique_routes = sorted({(e.get("route_id_site_id") or "").strip() for e in entries if (e.get("route_id_site_id") or "").strip()})
+    if unique_routes:
+        route_id_site_id = ", ".join(unique_routes)
+
+    return {
+        "po_number": po_number,
+        "route_id_site_id": route_id_site_id,
+        "po_value": po_value,
+        "entries": entries,
+        "entry_count": len(entries),
+    }
+
+
+@app.post("/api/parse-po-pdf")
+async def parse_po_pdf(file: UploadFile = File(...)):
+    """Extract PO Number, Route ID/Site ID, and PO Value from PO PDF."""
+    suffix = os.path.splitext(file.filename or "")[1] or ".pdf"
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+    tmp.write(await file.read())
+    tmp.close()
+    try:
+        import fitz
+
+        doc = fitz.open(tmp.name)
+        text = "\n".join(page.get_text("text") for page in doc)
+        doc.close()
+        extracted = _extract_po_essentials_from_text(text)
+        return extracted
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"PO PDF parsing failed: {e}")
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+
 @app.post("/api/parse-application")
 async def parse_application(dn_application_file: UploadFile = File(...), authority: str = Form(...)):
     """Parse DN Application PDF and return extracted fields."""

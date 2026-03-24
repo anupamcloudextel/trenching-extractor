@@ -1,5 +1,5 @@
 import { authorities } from "@/constants/authorities";
-import { Home, Building2, Landmark, Factory, Settings, Waves, ChevronLeft, ChevronRight, BarChart3, FileSpreadsheet, Zap, Database, Sparkles } from "lucide-react";
+import { Home, Building2, Landmark, Factory, Settings, Waves, ChevronLeft, ChevronRight, BarChart3, FileSpreadsheet, FileText, Zap, Database, Sparkles } from "lucide-react";
 import React, { useState } from "react";
 
 const authorityIcons: Record<string, React.ReactNode> = {
@@ -98,6 +98,16 @@ export function AuthoritySidebar({ selected, onSelect }: { selected: string; onS
             >
               <FileSpreadsheet className="h-5 w-5" />
               {!isCollapsed && <span className="ml-2">Route Report</span>}
+            </button>
+            <button
+              className={`flex items-center w-full px-3 py-2 rounded-lg font-inter text-sm transition-colors ${
+                selected === 'po-pdf-extractor' ? "bg-[#232f47] text-white font-semibold" : "text-gray-300 hover:bg-[#232f47]/60"
+              }`}
+              onClick={() => onSelect('po-pdf-extractor')}
+              title="PO PDF Extractor"
+            >
+              <FileText className="h-5 w-5" />
+              {!isCollapsed && <span className="ml-2">PO PDF Extractor</span>}
             </button>
           </nav>
         </>

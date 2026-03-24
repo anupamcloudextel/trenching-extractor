@@ -17,6 +17,7 @@ import React from "react"
 import MasterTrackerSection from '@/components/budget-pages/MasterTracker';
 import RouteOverview from "@/components/budget-pages/route_overview";
 import RouteReport from "@/components/budget-pages/RouteReport";
+import PoPdfExtractor from "@/components/budget-pages/PoPdfExtractor";
 import DnManagementSection from "@/components/budget-pages/data_management";
 import ClientParserV2 from "@/components/budget-pages/ClientParserV2";
 
@@ -106,6 +107,7 @@ export default function Home() {
             activeAuthority === 'data-management' ? 'Data Management' :
             activeAuthority === 'route-overview' ? 'Route Analysis' :
             activeAuthority === 'route-report' ? 'Route Report' :
+            activeAuthority === 'po-pdf-extractor' ? 'PO PDF Extractor' :
             activeAuthority === 'client-parser-v2' ? 'Client Parser V2' :
             "Master Dashboard"
           )} 
@@ -123,6 +125,8 @@ export default function Home() {
             <RouteOverview />
           ) : activeAuthority === 'route-report' ? (
             <RouteReport />
+          ) : activeAuthority === 'po-pdf-extractor' ? (
+            <PoPdfExtractor />
           ) : activeAuthority === 'client-parser-v2' ? (
             <ClientParserV2 />
           ) : (
