@@ -598,8 +598,11 @@ def _build_route_report_workbook(
             if po_row:
                 if mod.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built"):
                     ws["D4"].value = po_row.get("po_length_cobuild")
+                    # PO number cell in template row-4 output block
+                    ws["O4"].value = po_row.get("po_no_cobuild")
                 else:
                     ws["D4"].value = po_row.get("po_length_ip1")
+                    ws["O4"].value = po_row.get("po_no_ip1")
         except Exception:
             pass
 
@@ -654,7 +657,16 @@ def _build_route_report_workbook(
                 v = src_cell.value
                 if isinstance(v, str) and v.startswith("="):
                     # shift formulas to new row positions
-                    dst_cell.value = _Translator(v, origin=src_cell.coordinate).translate_formula(row_shift=row_offset, col_shift=0)
+                    try:
+                        # Works across openpyxl versions: translate to destination coordinate.
+                        dst_cell.value = _Translator(v, origin=src_cell.coordinate).translate_formula(dst_cell.coordinate)
+                    except Exception:
+                        # Fallback for versions supporting delta-style args.
+                        try:
+                            dst_cell.value = _Translator(v, origin=src_cell.coordinate).translate_formula(row_delta=row_offset, col_delta=0)
+                        except Exception:
+                            # Last resort: keep original formula text.
+                            dst_cell.value = v
                 else:
                     dst_cell.value = v
 
@@ -708,12 +720,15 @@ def _build_route_report_workbook(
         if table == "dn_master":
             dn_col_mappings[c] = col
 
-    # Fill each DN into its own block (aligned vertically)
+    # Fill each DN into its own block (aligned vertically).
+    # Re-scan block starts each iteration because row insertions inside one block
+    # can shift the start rows of the following blocks.
     for idx, dn in enumerate(dn_rows):
-        if idx >= len(dn_block_starts):
+        current_starts = _find_dn_block_starts()
+        if idx >= len(current_starts):
             break
         # summary row is the row immediately below the header row
-        r = dn_block_starts[idx] + 1
+        r = current_starts[idx] + 1
         # DN header cells in the summary row (as per template)
         # B{r} -> dn_master(dn_number)
         # D{r} -> dn_master(dn_length_mtr)
@@ -723,19 +738,109 @@ def _build_route_report_workbook(
         ws.cell(r, 2).value = dn.get("dn_number")
         ws.cell(r, 4).value = dn.get("dn_length_mtr")
 
-        # DN breakup values (as per template)
-        # F{r+2} -> dn_master(dn_ri_amount)
-        # F{r+3} -> dn_master(ground_rent)
-        # F{r+4} -> dn_master(administrative_charge)
-        # F{r+5} -> Access Charges (template default 0; keep 0 unless present)
-        ws.cell(r + 2, 6).value = None
-        ws.cell(r + 3, 6).value = None
-        ws.cell(r + 4, 6).value = None
-        ws.cell(r + 2, 6).value = dn.get("dn_ri_amount")
-        ws.cell(r + 3, 6).value = dn.get("ground_rent")
-        ws.cell(r + 4, 6).value = dn.get("administrative_charge")
-        if ws.cell(r + 5, 6).value is None:
-            ws.cell(r + 5, 6).value = dn.get("access_charges", 0) if isinstance(dn, dict) else 0
+        def _split_by_comma(v: Any) -> List[str]:
+            if v is None:
+                return []
+            s = str(v).strip()
+            if not s:
+                return []
+            import re as _re_local
+            return [x.strip() for x in _re_local.split(r"[,+]", s) if x.strip()]
+
+        def _split_generic(v: Any) -> List[str]:
+            if v is None:
+                return []
+            s = str(v).strip()
+            if not s:
+                return []
+            import re as _re_local
+            return [x.strip() for x in _re_local.split(r"[,/+]", s) if x.strip()]
+
+        surfaces = _split_by_comma(dn.get("surface"))
+        lengths = _split_generic(dn.get("surface_wise_length"))
+        rates = _split_generic(dn.get("surface_wise_ri_amount"))
+        factors = _split_generic(dn.get("surface_wise_multiplication_factor"))
+        surface_count = max(len(surfaces), 1)
+
+        # Template has one RI row at r+2. Add extra rows for additional surfaces so
+        # G23/G24/G25... can hold each segment and K-total row moves down dynamically.
+        extra_surface_rows = max(0, surface_count - 1)
+        if extra_surface_rows > 0:
+            ws.insert_rows(r + 3, amount=extra_surface_rows)
+            # Copy RI-row style/formulas to newly inserted RI rows.
+            for j in range(1, surface_count):
+                _copy_block(r + 2, 1, r + 2 + j)
+
+        ri_start = r + 2
+        ri_end = ri_start + surface_count - 1
+        ground_row = ri_end + 1
+        admin_row = ri_end + 2
+        access_row = ri_end + 3
+
+        def _to_float(x: Any) -> float:
+            if x is None or x == "":
+                return 0.0
+            try:
+                return float(str(x).replace(",", ""))
+            except Exception:
+                return 0.0
+
+        # Fill dynamic per-surface lines in G/H/I/J and line total in K.
+        for rr in range(ri_start, ri_end + 1):
+            ws.cell(rr, 7).value = None  # G
+            ws.cell(rr, 8).value = None  # H
+            ws.cell(rr, 9).value = None  # I
+            ws.cell(rr, 10).value = None  # J
+            ws.cell(rr, 11).value = None  # K
+            # Keep "RI Charges" label only on first row.
+            if rr == ri_start:
+                ws.cell(rr, 5).value = "RI Charges"
+            else:
+                ws.cell(rr, 5).value = None
+                ws.cell(rr, 4).value = None
+                # Avoid repeated RI amount value in F (e.g. F24, F25...)
+                ws.cell(rr, 6).value = None
+
+        k_row_totals: List[float] = []
+        for i in range(surface_count):
+            rr = ri_start + i
+            if i < len(surfaces):
+                ws.cell(rr, 7).value = surfaces[i]
+            if i < len(lengths):
+                ws.cell(rr, 8).value = lengths[i]
+            if i < len(rates):
+                ws.cell(rr, 9).value = rates[i]
+            if i < len(factors):
+                f_raw = factors[i]
+                try:
+                    f_num = float(str(f_raw).strip())
+                    ws.cell(rr, 10).value = 1 if f_num == 0 else f_raw
+                except Exception:
+                    ws.cell(rr, 10).value = f_raw
+            elif ws.cell(rr, 10).value in (None, ""):
+                ws.cell(rr, 10).value = 1
+
+            line_total = (
+                _to_float(ws.cell(rr, 8).value)
+                * _to_float(ws.cell(rr, 9).value)
+                * _to_float(ws.cell(rr, 10).value)
+            )
+            k_row_totals.append(line_total)
+            # Write numeric total so it is visible even without formula recalculation.
+            ws.cell(rr, 11).value = line_total if line_total != 0 else None
+
+        # Keep breakup lines below dynamic RI block.
+        ws.cell(ground_row, 6).value = dn.get("ground_rent")
+        ws.cell(admin_row, 6).value = dn.get("administrative_charge")
+        if ws.cell(access_row, 6).value is None:
+            ws.cell(access_row, 6).value = dn.get("access_charges", 0) if isinstance(dn, dict) else 0
+
+        # Total K row should shift downward based on surface rows.
+        # For default 3 surfaces, this remains K26; otherwise moves accordingly.
+        k_total = sum(k_row_totals)
+        ws.cell(access_row, 11).value = k_total if k_total != 0 else None
+        # RI charges row in F points to the shifted K total.
+        ws.cell(ri_start, 6).value = k_total if k_total != 0 else None
 
         # Also fill any additional dn_master(...) mappings present in row 18
         # (keeps compatibility if template is extended with more mapped columns)
@@ -743,21 +848,14 @@ def _build_route_report_workbook(
             # Avoid re-setting the ones we already hardcoded above, but it's harmless if same.
             ws.cell(r, c).value = dn.get(dn_col)
 
-        # Some viewers (and certain download flows) don't evaluate Excel formulas.
-        # The template expects F{r} to be =SUM(F{r+2}:F{r+5}). We compute and set the value explicitly.
-        def _to_float(x: Any) -> float:
-            if x is None or x == "":
-                return 0.0
-            try:
-                return float(x)
-            except Exception:
-                return 0.0
+        # Numeric fallback for F{r} in non-recalculating viewers.
+        k_numeric = k_total
 
         f_total = (
-            _to_float(ws.cell(r + 2, 6).value)
-            + _to_float(ws.cell(r + 3, 6).value)
-            + _to_float(ws.cell(r + 4, 6).value)
-            + _to_float(ws.cell(r + 5, 6).value)
+            k_numeric
+            + _to_float(ws.cell(ground_row, 6).value)
+            + _to_float(ws.cell(admin_row, 6).value)
+            + _to_float(ws.cell(access_row, 6).value)
         )
         ws.cell(r, 6).value = f_total
 
@@ -768,6 +866,15 @@ def _build_route_report_workbook(
         ws.cell(r0, 6).value = 0
 
     # --- 3) Block totals ---
+    # data-sheet!A8 (and Summary!A4 via reference) should reflect actual DN count.
+    # Do not rely on template's fixed SUBTOTAL(B21,B30,...) because row positions
+    # shift when DN blocks expand dynamically.
+    try:
+        dn_count = sum(1 for dn in dn_rows if str(dn.get("dn_number") or "").strip() != "")
+        ws["A8"].value = dn_count
+    except Exception:
+        pass
+
     # As requested: data-sheet!D8 should be the sum of all dn_master.dn_length_mtr for this route.
     try:
         total_dn_length = 0.0
@@ -910,7 +1017,7 @@ def _extract_route_report_summary_projection(wb: "Any") -> Dict[str, Any]:
             out = _eval_formula_to_number(v[1:], stack=stack)
         else:
             try:
-                out = float(v)
+                out = float(str(v).replace(",", ""))
             except Exception:
                 out = 0.0
 
@@ -1004,8 +1111,46 @@ def _extract_route_report_summary_projection(wb: "Any") -> Dict[str, Any]:
             args = _split_excel_args(inner)
             if not args:
                 return 0.0
-            # args[0] is function_num (e.g. 3). Ignore and sum the rest.
+            # args[0] is function_num. In this template, SUBTOTAL(3,...) means COUNTA.
+            fn_raw = args[0].strip()
+            try:
+                fn_num = int(float(fn_raw))
+            except Exception:
+                fn_num = -1
             rest = args[1:]
+            if fn_num == 3:
+                count = 0.0
+                for arg in rest:
+                    arg = arg.strip()
+                    m = _re.fullmatch(r"([A-Z]{1,3}[0-9]+):([A-Z]{1,3}[0-9]+)", arg.upper().replace("$", ""))
+                    if m:
+                        m1 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", m.group(1))
+                        m2 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", m.group(2))
+                        if not (m1 and m2):
+                            continue
+                        c1, r1 = m1.group(1), int(m1.group(2))
+                        c2, r2 = m2.group(1), int(m2.group(2))
+                        c1i, c2i = _col_to_idx(c1), _col_to_idx(c2)
+                        rmin, rmax = min(r1, r2), max(r1, r2)
+                        cmin, cmax = min(c1i, c2i), max(c1i, c2i)
+                        for rr in range(rmin, rmax + 1):
+                            for cc in range(cmin, cmax + 1):
+                                addr = _idx_to_col(cc) + str(rr)
+                                raw = ws_data[addr].value
+                                if raw is not None and str(raw).strip() != "":
+                                    count += 1.0
+                    elif _re.fullmatch(r"[A-Z]{1,3}[0-9]+", arg.upper().replace("$", "")):
+                        addr = arg.upper().replace("$", "")
+                        raw = ws_data[addr].value
+                        if raw is not None and str(raw).strip() != "":
+                            count += 1.0
+                    else:
+                        # Fallback: treat non-zero expression as one non-empty value.
+                        if _eval_expression_to_number(arg, stack) != 0:
+                            count += 1.0
+                return count
+
+            # Fallback for other SUBTOTAL types: sum-like behavior.
             total = 0.0
             for arg in rest:
                 arg = arg.strip()
@@ -1126,6 +1271,12 @@ def send_to_master_dn(body: Dict[str, Any] = Body(...)):
             col = SEND_TO_MASTER_DN_FIELD_MAP[field]
             if value is not None and str(value).strip() != "":
                 v = str(value).strip()
+                if col == "surface":
+                    # Normalize parser-delimited values to comma-separated storage.
+                    # Example: "A / B + C" -> "A, B, C"
+                    import re as _re
+                    v = _re.sub(r"\s*[\/+]\s*", ", ", v)
+                    v = _re.sub(r"\s*,\s*", ", ", v).strip(" ,")
                 if col in ("ground_rent", "gst", "deposit", "total_dn_amount", "actual_total_non_refundable",
                            "dn_length_mtr", "ot_length", "dn_ri_amount", "administrative_charge", "supervision_charges", "chamber_fee", "hdd_length", "pit_ri_rate"):
                     try:

@@ -97,6 +97,35 @@ export default function RouteReport() {
     const colCount = Math.max(...grid.map((r) => (Array.isArray(r) ? r.length : 0)));
     if (colCount === 0) return null;
 
+    const parseNumeric = (val: any): number | null => {
+      if (val === null || val === undefined) return null;
+      if (typeof val === "number") return Number.isFinite(val) ? val : null;
+      const s = String(val).trim();
+      if (!s) return null;
+      const cleaned = s.replace(/,/g, "");
+      const n = Number(cleaned);
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const formatCellValue = (val: any, rowIdx: number, colIdx: number): string => {
+      if (val === null || val === undefined) return "";
+      const s = String(val);
+      const n = parseNumeric(val);
+      if (n === null) return s;
+
+      const headerRow = grid[1] || [];
+      const headerText = String(headerRow[colIdx] ?? "").toLowerCase();
+      const looksLikeMoneyHeader = /cost|amount|budget|difference|payable|ri|total/.test(headerText);
+      if (!looksLikeMoneyHeader && Math.abs(n) < 1000) return s;
+
+      // Preserve up to 2 decimals where present; add thousands separators.
+      const hasDecimals = String(val).includes(".");
+      return n.toLocaleString("en-IN", {
+        minimumFractionDigits: hasDecimals ? 0 : 0,
+        maximumFractionDigits: 2,
+      });
+    };
+
     return (
       <div className="w-full overflow-x-auto">
         <table className="w-full text-xs bg-[#0f1626] rounded-lg overflow-hidden border-separate border-spacing-0">
@@ -118,7 +147,7 @@ export default function RouteReport() {
                             key={`${rIdx}-${c}`}
                             className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
                           >
-                            {currentStr}
+                            {formatCellValue(currentStr, rIdx, c)}
                           </td>
                         );
                         c += 1;
@@ -152,7 +181,7 @@ export default function RouteReport() {
                           colSpan={span}
                           className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
                         >
-                          {currentStr}
+                          {formatCellValue(currentStr, rIdx, c)}
                         </td>
                       );
                       c += span;
@@ -311,67 +340,6 @@ export default function RouteReport() {
             </div>
           )}
 
-          {reportRows.length > 0 && (
-            <div className="mt-6 overflow-x-auto">
-              <Table className="w-full mx-auto text-xs bg-[#0f1626] rounded-lg overflow-hidden">
-                <TableHeader>
-                  <TableRow className="border-slate-600 bg-[#141c2e]">
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      Route ID
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      DN Number
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      DN Length (m)
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      Non-Refundable
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      Budget CE Length (m)
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      Budget RI Cost/m
-                    </TableHead>
-                    <TableHead className="text-slate-300 font-sans font-medium px-2 py-2 text-sm text-center">
-                      PO No (IP1)
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {reportRows.map((r, idx) => (
-                    <TableRow
-                      key={idx}
-                      className={`border-slate-700 ${idx % 2 === 0 ? "bg-[#0f1626]" : "bg-[#111b2d]"}`}
-                    >
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.route_id_site_id ?? "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.dn_number ?? "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.dn_length_mtr != null ? String(r.dn_length_mtr) : "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.actual_total_non_refundable != null ? String(r.actual_total_non_refundable) : "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.budget_ce_length_mtr != null ? String(r.budget_ce_length_mtr) : "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.budget_ri_cost_per_meter != null ? String(r.budget_ri_cost_per_meter) : "-"}
-                      </TableCell>
-                      <TableCell className="text-slate-200 font-sans text-sm px-2 py-2 text-center">
-                        {r.po_no_ip1 != null ? String(r.po_no_ip1) : "-"}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
