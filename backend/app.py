@@ -34,6 +34,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["Content-Disposition"],
 )
 
 
@@ -487,6 +488,9 @@ def _build_route_report_rows(route_id_site_id: str) -> List[Dict[str, Any]]:
     budget_row = budget_rows[0] if budget_rows else None
     po_row = local_db.query_po_by_site_id(rid)
     dn_rows = local_db.get_dn_by_route_id_site_id(rid)
+    # Ignore incomplete DN rows for report block rendering so first block (row 21)
+    # does not become blank when DB has placeholder rows with empty dn_number.
+    dn_rows = [dn for dn in dn_rows if str((dn or {}).get("dn_number") or "").strip() != ""]
 
     rows: List[Dict[str, Any]] = []
     for dn in dn_rows:
@@ -530,6 +534,7 @@ def _build_route_report_workbook(
     """
     from pathlib import Path as _Path
     import openpyxl as _openpyxl
+    from openpyxl.styles import PatternFill as _PatternFill
 
     rid = (route_id_site_id or "").strip()
     if not rid:
@@ -546,12 +551,31 @@ def _build_route_report_workbook(
         planning_row = None
     dn_rows = local_db.get_dn_by_route_id_site_id(rid)
 
-    # Template path from user
-    template_path = _Path(
-        r"D:\trenching-extractor-fresh\trenching-extractor-fresh\MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx"
+    # Production-safe template resolution (no hardcoded machine-specific path).
+    # Priority:
+    # 1) ROUTE_REPORT_TEMPLATE_PATH env var
+    # 2) master_files/route_report_template.xlsx
+    # 3) existing project root template filename (legacy fallback)
+    env_tpl = os.environ.get("ROUTE_REPORT_TEMPLATE_PATH", "").strip()
+    candidate_paths = []
+    if env_tpl:
+        candidate_paths.append(_Path(env_tpl))
+    candidate_paths.extend(
+        [
+            BASE_DIR / "master_files" / "route_report_template.xlsx",
+            BASE_DIR / "MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx",
+        ]
     )
-    if not template_path.exists():
-        raise HTTPException(status_code=404, detail=f"Template not found: {template_path}")
+    template_path = next((p for p in candidate_paths if p.exists()), None)
+    if template_path is None:
+        raise HTTPException(
+            status_code=404,
+            detail=(
+                "Route report template not found. "
+                "Set ROUTE_REPORT_TEMPLATE_PATH or place template at "
+                "'master_files/route_report_template.xlsx'."
+            ),
+        )
 
     wb = _openpyxl.load_workbook(template_path)
     sheet_name = "data-sheet"
@@ -567,6 +591,37 @@ def _build_route_report_workbook(
     # - Row 18 contains green mapping cells for dn_master (dn_number, dn_length_mtr)
     #   and the DN "Approval Required" summary rows (21, 30, ...) are filled.
     map_pat = _re.compile(r"^[A-Za-z_]+\([A-Za-z0-9_]+\)$")
+    route_report_warnings: List[str] = []
+    _warn_seen: "set[str]" = set()
+    mod = (modality or "").strip().lower()
+
+    def _is_blank(v: Any) -> bool:
+        return v is None or str(v).strip() == ""
+
+    def _add_warn(msg: str) -> None:
+        m = str(msg).strip()
+        if not m or m in _warn_seen:
+            return
+        _warn_seen.add(m)
+        route_report_warnings.append(m)
+
+    def _should_warn_for_field(table: str, col: str) -> bool:
+        """
+        Modality-aware warning suppression:
+        - For IP1: don't warn for cobuild fields
+        - For Co-build: don't warn for ip1 fields
+        """
+        t = (table or "").strip().lower()
+        c = (col or "").strip().lower()
+        if t != "po_master":
+            return True
+        if mod in ("ip1",):
+            if "cobuild" in c or "co_build" in c or "co-built" in c or "co_build" in c:
+                return False
+        if mod in ("co-build", "cobuild", "co build", "co-built", "cobuilt"):
+            if "ip1" in c or "ip_1" in c:
+                return False
+        return True
 
     sources_common = {
         "budget_master": budget_row or {},
@@ -576,10 +631,12 @@ def _build_route_report_workbook(
     # --- 1) Fill budget/po mapping (row 2 -> row 4) ---
     mapping_row_budget = 2
     target_row_budget = 4
+    budget_mapping_cols: List[int] = []
     for c in range(1, ws.max_column + 1):
         marker = ws.cell(mapping_row_budget, c).value
         if not (isinstance(marker, str) and map_pat.match(marker.strip())):
             continue
+        budget_mapping_cols.append(c)
         table, col = marker.strip()[:-1].split("(", 1)
         table = table.strip()
         col = col.strip()
@@ -588,15 +645,49 @@ def _build_route_report_workbook(
         tgt_cell = ws.cell(target_row_budget, c)
         if not (isinstance(tgt_cell.value, str) and str(tgt_cell.value).startswith("=")):
             tgt_cell.value = None
-        tgt_cell.value = src.get(col)
+        val = src.get(col)
+        tgt_cell.value = val
+        if _is_blank(val) and _should_warn_for_field(table, col):
+            _add_warn(f"{table}.{col} is blank (used in Excel cell {tgt_cell.coordinate}).")
+
+    # Fallback for templates that do not contain mapping markers in row 2.
+    # This keeps download generation functional when reference template is changed.
+    if len(budget_mapping_cols) == 0:
+        def _set_if_not_formula(addr: str, value: Any) -> None:
+            c = ws[addr]
+            if isinstance(c.value, str) and c.value.startswith("="):
+                return
+            c.value = value
+
+        # Core route/report identity cells
+        _set_if_not_formula("B4", rid)
+        if budget_row:
+            _set_if_not_formula("E4", budget_row.get("ce_length_mtr"))
+            _set_if_not_formula("F4", budget_row.get("total_cost_without_deposit"))
+            _set_if_not_formula("G4", budget_row.get("ri_cost_per_meter"))
+            _set_if_not_formula("H4", budget_row.get("build_cost_per_meter"))
+            _set_if_not_formula("I4", budget_row.get("material_cost_per_meter"))
+            # If J4/K4 are value cells (not formulas), provide budget totals.
+            jv = None
+            try:
+                jv = (float(budget_row.get("build_cost_per_meter") or 0) + float(budget_row.get("material_cost_per_meter") or 0))
+            except Exception:
+                jv = None
+            if jv is not None:
+                _set_if_not_formula("J4", jv)
+            _set_if_not_formula("K4", budget_row.get("execution_cost_including_hh") or budget_row.get("total_cost_without_deposit"))
+            _set_if_not_formula("M4", budget_row.get("category_type") or budget_row.get("route_type"))
+        if po_row:
+            # O4/D4 are also set modality-wise below; this is baseline fallback.
+            _set_if_not_formula("O4", po_row.get("po_no_ip1") or po_row.get("po_no_cobuild"))
 
     # Modality impacts C4 + which PO length goes into D4
-    mod = (modality or "").strip()
-    if mod:
-        ws["C4"].value = mod
+    mod_raw = (modality or "").strip()
+    if mod_raw:
+        ws["C4"].value = mod_raw
         try:
             if po_row:
-                if mod.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built"):
+                if mod_raw.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built"):
                     ws["D4"].value = po_row.get("po_length_cobuild")
                     # PO number cell in template row-4 output block
                     ws["O4"].value = po_row.get("po_no_cobuild")
@@ -606,14 +697,49 @@ def _build_route_report_workbook(
         except Exception:
             pass
 
+    # Fill P4 from po_data using where clause:
+    # po_number = O4 AND route_id_site_id = B4
+    # Also gather warnings for missing required po_data fields for UI display.
+    try:
+        po_no_o4 = str(ws["O4"].value or "").strip()
+        route_b4 = str(ws["B4"].value or "").strip()
+        if not po_no_o4 or not route_b4:
+            if not po_no_o4:
+                _add_warn("po_data lookup skipped: O4 (po_number) is blank.")
+            if not route_b4:
+                _add_warn("po_data lookup skipped: B4 (route_id_site_id) is blank.")
+        else:
+            po_data_row = local_db.get_po_data_by_po_and_route(po_no_o4, route_b4)
+            if not po_data_row:
+                _add_warn(
+                    f"po_data row not found for po_number '{po_no_o4}' and route_id_site_id '{route_b4}'."
+                )
+            else:
+                # P4 <- line_total
+                ws["P4"].value = po_data_row.get("line_total")
+
+                required_fields = ("po_number", "cust_route_id_site_id", "quantity", "uom", "unit_price", "line_total")
+                for fld in required_fields:
+                    if str(po_data_row.get(fld) or "").strip() == "":
+                        _add_warn(f"po_data.{fld} is blank for po_number '{po_no_o4}' and route_id_site_id '{route_b4}'.")
+    except Exception as e:
+        _add_warn(f"po_data lookup failed: {e}")
+
     # Also fill planning_tracker values into fixed cells
     # M4 -> planning_date, N4 -> strategic_type
     if planning_row:
-        ws["M4"].value = planning_row.get("planning_date")
-        ws["N4"].value = planning_row.get("strategic_type")
+        val_m4 = planning_row.get("planning_date")
+        val_n4 = planning_row.get("strategic_type")
+        ws["M4"].value = val_m4
+        ws["N4"].value = val_n4
+        if _is_blank(val_m4):
+            _add_warn("planning_tracker.planning_date is blank (used in Excel cell M4).")
+        if _is_blank(val_n4):
+            _add_warn("planning_tracker.strategic_type is blank (used in Excel cell N4).")
     else:
         ws["M4"].value = None
         ws["N4"].value = None
+        _add_warn("planning_tracker row not found for route_id_site_id.")
 
     # Ensure deterministic DN order (and stable alignment in template blocks)
     dn_rows = sorted(dn_rows, key=lambda x: str(x.get("dn_number") or ""))
@@ -710,10 +836,12 @@ def _build_route_report_workbook(
     # DN mapping row defines which columns to fill in the summary rows
     mapping_row_dn = 18
     dn_col_mappings: Dict[int, str] = {}  # excel_col -> dn_master column
+    dn_mapping_cols: List[int] = []
     for c in range(1, ws.max_column + 1):
         marker = ws.cell(mapping_row_dn, c).value
         if not (isinstance(marker, str) and map_pat.match(marker.strip())):
             continue
+        dn_mapping_cols.append(c)
         table, col = marker.strip()[:-1].split("(", 1)
         table = table.strip()
         col = col.strip()
@@ -737,6 +865,10 @@ def _build_route_report_workbook(
         ws.cell(r, 4).value = None
         ws.cell(r, 2).value = dn.get("dn_number")
         ws.cell(r, 4).value = dn.get("dn_length_mtr")
+        if _is_blank(dn.get("dn_number")):
+            _add_warn(f"dn_master.dn_number is blank for DN block #{idx + 1} (cell B{r}).")
+        if _is_blank(dn.get("dn_length_mtr")):
+            _add_warn(f"dn_master.dn_length_mtr is blank for dn_number '{dn.get('dn_number') or '-'}' (cell D{r}).")
 
         def _split_by_comma(v: Any) -> List[str]:
             if v is None:
@@ -760,6 +892,15 @@ def _build_route_report_workbook(
         lengths = _split_generic(dn.get("surface_wise_length"))
         rates = _split_generic(dn.get("surface_wise_ri_amount"))
         factors = _split_generic(dn.get("surface_wise_multiplication_factor"))
+        dn_no_for_warn = str(dn.get("dn_number") or "-")
+        if len(surfaces) == 0:
+            _add_warn(f"dn_master.surface is blank for dn_number '{dn_no_for_warn}'.")
+        if len(lengths) == 0:
+            _add_warn(f"dn_master.surface_wise_length is blank for dn_number '{dn_no_for_warn}'.")
+        if len(rates) == 0:
+            _add_warn(f"dn_master.surface_wise_ri_amount is blank for dn_number '{dn_no_for_warn}'.")
+        if len(factors) == 0:
+            _add_warn(f"dn_master.surface_wise_multiplication_factor is blank for dn_number '{dn_no_for_warn}'.")
         surface_count = max(len(surfaces), 1)
 
         # Template has one RI row at r+2. Add extra rows for additional surfaces so
@@ -832,6 +973,10 @@ def _build_route_report_workbook(
         # Keep breakup lines below dynamic RI block.
         ws.cell(ground_row, 6).value = dn.get("ground_rent")
         ws.cell(admin_row, 6).value = dn.get("administrative_charge")
+        if _is_blank(dn.get("ground_rent")):
+            _add_warn(f"dn_master.ground_rent is blank for dn_number '{dn_no_for_warn}'.")
+        if _is_blank(dn.get("administrative_charge")):
+            _add_warn(f"dn_master.administrative_charge is blank for dn_number '{dn_no_for_warn}'.")
         if ws.cell(access_row, 6).value is None:
             ws.cell(access_row, 6).value = dn.get("access_charges", 0) if isinstance(dn, dict) else 0
 
@@ -846,7 +991,10 @@ def _build_route_report_workbook(
         # (keeps compatibility if template is extended with more mapped columns)
         for c, dn_col in dn_col_mappings.items():
             # Avoid re-setting the ones we already hardcoded above, but it's harmless if same.
-            ws.cell(r, c).value = dn.get(dn_col)
+            v_dn = dn.get(dn_col)
+            ws.cell(r, c).value = v_dn
+            if _is_blank(v_dn):
+                _add_warn(f"dn_master.{dn_col} is blank for dn_number '{dn_no_for_warn}' (cell {ws.cell(r, c).coordinate}).")
 
         # Numeric fallback for F{r} in non-recalculating viewers.
         k_numeric = k_total
@@ -895,6 +1043,14 @@ def _build_route_report_workbook(
     except Exception:
         pass
 
+    # Note: no explicit template-marker row cleanup here.
+
+    # Attach non-fatal warnings so /api/route-report can show them in UI.
+    try:
+        setattr(wb, "_route_report_warnings", route_report_warnings)
+    except Exception:
+        pass
+
     return wb
 
 
@@ -911,7 +1067,8 @@ def api_route_report(
     # keep formulas in the downloaded file).
     wb = _build_route_report_workbook(route_id_site_id, modality=modality)
     payload = _extract_route_report_summary_projection(wb)
-    return {"rows": rows, "modality": modality, **payload}
+    warnings = getattr(wb, "_route_report_warnings", []) or []
+    return {"rows": rows, "modality": modality, "warnings": warnings, **payload}
 
 
 @app.get("/api/route-report/xlsx")
@@ -1644,6 +1801,414 @@ async def parse_po_pdf(file: UploadFile = File(...)):
     finally:
         try:
             os.remove(tmp.name)
+        except Exception:
+            pass
+
+
+@app.post("/api/po-data/save")
+async def save_po_data(payload: Dict[str, Any] = Body(...)):
+    """
+    Save extracted PO rows into po_data.
+    - id is auto-generated as: po_number + cust_route_id_site_id (direct concat)
+    - existing ids are reported back row-wise
+    """
+    entries = payload.get("entries") if isinstance(payload, dict) else None
+    if not isinstance(entries, list) or len(entries) == 0:
+        raise HTTPException(status_code=400, detail="entries is required")
+
+    results: List[Dict[str, Any]] = []
+    inserted = 0
+    exists = 0
+
+    for idx, row in enumerate(entries):
+        if not isinstance(row, dict):
+            continue
+        po_number = str(row.get("po_number") or "").strip()
+        cust_route_id_site_id = str(row.get("route_id_site_id") or row.get("cust_route_id_site_id") or "").strip()
+        if not po_number or not cust_route_id_site_id:
+            results.append({
+                "row_index": idx,
+                "status": "skipped",
+                "reason": "po_number or cust_route_id_site_id missing",
+            })
+            continue
+
+        row_id = local_db.make_po_data_id(po_number, cust_route_id_site_id)
+        saved = local_db.insert_po_data_if_new(
+            {
+                "id": row_id,
+                "po_number": po_number,
+                # Keep both for strict report lookup and custom tracking.
+                "route_id_site_id": cust_route_id_site_id,
+                "cust_route_id_site_id": cust_route_id_site_id,
+                "quantity": str(row.get("qty") or row.get("quantity") or "").strip(),
+                "uom": str(row.get("uom") or "").strip(),
+                "unit_price": str(row.get("unit_price") or "").strip(),
+                "line_total": str(row.get("po_value") or row.get("line_total") or "").strip(),
+            }
+        )
+        if saved:
+            inserted += 1
+            results.append({"row_index": idx, "id": row_id, "status": "inserted"})
+        else:
+            exists += 1
+            results.append({"row_index": idx, "id": row_id, "status": "exists"})
+
+    return {
+        "success": True,
+        "inserted_count": inserted,
+        "exists_count": exists,
+        "results": results,
+    }
+
+
+@app.post("/api/deposit-return/docx")
+async def generate_deposit_return_docx(permit_pdf: UploadFile = File(...)):
+    """
+    Generate Deposit Refund / WCC-like DOCX using:
+    - Excel: fixed sheet at project root `ward-address/Mumbai_Ward Address.xlsx`
+    - PDF: Permit details + Ward extraction
+    """
+    import tempfile as _tempfile
+    from io import BytesIO as _BytesIO
+
+    # Save PDF upload
+    tmp_pdf = _tempfile.NamedTemporaryFile(delete=False, suffix=".pdf")
+    tmp_pdf.write(await permit_pdf.read())
+    tmp_pdf.close()
+
+    try:
+        # ---- Extract from PDF ----
+        import fitz
+
+        doc = fitz.open(tmp_pdf.name)
+        pdf_text = "\n".join(page.get_text("text") for page in doc)
+        doc.close()
+
+        def _pick_first(pattern: str) -> str:
+            m = re.search(pattern, pdf_text, flags=re.IGNORECASE)
+            return (m.group(1).strip() if m else "")
+
+        def _pick_last_group1(pattern: str) -> str:
+            ms = list(re.finditer(pattern, pdf_text, flags=re.IGNORECASE))
+            return (ms[-1].group(1).strip() if ms else "")
+
+        # Permit number + permit date appear in multiple formats in PDFs.
+        # Example (from your screenshot):
+        #   No. 783339100 Dt. 16.04.2025
+        m_no_dt = re.search(
+            r"\bNo\.?\s*([0-9]{6,})\s*Dt\.?\s*([0-9]{1,2}[./-][0-9]{1,2}[./-][0-9]{2,4})\b",
+            pdf_text,
+            flags=re.IGNORECASE,
+        )
+        permit_no = m_no_dt.group(1).strip() if m_no_dt else ""
+        permit_date = m_no_dt.group(2).strip() if m_no_dt else ""
+
+        if not permit_no:
+            permit_no = _pick_first(r"\bPermit\s*No\.?\s*[:\-]?\s*([0-9]{6,})\b") or _pick_first(r"\b([0-9]{6,})\b")
+        if not permit_date:
+            # Example alternative format: Dt. 16.04.2025
+            permit_date = _pick_first(r"\bDt\.?\s*([0-9]{1,2}[./-][0-9]{1,2}[./-][0-9]{2,4})\b")
+            if not permit_date:
+                permit_date = _pick_first(r"\bDate\s*[:\-]?\s*([0-9]{1,2}[./-][0-9]{1,2}[./-][0-9]{2,4})\b")
+        # Ward: prefer signature line "Asst. Engineer (Maint) A Ward" (usually at PDF end).
+        # Generic "\b... Ward\b" must NOT run first — with IGNORECASE it matches English
+        # "by Ward" / "near by ward" and yields false "BY", breaking Excel lookup.
+        _WARD_STOPWORDS = frozenset(
+            {
+                "BY",
+                "TO",
+                "THE",
+                "AND",
+                "OR",
+                "FOR",
+                "NOT",
+                "BUT",
+                "OUR",
+                "NOR",
+                "PER",
+                "VIA",
+                "CUM",
+                "MAY",
+                "WAS",
+                "ARE",
+                "HIS",
+                "HER",
+                "ITS",
+            }
+        )
+        _WARD_SIG = (
+            r"Asst\.?\s+Engineer\s*\([^)]*\)\s*"
+            r"([A-Za-z]{1,3}(?:\s*\/\s*[A-Za-z]{1,3})?)\s+Ward\b"
+        )
+        _WARD_GEN = r"\b([A-Za-z]{1,3}(?:\s*\/\s*[A-Za-z]{1,3})?)\s*Ward\b"
+        _WARD_GEN_DOT = r"\b([A-Za-z]{1,3}(?:\s*\/\s*[A-Za-z]{1,3})?)\s*Ward\."
+
+        ward = _pick_last_group1(_WARD_SIG)
+        if not ward:
+            # Last non-stopword generic match (prefer end of document — signature / footer).
+            for pat in (_WARD_GEN_DOT, _WARD_GEN):
+                ms = list(re.finditer(pat, pdf_text, flags=re.IGNORECASE))
+                for m in reversed(ms):
+                    raw = m.group(1).strip()
+                    w_try = re.sub(r"\s*/\s*", "/", raw.upper())
+                    if w_try in _WARD_STOPWORDS:
+                        continue
+                    ward = raw
+                    break
+                if ward:
+                    break
+        if ward:
+            # Normalize spaces around slash, uppercase for consistent matching/output.
+            ward = re.sub(r"\s*/\s*", "/", ward.strip().upper())
+
+        # Road name (best-effort)
+        # Prefer "Name of Road : <ROAD>" because other "Trench on ..." occurrences
+        # may refer to Carriageway/Footpath sections.
+        trench_road = _pick_first(
+            r"\bName\s+of\s+Road\s*[:\-]\s*([A-Za-z0-9][A-Za-z0-9 \\/&().,-]{2,90})"
+        )
+        if not trench_road:
+            trench_road = _pick_first(r"\bTrench\s+on\s+([A-Za-z0-9][A-Za-z0-9 /&().,-]{3,60})")
+            # Avoid capturing sub-sections like "Carriageway"/"Footpath"
+            if trench_road and trench_road.strip().lower() in ("carriageway", "footpath", "carriage way"):
+                trench_road = ""
+
+        # Dates of start / completion
+        date_of_start = _pick_first(
+            r"\bDate\s*of\s*Start\s*[:\-]?\s*([0-9]{1,2}[./-][0-9]{1,2}[./-][0-9]{2,4})"
+        )
+        date_of_completion = _pick_first(
+            r"\bDate\s*of\s*Completion\s*[:\-]?\s*([0-9]{1,2}[./-][0-9]{1,2}[./-][0-9]{2,4})"
+        )
+
+        # ---- Excel: Ward -> Address ----
+        import openpyxl as _openpyxl
+
+        base_dir = Path(__file__).resolve().parent.parent
+        excel_path = base_dir / "ward-address" / "Mumbai_Ward Address.xlsx"
+        if not excel_path.exists():
+            raise HTTPException(
+                status_code=400,
+                detail=f"Ward address Excel not found at: {excel_path}",
+            )
+
+        wb = _openpyxl.load_workbook(str(excel_path), data_only=True)
+        ws = wb[wb.sheetnames[0]]
+
+        # Find header row containing "Ward" (optional).
+        header_row_idx = None
+        header_map: Dict[str, int] = {}
+        for r in range(1, min(ws.max_row, 15) + 1):
+            row_vals = [str(ws.cell(r, c).value or "").strip() for c in range(1, min(ws.max_column, 50) + 1)]
+            low = [v.lower() for v in row_vals]
+            if any(v == "ward" for v in low):
+                header_row_idx = r
+                for ci, name in enumerate(row_vals, start=1):
+                    if name:
+                        header_map[name.lower()] = ci
+                break
+
+        def _get_col(*names: str) -> Optional[int]:
+            for n in names:
+                if n.lower() in header_map:
+                    return header_map[n.lower()]
+            return None
+
+        ward_col = _get_col("ward")
+        addr_col = _get_col("address", "adress", "office address", "ward address")
+
+        # If the uploaded file uses fixed columns (as you specified):
+        # Column A = Ward, Column C = Address
+        if not ward_col:
+            ward_col = 1
+        if not addr_col:
+            addr_col = 3
+
+        def _excel_ward_matches(extracted: str, cell_val: str) -> bool:
+            """Match Excel column A even if it uses punctuation variants like 'H/W' vs 'HW'."""
+            if not extracted:
+                return False
+
+            def _norm(x: str) -> str:
+                t = str(x or "").strip().upper()
+                if not t:
+                    return ""
+                # Remove trailing/prefixed 'WARD' labels, then keep only alphanumerics.
+                t = re.sub(r"\bWARD\.?\b", "", t)
+                t = re.sub(r"[^A-Z0-9]", "", t)
+                return t
+
+            e_norm = _norm(extracted)
+            w_norm = _norm(cell_val)
+            return bool(e_norm and w_norm and e_norm == w_norm)
+
+        address = ""
+        if ward and ward_col and addr_col:
+            start_r = (header_row_idx + 1) if header_row_idx else 1
+            for r in range(start_r, ws.max_row + 1):
+                wv = str(ws.cell(r, ward_col).value or "").strip()
+                if _excel_ward_matches(ward, wv):
+                    address = str(ws.cell(r, addr_col).value or "").strip()
+                    break
+
+        # If trench road is not in PDF, try excel columns
+        if not trench_road and header_row_idx:
+            road_col = _get_col("road", "trench on", "location", "street")
+            if road_col:
+                trench_road = str(ws.cell(header_row_idx + 1, road_col).value or "").strip()
+
+        # ---- Build DOCX ----
+        from docx import Document
+        from docx.shared import Pt
+        from docx.enum.text import WD_LINE_SPACING, WD_BREAK
+
+        _LINE_GAP = Pt(12)  # ~one blank line in Word at default body size
+
+        out = _BytesIO()
+        d = Document()
+
+        def _fmt_tight_para(p) -> None:
+            pf = p.paragraph_format
+            pf.space_before = Pt(0)
+            pf.space_after = Pt(0)
+            pf.line_spacing_rule = WD_LINE_SPACING.SINGLE
+
+        def _add_tight_line(text: str, *, bold: bool = False):
+            p = d.add_paragraph()
+            _fmt_tight_para(p)
+            r = p.add_run(text)
+            r.bold = bold
+            return p
+
+        def _estimate_body_lines() -> float:
+            """Rough line count for page-fill heuristic (~75 chars/line on A4)."""
+            n = 0.0
+            for p in d.paragraphs:
+                t = (p.text or "").strip()
+                if not t:
+                    continue
+                n += max(1.0, (len(t) + 74) / 75.0)
+            return n
+
+        p_title = d.add_paragraph()
+        r_top = p_title.add_run("PROGRESS REPORT OF AIRTEL")
+        r_top.bold = True
+        p_title.add_run("\n")
+        r_sub = p_title.add_run("(Work Completion Certificate)")
+        r_sub.bold = True
+        _fmt_tight_para(p_title)
+        p_title.paragraph_format.space_after = Pt(0)
+
+        p_to = d.add_paragraph()
+        _fmt_tight_para(p_to)
+        p_to.paragraph_format.space_before = _LINE_GAP
+        p_to.paragraph_format.space_after = _LINE_GAP
+        p_to.add_run("To:")
+        _add_tight_line("ASSISTANT ENGINEER - MAINTENANCE")
+        if ward:
+            _add_tight_line(f"{ward} Ward Office Bldg.,")
+        if address:
+            # One line per segment; collapse internal spaces; no blank lines.
+            addr_parts: List[str] = []
+            for chunk in re.split(r",|\n", address):
+                line = " ".join(str(chunk).split())
+                if line:
+                    addr_parts.append(line)
+            for part in addr_parts:
+                _add_tight_line(part)
+
+        p_subj = d.add_paragraph(f"Sub:- Trench on {trench_road or ''}".strip())
+        p_subj.paragraph_format.space_before = _LINE_GAP
+        if permit_no:
+            d.add_paragraph(f"Ref: - Permit No. {permit_no}")
+        d.add_paragraph("Sir,")
+        if permit_no:
+            if permit_date:
+                d.add_paragraph(f"1. Permit No. & Date :  {permit_no}   Date {permit_date}")
+            else:
+                d.add_paragraph(f"1. Permit No. & Date :  {permit_no}")
+        if date_of_start:
+            d.add_paragraph(f"2. Date of Start :  {date_of_start} Work Done")
+        else:
+            d.add_paragraph("2. Date of Start :")
+
+        if date_of_completion:
+            d.add_paragraph(f"3. Date of Completion :  {date_of_completion} Work Done")
+        else:
+            d.add_paragraph("3. Date of Completion :")
+        d.add_paragraph("The progress of above work is as follows:-")
+        d.add_paragraph("Sr.No. Particular Proposed as per plan Actual Progress")
+        d.add_paragraph("1  Laying of cable : Yes  Done")
+        d.add_paragraph("2  Transporting of excavated earth : Yes  Done")
+        d.add_paragraph("3  Damage to Municipal Utility : No")
+        d.add_paragraph("4  Damages to other Utility : No")
+        d.add_paragraph("Engineer of Utility.")
+        d.add_paragraph("Date:")
+        # ~45 lines ≈ one full A4 page (11–12pt, default margins). If ~90% full, start Observations on next page.
+        _PAGE_LINES_FULL = 45.0
+        _OBS_LINES_GAP = Pt(22)  # ~2 blank lines above Observations when same page
+        lines_before_obs = _estimate_body_lines()
+        if lines_before_obs >= _PAGE_LINES_FULL * 0.9:
+            p_br = d.add_paragraph()
+            _fmt_tight_para(p_br)
+            p_br.add_run().add_break(WD_BREAK.PAGE)
+            obs_space_top = Pt(6)
+        else:
+            obs_space_top = _OBS_LINES_GAP
+
+        p_obs = d.add_paragraph()
+        p_obs.paragraph_format.space_before = obs_space_top
+        p_obs.paragraph_format.space_after = _LINE_GAP
+        p_obs.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+        p_obs.add_run("Observations of Ward Engineer").bold = True
+        observations = [
+            "1 Delayed in starting Yes / No",
+            "2 Delayed in completion Yes / No",
+            "3 Delayed in phase wise completion Yes / No",
+            "4 Engineer of Utility is available Yes / No",
+            "5 Barricading fixed Yes / No",
+            "6 Reflectory signage provided Yes / No",
+            "7 Name Board displayed Yes / No",
+            "8 Warden appointed Yes / No",
+            "9 M. S. Plate provided Yes / No",
+            "10 Earth removed in time Yes / No",
+            "11 Excavated earth removed Yes / No",
+            "12 Excavated earth transported to identified spot Yes / No",
+            "13 Water entrances covered Yes / No",
+            "14 Water entrances cleaned Yes / No",
+            "15 Municipal Utility damaged Yes / No",
+            "16 Other Utility damaged Yes / No",
+            "17 Damages to private property Yes / No",
+            "18 Length increased Yes / No",
+            "19 Alignment changed Yes / No",
+            "20 Starting Point changed Yes / No",
+            "21 End point change Yes / No",
+            "22 Missing cover provided Yes / No",
+            "23 Night lighting provided Yes / No",
+        ]
+        for line in observations:
+            d.add_paragraph(line)
+
+        d.save(out)
+        out.seek(0)
+
+        from fastapi.responses import Response
+
+        safe_permit_no = re.sub(r"[^0-9A-Za-z_-]", "", str(permit_no or "").strip())
+        filename = f"Permit_No_{safe_permit_no}.docx" if safe_permit_no else "Permit_No_deposit_return.docx"
+        return Response(
+            content=out.getvalue(),
+            media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        try:
+            os.remove(tmp_pdf.name)
         except Exception:
             pass
 

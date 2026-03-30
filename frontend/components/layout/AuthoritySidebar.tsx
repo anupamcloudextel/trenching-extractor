@@ -109,6 +109,16 @@ export function AuthoritySidebar({ selected, onSelect }: { selected: string; onS
               <FileText className="h-5 w-5" />
               {!isCollapsed && <span className="ml-2">PO PDF Extractor</span>}
             </button>
+            <button
+              className={`flex items-center w-full px-3 py-2 rounded-lg font-inter text-sm transition-colors ${
+                selected === 'deposit-return' ? "bg-[#232f47] text-white font-semibold" : "text-gray-300 hover:bg-[#232f47]/60"
+              }`}
+              onClick={() => onSelect('deposit-return')}
+              title="Deposit Refund"
+            >
+              <FileText className="h-5 w-5" />
+              {!isCollapsed && <span className="ml-2">Deposit Refund</span>}
+            </button>
           </nav>
         </>
       )}
