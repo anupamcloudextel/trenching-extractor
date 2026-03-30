@@ -29,6 +29,7 @@ export default function RouteReport() {
   const [error, setError] = useState<string | null>(null);
   const [reportRows, setReportRows] = useState<any[]>([]);
   const [reportError, setReportError] = useState<string | null>(null);
+  const [reportWarnings, setReportWarnings] = useState<string[]>([]);
   const [reportLoading, setReportLoading] = useState(false);
   const [summaryGrid, setSummaryGrid] = useState<any[][]>([]);
   const [projectionGrid, setProjectionGrid] = useState<any[][]>([]);
@@ -61,6 +62,7 @@ export default function RouteReport() {
     if (!routeAnalysisId) return;
     setReportLoading(true);
     setReportError(null);
+    setReportWarnings([]);
     try {
       let backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
       backendUrl = backendUrl.replace(/\/$/, "");
@@ -76,6 +78,7 @@ export default function RouteReport() {
       setReportRows(json.rows || []);
       setSummaryGrid(Array.isArray(json.summaryGrid) ? json.summaryGrid : []);
       setProjectionGrid(Array.isArray(json.projectionGrid) ? json.projectionGrid : []);
+      setReportWarnings(Array.isArray(json.warnings) ? json.warnings.map((w: any) => String(w)) : []);
       setLastReportParams({ route_id_site_id: routeAnalysisId, modality });
     } catch (e: any) {
       setReportError(e?.message || "Failed to create report");
@@ -325,6 +328,16 @@ export default function RouteReport() {
           </div>
           {reportError && (
             <div className="text-red-400 text-sm mt-2">{reportError}</div>
+          )}
+          {reportWarnings.length > 0 && (
+            <div className="mt-2 rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2">
+              <div className="text-amber-300 text-sm font-semibold">Warning</div>
+              <ul className="list-disc pl-5 mt-1 space-y-1">
+                {reportWarnings.map((w, i) => (
+                  <li key={i} className="text-amber-200 text-sm">{w}</li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {summaryGrid.length > 0 && (

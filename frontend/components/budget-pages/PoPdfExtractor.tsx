@@ -23,13 +23,20 @@ type ExtractedPO = {
 export default function PoPdfExtractor() {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saveMessage, setSaveMessage] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [rowStatuses, setRowStatuses] = useState<Record<number, "inserted" | "exists" | "skipped">>({});
   const [result, setResult] = useState<ExtractedPO | null>(null);
 
   const handleExtract = async () => {
     if (!file) return;
     setLoading(true);
     setError(null);
+    setSaveError(null);
+    setSaveMessage(null);
+    setRowStatuses({});
     setResult(null);
     try {
       const formData = new FormData();
@@ -56,6 +63,50 @@ export default function PoPdfExtractor() {
     }
   };
 
+  const handleSave = async () => {
+    if (!result) return;
+    const entries = result.entries && result.entries.length > 0
+      ? result.entries
+      : [{
+          sr_no: "1",
+          po_number: result.po_number || "",
+          route_id_site_id: result.route_id_site_id || "",
+          qty: "",
+          uom: "",
+          unit_price: "",
+          po_value: result.po_value || "",
+        }];
+    if (!entries.length) return;
+
+    setSaving(true);
+    setSaveError(null);
+    setSaveMessage(null);
+    try {
+      const backendUrl = (process.env.NEXT_PUBLIC_BACKEND_URL || "").replace(/\/$/, "");
+      const res = await fetch(`${backendUrl}/api/po-data/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entries }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        throw new Error(json?.detail || "Failed to save data");
+      }
+      const statuses: Record<number, "inserted" | "exists" | "skipped"> = {};
+      (json?.results || []).forEach((r: any) => {
+        if (typeof r?.row_index === "number" && (r?.status === "inserted" || r?.status === "exists" || r?.status === "skipped")) {
+          statuses[r.row_index] = r.status;
+        }
+      });
+      setRowStatuses(statuses);
+      setSaveMessage(`Saved ${json?.inserted_count || 0} new row(s). ${json?.exists_count || 0} row(s) already exist.`);
+    } catch (e: any) {
+      setSaveError(e?.message || "Failed to save data");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="w-full bg-[#101624] py-8" style={{ overflowX: "hidden" }}>
       <Card className="w-full bg-[#101624] border-none shadow-2xl rounded-3xl backdrop-blur-md mb-12">
@@ -65,7 +116,7 @@ export default function PoPdfExtractor() {
             PO PDF Extractor
           </CardTitle>
           <CardDescription className="text-slate-400 mt-1 text-base font-normal leading-snug">
-            Upload PO PDF and extract PO Number, Route ID/Site ID, and PO Value.
+            Upload PO PDF and extract PO Number, Customer Route ID / Site ID, and PO Value.
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6 pb-8 px-12">
@@ -89,9 +140,21 @@ export default function PoPdfExtractor() {
                 {loading ? "Extracting..." : "Extract"}
               </Button>
             </div>
+            <div className="flex items-end">
+              <Button
+                className="h-12 px-6 bg-[#232f47] hover:bg-[#2a3855] text-white font-semibold rounded-lg shadow-lg"
+                disabled={!result || saving || loading}
+                onClick={handleSave}
+              >
+                {saving ? <Loader2 className="h-5 w-5 animate-spin mr-2" /> : null}
+                {saving ? "Saving..." : "Save Extracted Data"}
+              </Button>
+            </div>
           </div>
 
           {error && <div className="text-red-400 text-sm mt-4">{error}</div>}
+          {saveError && <div className="text-red-400 text-sm mt-2">{saveError}</div>}
+          {saveMessage && <div className="text-amber-300 text-sm mt-2">{saveMessage}</div>}
 
           {result && (
             <div className="mt-6 space-y-5">
@@ -101,7 +164,7 @@ export default function PoPdfExtractor() {
                   <div className="text-white text-lg font-semibold">{result.po_number || "-"}</div>
                 </div>
                 <div className="bg-[#141c2e] border border-slate-700 rounded-lg p-4">
-                  <div className="text-slate-400 text-xs mb-1">Route ID / Site ID</div>
+                  <div className="text-slate-400 text-xs mb-1">Customer Route ID / Site ID</div>
                   <div className="text-white text-lg font-semibold">{result.route_id_site_id || "-"}</div>
                 </div>
                 <div className="bg-[#141c2e] border border-slate-700 rounded-lg p-4">
@@ -122,11 +185,12 @@ export default function PoPdfExtractor() {
                       <tr>
                         <th className="text-slate-300 font-semibold text-left px-3 py-2">S.No</th>
                         <th className="text-slate-300 font-semibold text-left px-3 py-2">PO Number</th>
-                        <th className="text-slate-300 font-semibold text-left px-3 py-2">Route ID / Site ID</th>
+                        <th className="text-slate-300 font-semibold text-left px-3 py-2">Customer Route ID / Site ID</th>
                         <th className="text-slate-300 font-semibold text-right px-3 py-2">Qty</th>
                         <th className="text-slate-300 font-semibold text-left px-3 py-2">UOM</th>
                         <th className="text-slate-300 font-semibold text-right px-3 py-2">Unit Price</th>
                         <th className="text-slate-300 font-semibold text-right px-3 py-2">Line Total</th>
+                        <th className="text-slate-300 font-semibold text-left px-3 py-2">Save Status</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -147,6 +211,17 @@ export default function PoPdfExtractor() {
                           <td className="text-slate-100 px-3 py-2">{row.uom || "-"}</td>
                           <td className="text-slate-100 px-3 py-2 text-right">{row.unit_price || "-"}</td>
                           <td className="text-slate-100 px-3 py-2 text-right">{row.po_value || "-"}</td>
+                          <td className="text-slate-100 px-3 py-2">
+                            {rowStatuses[idx] === "inserted" ? (
+                              <span className="text-green-400 font-semibold">Saved</span>
+                            ) : rowStatuses[idx] === "exists" ? (
+                              <span className="text-amber-300 font-semibold">Data Exists</span>
+                            ) : rowStatuses[idx] === "skipped" ? (
+                              <span className="text-red-400 font-semibold">Skipped</span>
+                            ) : (
+                              <span className="text-slate-500">-</span>
+                            )}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
