@@ -63,7 +63,7 @@ MASTER_PO_PATH = MASTER_FILES_DIR / "master_po.xlsx"
 MASTER_BUDGET_DB = MASTER_FILES_DIR / "master_budget.xlsx"
 
 # Route report Excel template (override with ROUTE_REPORT_TEMPLATE absolute path if needed)
-ROUTE_REPORT_TEMPLATE_DEFAULT = BASE_DIR / "MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx"
+ROUTE_REPORT_TEMPLATE_DEFAULT = BASE_DIR / "master_files" / "Route_report_reference_file.xlsx"
 
 # -------------------------------------------------------------------
 # HELPERS
