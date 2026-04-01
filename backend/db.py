@@ -82,6 +82,7 @@ def init_tables(engine=None):
     _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_length TEXT", fetch=False)
     _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_ri_amount TEXT", fetch=False)
     _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS surface_wise_multiplication_factor TEXT", fetch=False)
+    _run_sql(engine, "ALTER TABLE dn_master ADD COLUMN IF NOT EXISTS survey_length NUMERIC(18,4)", fetch=False)
     _run_sql(engine, "CREATE UNIQUE INDEX IF NOT EXISTS idx_dn_master_dn_number ON dn_master(dn_number)", fetch=False)
 
     budget_sql = """
@@ -153,9 +154,22 @@ def get_dn_by_route_id_site_id(route_id_site_id: str) -> List[Dict[str, Any]]:
     engine = get_engine()
     return _run_sql(engine, "SELECT * FROM dn_master WHERE route_id_site_id = :rid", {"rid": route_id_site_id})
 
+
+def get_dn_by_route_id_site_id_insensitive(route_id_site_id: str) -> List[Dict[str, Any]]:
+    """Same as get_dn_by_route_id_site_id but matches route_id_site_id case-insensitively."""
+    engine = get_engine()
+    rid = (route_id_site_id or "").strip()
+    if not rid:
+        return []
+    return _run_sql(
+        engine,
+        "SELECT * FROM dn_master WHERE LOWER(TRIM(route_id_site_id)) = LOWER(TRIM(:rid))",
+        {"rid": rid},
+    )
+
 def upsert_dn_master(row: Dict[str, Any]) -> None:
     engine = get_engine()
-    allowed = {"dn_number", "route_id_site_id", "dn_length_mtr", "permission_receipt_date", "permit_no",
+    allowed = {"dn_number", "route_id_site_id", "dn_length_mtr", "survey_length", "permission_receipt_date", "permit_no",
                "permit_start_date", "permit_end_date", "permitted_length_by_ward_mts", "surface",
                "surface_wise_length", "surface_wise_ri_amount", "surface_wise_multiplication_factor", "no_of_pits",
                "ground_rent", "gst", "deposit", "total_dn_amount", "application_date", "dn_received_date",
@@ -233,6 +247,19 @@ def budget_insert_many(rows: List[Dict[str, Any]]) -> None:
 def query_po_by_site_id(site_id: str) -> Optional[Dict[str, Any]]:
     engine = get_engine()
     rows = _run_sql(engine, "SELECT * FROM po_master WHERE route_id_site_id = :sid LIMIT 1", {"sid": site_id})
+    return rows[0] if rows else None
+
+
+def query_po_by_route_id_insensitive(route_id_site_id: str) -> Optional[Dict[str, Any]]:
+    """Match po_master.route_id_site_id case-insensitively (same idea as budget route analysis)."""
+    if not (route_id_site_id or str(route_id_site_id).strip()):
+        return None
+    engine = get_engine()
+    rows = _run_sql(
+        engine,
+        "SELECT * FROM po_master WHERE LOWER(TRIM(route_id_site_id)) = LOWER(TRIM(:sid)) LIMIT 1",
+        {"sid": str(route_id_site_id).strip()},
+    )
     return rows[0] if rows else None
 
 def get_po_site_ids() -> List[str]:

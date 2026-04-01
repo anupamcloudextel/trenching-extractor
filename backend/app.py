@@ -8,7 +8,7 @@ from pathlib import Path
 import os
 import tempfile
 import re
-from typing import Optional, List, Dict, Any
+from typing import Optional, List, Dict, Any, Tuple
 
 # Existing imports
 from parsers import nmmc
@@ -61,6 +61,9 @@ MASTER_PO_PATH = MASTER_FILES_DIR / "master_po.xlsx"
 # If you have the real old server file, keep it here:
 MASTER_BUDGET_DB = MASTER_FILES_DIR / "master_budget.xlsx"
 
+# Route report Excel template (override with ROUTE_REPORT_TEMPLATE absolute path if needed)
+ROUTE_REPORT_TEMPLATE_DEFAULT = BASE_DIR / "MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx"
+
 # -------------------------------------------------------------------
 # HELPERS
 # -------------------------------------------------------------------
@@ -93,6 +96,130 @@ def _extract_digits(s: str) -> str:
     s = _normalize(s)
     m = re.search(r"(\d+)", s)
     return m.group(1) if m else ""
+
+
+def _excel_cached_value_xml_text(val: Any) -> str:
+    """Format a number for OOXML <v> (no thousands separator)."""
+    if val is None:
+        return "0"
+    try:
+        x = float(val)
+    except Exception:
+        return "0"
+    if x != x:  # NaN
+        return "0"
+    if abs(x - round(x)) < 1e-9:
+        return str(int(round(x)))
+    return f"{x:.15g}".rstrip("0").rstrip(".")
+
+
+def _inject_ooxml_cached_v_after_formula(xml: str, cell_ref: str, v_text: str) -> str:
+    """
+    Insert or replace <v> immediately after </f> inside <c r="cell_ref" ...>...</c>.
+    String-based so the workbook keeps its original namespace formatting (no ns0: rewrite).
+    """
+    needle = f'<c r="{cell_ref}"'
+    start = xml.find(needle)
+    if start < 0:
+        return xml
+    cell_close = xml.find("</c>", start)
+    if cell_close < 0:
+        return xml
+    chunk = xml[start:cell_close]
+    f_end_rel = chunk.find("</f>")
+    if f_end_rel < 0:
+        return xml
+    ins = start + f_end_rel + len("</f>")
+    tail_to_cell_end = xml[ins:cell_close]
+    stripped = tail_to_cell_end.lstrip()
+    if stripped.startswith("<v"):
+        m = re.match(r"\s*<v[^>]*>.*?</v>", tail_to_cell_end, re.DOTALL)
+        if m:
+            end = ins + m.end()
+            return xml[:ins] + f"<v>{v_text}</v>" + xml[end:]
+        return xml
+    return xml[:ins] + f"<v>{v_text}</v>" + xml[ins:]
+
+
+def _patch_xlsx_formula_cached_values(xlsx_path: str, sheet_name: str, ref_to_value: Dict[str, float]) -> None:
+    """
+    openpyxl writes <f> for formulas but never writes <v> (cached result), so Excel
+    shows blank cells until a full recalculation. Inject <v> next to each <f> for the
+    given refs so the grid shows numbers immediately while keeping formulas.
+    """
+    import io
+    import math
+    import zipfile
+    import xml.etree.ElementTree as ET
+
+    path = Path(xlsx_path)
+    if not path.exists() or not ref_to_value:
+        return
+
+    ref_map: Dict[str, str] = {}
+    for k, v in ref_to_value.items():
+        key = str(k).upper().replace("$", "")
+        if v is None or (isinstance(v, float) and math.isnan(v)):
+            continue
+        try:
+            ref_map[key] = _excel_cached_value_xml_text(v)
+        except Exception:
+            continue
+    if not ref_map:
+        return
+
+    NS_MAIN = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+
+    def _sheet_part_path(zin: zipfile.ZipFile) -> Optional[str]:
+        try:
+            root = ET.fromstring(zin.read("xl/workbook.xml"))
+        except Exception:
+            return None
+        rid = None
+        for el in root.iter():
+            if el.tag == f"{{{NS_MAIN}}}sheet" and el.get("name") == sheet_name:
+                rid = el.get(f"{{{NS_REL}}}id")
+                break
+        if not rid:
+            return None
+        try:
+            rels = ET.fromstring(zin.read("xl/_rels/workbook.xml.rels"))
+        except Exception:
+            return None
+        for el in rels:
+            if el.tag.endswith("Relationship") and el.get("Id") == rid:
+                tgt = (el.get("Target") or "").replace("\\", "/")
+                if tgt.startswith("worksheets/"):
+                    return "xl/" + tgt
+                if "/worksheets/" in tgt:
+                    return "xl" + tgt[tgt.index("/worksheets/") :].replace("/xl/", "xl/")
+                return "xl/worksheets/" + tgt.rsplit("/", 1)[-1]
+        return None
+
+    with zipfile.ZipFile(path, "r") as zin:
+        sheet_part = _sheet_part_path(zin)
+        if not sheet_part or sheet_part not in zin.namelist():
+            return
+        try:
+            xml = zin.read(sheet_part).decode("utf-8")
+        except Exception:
+            return
+
+        for ref, vtxt in ref_map.items():
+            xml = _inject_ooxml_cached_v_after_formula(xml, ref, vtxt)
+
+        new_sheet_bytes = xml.encode("utf-8")
+
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w", compression=zipfile.ZIP_DEFLATED) as zout:
+            for name in zin.namelist():
+                if name == sheet_part:
+                    zout.writestr(name, new_sheet_bytes)
+                else:
+                    zout.writestr(name, zin.read(name))
+
+    path.write_bytes(buf.getvalue())
 
 
 def _read_budget_df() -> "Any":
@@ -522,11 +649,17 @@ def _build_route_report_rows(route_id_site_id: str) -> List[Dict[str, Any]]:
 def _build_route_report_workbook(
     route_id_site_id: str,
     modality: Optional[str] = None,
-) -> "Any":
+) -> Tuple["Any", Dict[str, float]]:
     """
     Open the template Excel and fill green cells whose values are
     table_name(column_name) by pulling from budget_master, po_master, dn_master.
     All formulas are left intact.
+
+    Returns (workbook, formula_cached) — row 8 and per-DN F/G/J/K use Excel formulas
+    built from actual DN summary row numbers (the template row 8 had #REF! placeholders
+    that caused values to disappear after recalculation). formula_cached maps refs like
+    A8 and F21 to numbers so /api/route-report/xlsx can inject OOXML <v> next to <f>
+    (openpyxl does not write cached values for formulas).
     """
     from pathlib import Path as _Path
     import openpyxl as _openpyxl
@@ -535,23 +668,30 @@ def _build_route_report_workbook(
     if not rid:
         raise HTTPException(status_code=400, detail="route_id_site_id is required")
 
-    # Fetch DB rows once
+    # Fetch DB rows once (exact match, then case-insensitive route match)
     budget_rows = local_db.query_budget_by_site_id_all(rid)
+    if not budget_rows:
+        budget_rows = local_db.query_budget_by_route_id_insensitive(rid)
     budget_row = budget_rows[0] if budget_rows else None
     po_row = local_db.query_po_by_site_id(rid)
+    if not po_row:
+        po_row = local_db.query_po_by_route_id_insensitive(rid)
     planning_row = None
     try:
         planning_row = local_db.get_planning_tracker_by_route_id_site_id(rid)
     except Exception:
         planning_row = None
     dn_rows = local_db.get_dn_by_route_id_site_id(rid)
+    if not dn_rows:
+        dn_rows = local_db.get_dn_by_route_id_site_id_insensitive(rid)
+    dn_rows = sorted(dn_rows, key=lambda x: str(x.get("dn_number") or ""))
 
-    # Template path from user
-    template_path = _Path(
-        r"D:\trenching-extractor-fresh\trenching-extractor-fresh\MUM_Route_23_analysis - 2026-01-08 v2 SP.xlsx"
-    )
+    env_tpl = (os.environ.get("ROUTE_REPORT_TEMPLATE") or "").strip()
+    template_path = _Path(env_tpl) if env_tpl else ROUTE_REPORT_TEMPLATE_DEFAULT
     if not template_path.exists():
         raise HTTPException(status_code=404, detail=f"Template not found: {template_path}")
+
+    from openpyxl.utils import get_column_letter as _gcl
 
     wb = _openpyxl.load_workbook(template_path)
     sheet_name = "data-sheet"
@@ -560,6 +700,46 @@ def _build_route_report_workbook(
     ws = wb[sheet_name]
 
     import re as _re
+
+    def _coerce_numeric(value: Any) -> Any:
+        """Convert Decimal / numeric-looking strings to float so openpyxl writes <v> not inlineStr."""
+        if value is None:
+            return None
+        if isinstance(value, (int, float)):
+            return value
+        if isinstance(value, str) and value.startswith("="):
+            return value
+        try:
+            from decimal import Decimal
+            if isinstance(value, Decimal):
+                return float(value)
+        except Exception:
+            pass
+        if isinstance(value, str):
+            s = value.strip().replace(",", "")
+            if not s:
+                return value
+            try:
+                return float(s)
+            except ValueError:
+                return value
+        try:
+            return float(value)
+        except (TypeError, ValueError):
+            return value
+
+    def _set_cell_safe(rr: int, cc: int, value: Any) -> None:
+        """Write value; if cell is merged, write to merge anchor. Coerces to float when possible."""
+        value = _coerce_numeric(value)
+        cell = ws.cell(rr, cc)
+        if cell.__class__.__name__ != "MergedCell":
+            cell.value = value
+            return
+        coord = cell.coordinate
+        for rng in ws.merged_cells.ranges:
+            if coord in rng:
+                ws.cell(rng.min_row, rng.min_col).value = value
+                return
 
     # This template has explicit mapping rows:
     # - Row 2 contains green mapping cells for budget_master / po_master
@@ -588,46 +768,84 @@ def _build_route_report_workbook(
         tgt_cell = ws.cell(target_row_budget, c)
         if not (isinstance(tgt_cell.value, str) and str(tgt_cell.value).startswith("=")):
             tgt_cell.value = None
-        tgt_cell.value = src.get(col)
+        tgt_cell.value = _coerce_numeric(src.get(col))
 
-    # Modality impacts C4 + which PO length goes into D4
+    # --- 1b) Current template: row 2 has no table(column) markers — fill row 4 explicitly from DB ---
+    def _sum_dn_survey_length(rows: List[Dict[str, Any]]) -> Optional[float]:
+        s = 0.0
+        any_v = False
+        for dn in rows:
+            v = dn.get("survey_length")
+            if v is None or str(v).strip() == "":
+                v = dn.get("application_length_mtr")
+            if v is None or str(v).strip() == "":
+                continue
+            try:
+                s += float(str(v).replace(",", ""))
+                any_v = True
+            except Exception:
+                pass
+        return s if any_v else None
+
     mod = (modality or "").strip()
+    _set_cell_safe(4, 2, rid)
     if mod:
-        ws["C4"].value = mod
-        try:
-            if po_row:
-                if mod.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built"):
-                    ws["D4"].value = po_row.get("po_length_cobuild")
-                    # PO number cell in template row-4 output block
-                    ws["O4"].value = po_row.get("po_no_cobuild")
-                else:
-                    ws["D4"].value = po_row.get("po_length_ip1")
-                    ws["O4"].value = po_row.get("po_no_ip1")
-        except Exception:
-            pass
+        _set_cell_safe(4, 3, mod)
+    elif budget_row and budget_row.get("route_type"):
+        _set_cell_safe(4, 3, budget_row.get("route_type"))
+    elif po_row and po_row.get("route_type"):
+        _set_cell_safe(4, 3, po_row.get("route_type"))
 
-    # Also fill planning_tracker values into fixed cells
-    # M4 -> planning_date, N4 -> strategic_type
-    if planning_row:
-        ws["M4"].value = planning_row.get("planning_date")
-        ws["N4"].value = planning_row.get("strategic_type")
+    if po_row:
+        use_cobuild = mod and mod.lower() in ("co-build", "cobuild", "co build", "cobuilt", "co-built")
+        if use_cobuild:
+            _set_cell_safe(4, 4, po_row.get("po_length_cobuild"))
+            _set_cell_safe(4, 15, po_row.get("po_no_cobuild"))
+        else:
+            _set_cell_safe(4, 4, po_row.get("po_length_ip1"))
+            _set_cell_safe(4, 15, po_row.get("po_no_ip1"))
+
+    e_val = None
+    if budget_row and budget_row.get("ce_length_mtr") is not None:
+        e_val = budget_row.get("ce_length_mtr")
     else:
-        ws["M4"].value = None
-        ws["N4"].value = None
+        e_val = _sum_dn_survey_length(dn_rows)
+    _set_cell_safe(4, 5, e_val)
 
-    # Ensure deterministic DN order (and stable alignment in template blocks)
-    dn_rows = sorted(dn_rows, key=lambda x: str(x.get("dn_number") or ""))
+    f_val = None
+    if budget_row:
+        f_val = budget_row.get("total_ri_amount")
+        if f_val is None:
+            f_val = budget_row.get("total_cost_without_deposit")
+    _set_cell_safe(4, 6, f_val)
+
+    if budget_row:
+        # H4 = Budgeted Service/mtr, I4 = Budgeted Material/mtr (template row 3)
+        _set_cell_safe(4, 8, budget_row.get("build_cost_per_meter"))
+        _set_cell_safe(4, 9, budget_row.get("material_cost_per_meter"))
+    # Same per-mtr values as H4/I4 for every DN summary row (H21/I21, H30/I30, …)
+    h4_budget = budget_row.get("build_cost_per_meter") if budget_row else None
+    i4_budget = budget_row.get("material_cost_per_meter") if budget_row else None
+
+    if planning_row:
+        _set_cell_safe(4, 13, planning_row.get("planning_date"))
+    else:
+        _set_cell_safe(4, 13, None)
+
+    if budget_row and budget_row.get("category_type"):
+        _set_cell_safe(4, 14, budget_row.get("category_type"))
+    elif planning_row:
+        _set_cell_safe(4, 14, planning_row.get("strategic_type"))
+    else:
+        _set_cell_safe(4, 14, None)
 
     # --- 2) DN block expansion + fill ---
-    # The template repeats a DN section starting with a header row where col A == "Approval Required"
-    # followed by a summary row (col A numeric). We ensure there are enough blocks for every DN,
-    # then fill each block with that DN's values.
-    def _find_dn_block_starts() -> List[int]:
-        starts: List[int] = []
-        for rr in range(2, ws.max_row + 1):
-            if ws.cell(rr, 1).value == "Approval Required":
-                starts.append(rr)
-        return starts
+    # Keep template structure exactly:
+    # - row 20 is the label/header row
+    # - row 21 is the data summary row for each DN block
+    # - rows 22..28 are breakup/detail rows
+    base_block_start = 20
+    dn_block_height = 9  # rows 20..28 inclusive
 
     def _copy_block(src_start: int, src_height: int, dest_start: int) -> None:
         """
@@ -670,42 +888,30 @@ def _build_route_report_workbook(
                 else:
                     dst_cell.value = v
 
-    dn_block_starts = _find_dn_block_starts()
-    if not dn_block_starts:
-        raise HTTPException(status_code=500, detail="DN block header ('Approval Required') not found in template.")
+        # Copy merged ranges that are fully inside the source block.
+        # Keeps row-20..28 structure identical across replicated DN blocks.
+        for rng in list(ws.merged_cells.ranges):
+            if rng.min_row < src_start or rng.max_row >= src_start + src_height:
+                continue
+            dst_min_row = rng.min_row + row_offset
+            dst_max_row = rng.max_row + row_offset
+            new_ref = f"{ws.cell(dst_min_row, rng.min_col).coordinate}:{ws.cell(dst_max_row, rng.max_col).coordinate}"
+            if all(str(existing) != new_ref for existing in ws.merged_cells.ranges):
+                ws.merge_cells(new_ref)
 
-    # Determine DN block height by distance to next block start (or fallback to 9 rows if only one exists)
-    if len(dn_block_starts) >= 2:
-        dn_block_height = dn_block_starts[1] - dn_block_starts[0]
-    else:
-        dn_block_height = 9
+    if ws.cell(base_block_start, 1).value is None and ws.cell(base_block_start, 2).value is None:
+        raise HTTPException(status_code=500, detail="Template row 20 DN block not found in data-sheet.")
 
-    # Ensure enough DN blocks for every DN in dn_master
-    needed_blocks = len(dn_rows)
-    existing_blocks = len(dn_block_starts)
+    needed_blocks = max(1, len(dn_rows))  # keep one visible empty block when no DN rows exist
+    existing_blocks = 1
     if needed_blocks > existing_blocks:
-        template_start = dn_block_starts[0]
-        # Insert/copy blocks after the last existing block
-        insert_at = dn_block_starts[-1] + dn_block_height
+        insert_at = base_block_start + dn_block_height
         for _ in range(needed_blocks - existing_blocks):
-            # Insert blank rows for a new block
             ws.insert_rows(insert_at, amount=dn_block_height)
-            # Copy template block into the inserted rows
-            _copy_block(template_start, dn_block_height, insert_at)
+            _copy_block(base_block_start, dn_block_height, insert_at)
             insert_at += dn_block_height
-        # Re-scan block starts after inserting
-        dn_block_starts = _find_dn_block_starts()
-    elif needed_blocks < existing_blocks:
-        # Remove extra pre-existing template blocks so we don't leak sample DN data.
-        # Delete from bottom to top so row indices remain valid while deleting.
-        starts_to_delete = dn_block_starts[needed_blocks:]
-        # Special case: if there are 0 DNs, keep one empty block so fixed cells
-        # (like F21 in the first block) remain present in the output.
-        if needed_blocks == 0 and len(dn_block_starts) > 0:
-            starts_to_delete = dn_block_starts[1:]
-        for start in sorted(starts_to_delete, reverse=True):
-            ws.delete_rows(start, amount=dn_block_height)
-        dn_block_starts = _find_dn_block_starts()
+
+    dn_summary_rows = [base_block_start + 1 + i * dn_block_height for i in range(needed_blocks)]
 
     # DN mapping row defines which columns to fill in the summary rows
     mapping_row_dn = 18
@@ -720,23 +926,37 @@ def _build_route_report_workbook(
         if table == "dn_master":
             dn_col_mappings[c] = col
 
-    # Fill each DN into its own block (aligned vertically).
-    # Re-scan block starts each iteration because row insertions inside one block
-    # can shift the start rows of the following blocks.
+    # Summary columns filled by budget/RI math — do not let dn_master(row 18) mappings overwrite these.
+    _DN_SUMMARY_PROTECT_COLS = {1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 15}
+
+    # Cached numeric results for OOXML <v> (openpyxl omits <v> for formulas).
+    dn_formula_cached: Dict[str, float] = {}
+
+    # Aggregates for row 8 cached values (<v>) — openpyxl does not write formula results.
+    row8_sum_d = 0.0
+    row8_sum_e = 0.0
+    row8_sum_f = 0.0
+    row8_sum_o = 0.0
+
+    # Fill each DN into its own replicated 20..28 block.
     for idx, dn in enumerate(dn_rows):
-        current_starts = _find_dn_block_starts()
-        if idx >= len(current_starts):
+        if idx >= len(dn_summary_rows):
             break
-        # summary row is the row immediately below the header row
-        r = current_starts[idx] + 1
-        # DN header cells in the summary row (as per template)
-        # B{r} -> dn_master(dn_number)
-        # D{r} -> dn_master(dn_length_mtr)
+        r = dn_summary_rows[idx]
+        # DN data cells in the summary row (as per template)
+        # A{r} -> serial number (row 21 / 30 / 39...)
+        # B{r} -> dn_master(dn_number), D{r} -> dn_master(dn_length_mtr)
         # Clear sample values first (preserve formulas elsewhere)
-        ws.cell(r, 2).value = None
-        ws.cell(r, 4).value = None
-        ws.cell(r, 2).value = dn.get("dn_number")
-        ws.cell(r, 4).value = dn.get("dn_length_mtr")
+        _set_cell_safe(r, 1, None)
+        _set_cell_safe(r, 2, None)
+        _set_cell_safe(r, 4, None)
+        _set_cell_safe(r, 1, idx + 1)
+        _set_cell_safe(r, 2, dn.get("dn_number"))
+        _set_cell_safe(r, 4, dn.get("dn_length_mtr"))
+        _sv = dn.get("survey_length")
+        if _sv is None or str(_sv).strip() == "":
+            _sv = dn.get("application_length_mtr")
+        _set_cell_safe(r, 5, _sv if _sv is not None and str(_sv).strip() != "" else None)
 
         def _split_by_comma(v: Any) -> List[str]:
             if v is None:
@@ -760,22 +980,13 @@ def _build_route_report_workbook(
         lengths = _split_generic(dn.get("surface_wise_length"))
         rates = _split_generic(dn.get("surface_wise_ri_amount"))
         factors = _split_generic(dn.get("surface_wise_multiplication_factor"))
-        surface_count = max(len(surfaces), 1)
-
-        # Template has one RI row at r+2. Add extra rows for additional surfaces so
-        # G23/G24/G25... can hold each segment and K-total row moves down dynamically.
-        extra_surface_rows = max(0, surface_count - 1)
-        if extra_surface_rows > 0:
-            ws.insert_rows(r + 3, amount=extra_surface_rows)
-            # Copy RI-row style/formulas to newly inserted RI rows.
-            for j in range(1, surface_count):
-                _copy_block(r + 2, 1, r + 2 + j)
-
+        # Keep exact template structure in every DN block:
+        # row r+2 = RI Charges line, r+3 = Ground Rent, r+4 = Admin, r+5 = Access/total
         ri_start = r + 2
-        ri_end = ri_start + surface_count - 1
-        ground_row = ri_end + 1
-        admin_row = ri_end + 2
-        access_row = ri_end + 3
+        ri_end = ri_start
+        ground_row = r + 3
+        admin_row = r + 4
+        access_row = r + 5
 
         def _to_float(x: Any) -> float:
             if x is None or x == "":
@@ -785,117 +996,262 @@ def _build_route_report_workbook(
             except Exception:
                 return 0.0
 
+        try:
+            _e_sur = float(str(_sv).replace(",", "")) if _sv is not None and str(_sv).strip() != "" else 0.0
+        except Exception:
+            _e_sur = 0.0
+        d_len = _to_float(dn.get("dn_length_mtr"))
+
         # Fill dynamic per-surface lines in G/H/I/J and line total in K.
         for rr in range(ri_start, ri_end + 1):
-            ws.cell(rr, 7).value = None  # G
-            ws.cell(rr, 8).value = None  # H
-            ws.cell(rr, 9).value = None  # I
-            ws.cell(rr, 10).value = None  # J
-            ws.cell(rr, 11).value = None  # K
+            _set_cell_safe(rr, 7, None)  # G
+            _set_cell_safe(rr, 8, None)  # H
+            _set_cell_safe(rr, 9, None)  # I
+            _set_cell_safe(rr, 10, None)  # J
+            _set_cell_safe(rr, 11, None)  # K
             # Keep "RI Charges" label only on first row.
             if rr == ri_start:
-                ws.cell(rr, 5).value = "RI Charges"
+                _set_cell_safe(rr, 5, "RI Charges")
             else:
-                ws.cell(rr, 5).value = None
-                ws.cell(rr, 4).value = None
+                _set_cell_safe(rr, 5, None)
+                _set_cell_safe(rr, 4, None)
                 # Avoid repeated RI amount value in F (e.g. F24, F25...)
-                ws.cell(rr, 6).value = None
+                _set_cell_safe(rr, 6, None)
 
+        # Show first available surface details in the fixed RI row.
+        if surfaces:
+            _set_cell_safe(ri_start, 7, surfaces[0])
+        if lengths:
+            _set_cell_safe(ri_start, 8, lengths[0])
+        if rates:
+            _set_cell_safe(ri_start, 9, rates[0])
+        if factors:
+            f_raw = factors[0]
+            try:
+                f_num = float(str(f_raw).strip())
+                _set_cell_safe(ri_start, 10, 1 if f_num == 0 else f_raw)
+            except Exception:
+                _set_cell_safe(ri_start, 10, f_raw)
+        elif ws.cell(ri_start, 10).value in (None, ""):
+            _set_cell_safe(ri_start, 10, 1)
+
+        # Compute RI total from all surface-wise entries from dn_master while preserving row layout.
         k_row_totals: List[float] = []
-        for i in range(surface_count):
-            rr = ri_start + i
-            if i < len(surfaces):
-                ws.cell(rr, 7).value = surfaces[i]
-            if i < len(lengths):
-                ws.cell(rr, 8).value = lengths[i]
-            if i < len(rates):
-                ws.cell(rr, 9).value = rates[i]
-            if i < len(factors):
-                f_raw = factors[i]
-                try:
-                    f_num = float(str(f_raw).strip())
-                    ws.cell(rr, 10).value = 1 if f_num == 0 else f_raw
-                except Exception:
-                    ws.cell(rr, 10).value = f_raw
-            elif ws.cell(rr, 10).value in (None, ""):
-                ws.cell(rr, 10).value = 1
+        n_terms = max(len(lengths), len(rates), len(factors), 1)
+        for i in range(n_terms):
+            l = _to_float(lengths[i]) if i < len(lengths) else (0.0 if i > 0 else _to_float(ws.cell(ri_start, 8).value))
+            rr_v = _to_float(rates[i]) if i < len(rates) else (0.0 if i > 0 else _to_float(ws.cell(ri_start, 9).value))
+            ff = _to_float(factors[i]) if i < len(factors) else (1.0 if i == 0 else 0.0)
+            if ff == 0:
+                ff = 1.0
+            k_row_totals.append(l * rr_v * ff)
 
-            line_total = (
-                _to_float(ws.cell(rr, 8).value)
-                * _to_float(ws.cell(rr, 9).value)
-                * _to_float(ws.cell(rr, 10).value)
-            )
-            k_row_totals.append(line_total)
-            # Write numeric total so it is visible even without formula recalculation.
-            ws.cell(rr, 11).value = line_total if line_total != 0 else None
+        line_total_display = k_row_totals[0] if k_row_totals else 0.0
+        _set_cell_safe(ri_start, 11, line_total_display if line_total_display != 0 else None)
 
         # Keep breakup lines below dynamic RI block.
-        ws.cell(ground_row, 6).value = dn.get("ground_rent")
-        ws.cell(admin_row, 6).value = dn.get("administrative_charge")
+        _set_cell_safe(ground_row, 6, dn.get("ground_rent"))
+        _set_cell_safe(admin_row, 6, dn.get("administrative_charge"))
         if ws.cell(access_row, 6).value is None:
-            ws.cell(access_row, 6).value = dn.get("access_charges", 0) if isinstance(dn, dict) else 0
+            _set_cell_safe(access_row, 6, dn.get("access_charges", 0) if isinstance(dn, dict) else 0)
 
         # Total K row should shift downward based on surface rows.
         # For default 3 surfaces, this remains K26; otherwise moves accordingly.
         k_total = sum(k_row_totals)
-        ws.cell(access_row, 11).value = k_total if k_total != 0 else None
+        _set_cell_safe(access_row, 11, k_total if k_total != 0 else None)
         # RI charges row in F points to the shifted K total.
-        ws.cell(ri_start, 6).value = k_total if k_total != 0 else None
+        _set_cell_safe(ri_start, 6, k_total if k_total != 0 else None)
 
-        # Also fill any additional dn_master(...) mappings present in row 18
-        # (keeps compatibility if template is extended with more mapped columns)
-        for c, dn_col in dn_col_mappings.items():
-            # Avoid re-setting the ones we already hardcoded above, but it's harmless if same.
-            ws.cell(r, c).value = dn.get(dn_col)
-
-        # Numeric fallback for F{r} in non-recalculating viewers.
         k_numeric = k_total
-
         f_total = (
             k_numeric
             + _to_float(ws.cell(ground_row, 6).value)
             + _to_float(ws.cell(admin_row, 6).value)
             + _to_float(ws.cell(access_row, 6).value)
         )
-        ws.cell(r, 6).value = f_total
+        # F/G/J/K: same layout as template — formulas over breakup rows so Excel shows formulas, not #REF!.
+        _set_cell_safe(r, 6, f"=SUM(F{r+2}:F{r+5})")
+        h4_cell = ws.cell(4, 8).value
+        i4_cell = ws.cell(4, 9).value
+        h_val = h4_cell if h4_cell not in (None, "") else h4_budget
+        i_val = i4_cell if i4_cell not in (None, "") else i4_budget
+        g_dn = (f_total / d_len) if d_len else None
+        h_dn = _to_float(h_val)
+        i_dn = _to_float(i_val)
+        j_dn = (g_dn + h_dn + i_dn) if d_len else None
+        k_dn = (j_dn * d_len) if d_len else f_total
+        _set_cell_safe(r, 7, f"=IF(D{r}=0,0,F{r}/D{r})")
+        _set_cell_safe(r, 8, h_val)
+        _set_cell_safe(r, 9, i_val)
+        _set_cell_safe(r, 10, f"=G{r}+H{r}+I{r}")
+        _set_cell_safe(r, 11, f"=J{r}*D{r}")
+        dn_formula_cached[f"{_gcl(6)}{r}"] = float(f_total)
+        dn_formula_cached[f"{_gcl(7)}{r}"] = float(g_dn) if g_dn is not None else 0.0
+        dn_formula_cached[f"{_gcl(10)}{r}"] = float(j_dn) if j_dn is not None else 0.0
+        dn_formula_cached[f"{_gcl(11)}{r}"] = float(k_dn) if k_dn is not None else 0.0
+        dep_dn = _to_float(dn.get("deposit"))
+        _set_cell_safe(r, 15, dep_dn if dep_dn else None)
 
-    # If no DN rows exist for this route, explicitly set the first block's total to 0
-    # so F21 (and equivalents) is not left uncomputed in non-Excel viewers.
-    if not dn_rows and dn_block_starts:
-        r0 = dn_block_starts[0] + 1
-        ws.cell(r0, 6).value = 0
+        row8_sum_d += d_len
+        row8_sum_e += _e_sur
+        row8_sum_f += f_total
+        row8_sum_o += dep_dn
 
-    # --- 3) Block totals ---
-    # data-sheet!A8 (and Summary!A4 via reference) should reflect actual DN count.
-    # Do not rely on template's fixed SUBTOTAL(B21,B30,...) because row positions
-    # shift when DN blocks expand dynamically.
-    try:
-        dn_count = sum(1 for dn in dn_rows if str(dn.get("dn_number") or "").strip() != "")
-        ws["A8"].value = dn_count
-    except Exception:
-        pass
-
-    # As requested: data-sheet!D8 should be the sum of all dn_master.dn_length_mtr for this route.
-    try:
-        total_dn_length = 0.0
-        for dn in dn_rows:
-            v = dn.get("dn_length_mtr")
-            if v is None or v == "":
+        # Row 18 dn_master(...) markers: fill extra columns only (not G–K summary math).
+        for c, dn_col in dn_col_mappings.items():
+            if c in _DN_SUMMARY_PROTECT_COLS:
                 continue
-            total_dn_length += float(v)
-        ws["D8"].value = total_dn_length
+            _set_cell_safe(r, c, dn.get(dn_col))
+
+    # --- 3) Row 8 totals — replace template #REF! sums with formulas over real DN summary rows only. ---
+    rows_r = [dn_summary_rows[i] for i in range(len(dn_rows))] if dn_rows else [dn_summary_rows[0]]
+
+    def _nf_r8(x: Any) -> float:
+        if x is None or x == "":
+            return 0.0
+        try:
+            return float(str(x).replace(",", ""))
+        except Exception:
+            return 0.0
+
+    d8c = row8_sum_d
+    e8c = row8_sum_e
+    f8c = row8_sum_f
+    o8c = row8_sum_o
+    g8c = (f8c / d8c) if d8c else 0.0
+    h8c = 0.0
+    i8c = 0.0
+    if d8c > 0 and rows_r:
+        for rr in rows_r:
+            h8c += _nf_r8(ws.cell(rr, 8).value) * _nf_r8(ws.cell(rr, 4).value)
+            i8c += _nf_r8(ws.cell(rr, 9).value) * _nf_r8(ws.cell(rr, 4).value)
+        h8c /= d8c
+        i8c /= d8c
+    j8c = g8c + h8c + i8c
+    k8c = j8c * d8c
+    a8c = float(len(dn_rows))
+
+    ev = _nf_r8(e_val)
+    fv = _nf_r8(f_val)
+    h4b = _nf_r8(budget_row.get("build_cost_per_meter")) if budget_row else 0.0
+    i4b = _nf_r8(budget_row.get("material_cost_per_meter")) if budget_row else 0.0
+    g4v = (fv / ev) if ev else 0.0
+    j4v = g4v + h4b + i4b
+    l8c = j4v * d8c
+    m8c = (j4v * d8c) - k8c
+    n8c = (m8c / d8c) if d8c else 0.0
+    p8c = f8c + o8c
+
+    def _csv_col(col: int) -> str:
+        return ",".join(f"{_gcl(col)}{r}" for r in rows_r)
+
+    _set_cell_safe(8, 1, f"=COUNTA({_csv_col(2)})")
+    _set_cell_safe(8, 4, f"=SUM({_csv_col(4)})")
+    _set_cell_safe(8, 5, f"=SUM({_csv_col(5)})")
+    _set_cell_safe(8, 6, f"=SUM({_csv_col(6)})")
+    _set_cell_safe(8, 7, "=IF($D$8=0,0,$F$8/$D$8)")
+    if rows_r:
+        h_num = "+".join(f"H{r}*$D{r}" for r in rows_r)
+        i_num = "+".join(f"I{r}*$D{r}" for r in rows_r)
+        _set_cell_safe(8, 8, f"=IF($D$8=0,0,({h_num})/$D$8)")
+        _set_cell_safe(8, 9, f"=IF($D$8=0,0,({i_num})/$D$8)")
+    else:
+        _set_cell_safe(8, 8, 0.0)
+        _set_cell_safe(8, 9, 0.0)
+    _set_cell_safe(8, 10, "=$G$8+$H$8+$I$8")
+    _set_cell_safe(8, 11, "=$J$8*$D$8")
+    _set_cell_safe(8, 12, "=IF($E$4=0,0,L$4/E$4*$D$8)")
+    _set_cell_safe(8, 13, "=$J$4*$D$8-$K$8")
+    _set_cell_safe(8, 14, "=IF($D$8=0,0,$M$8/$D$8)")
+    _set_cell_safe(8, 15, f"=SUM({_csv_col(15)})")
+    _set_cell_safe(8, 16, "=$F$8+$O$8")
+
+    row8_cached: Dict[str, float] = {
+        "A8": a8c,
+        "D8": d8c,
+        "E8": e8c,
+        "F8": f8c,
+        "G8": g8c,
+        "H8": h8c,
+        "I8": i8c,
+        "J8": j8c,
+        "K8": k8c,
+        "L8": l8c,
+        "M8": m8c,
+        "N8": n8c,
+        "O8": o8c,
+        "P8": p8c,
+    }
+    formula_cached: Dict[str, float] = {**row8_cached, **dn_formula_cached}
+
+    # --- 4) Summary sheet sync ---
+    # Keep Summary formulas explicitly aligned with data-sheet dynamic cells.
+    try:
+        if "Summary" in wb.sheetnames:
+            ws_summary = wb["Summary"]
+            summary_links = {
+                # Actuals section
+                "A4": "='data-sheet'!A8",
+                "B4": "='data-sheet'!D8",
+                "C4": "='data-sheet'!E8",
+                "D4": "='data-sheet'!F8",
+                "E4": "='data-sheet'!J8",
+                "G4": "='data-sheet'!K8",
+                "H4": "='data-sheet'!L8",
+                "I4": "='data-sheet'!M8",
+                "J4": "='data-sheet'!N8",
+                "K4": "='data-sheet'!O8",
+                "L4": "='data-sheet'!P8",
+                # Projection section
+                "A7": "='data-sheet'!D12",
+                "B7": "='data-sheet'!E12",
+                "C7": "='data-sheet'!F12",
+                "D7": "='data-sheet'!J12",
+                "G7": "='data-sheet'!K12",
+                "I7": "='data-sheet'!M12",
+                "J7": "='data-sheet'!N12",
+                "A8": "='data-sheet'!A14",
+                "B8": "='data-sheet'!D14",
+                "C8": "='data-sheet'!E14",
+                "D8": "='data-sheet'!F14",
+                "E8": "='data-sheet'!J14",
+                "G8": "='data-sheet'!K14",
+                "H8": "='data-sheet'!L14",
+                "I8": "='data-sheet'!M14",
+                "J8": "='data-sheet'!N14",
+                "A9": "='data-sheet'!A15",
+                "B9": "='data-sheet'!D15",
+                "C9": "='data-sheet'!E15",
+                "D9": "='data-sheet'!F15",
+                "E9": "='data-sheet'!J15",
+                "G9": "='data-sheet'!K15",
+                "H9": "='data-sheet'!L15",
+                "I9": "='data-sheet'!M15",
+                "J9": "='data-sheet'!N15",
+                "A10": "='data-sheet'!A16",
+                "B10": "='data-sheet'!D16",
+                "C10": "='data-sheet'!E16",
+                "D10": "='data-sheet'!F16",
+                "E10": "='data-sheet'!J16",
+                "F10": "='data-sheet'!K16",
+                "I10": "='data-sheet'!M16",
+                "J10": "='data-sheet'!N16",
+            }
+            for addr, formula in summary_links.items():
+                ws_summary[addr].value = formula
     except Exception:
-        # If any conversion fails, keep the template value/formula as-is.
         pass
 
-    # Hint Excel to recalc on open (useful for other dependent cells),
-    # while also setting key totals explicitly above.
+    # Recalc on open so template formulas (M15, L4, J4, etc.) display correctly.
+    # Previously this caused flicker because formulas had #REF! and data cells were text;
+    # both are now fixed (valid formulas + numeric data cells).
     try:
         wb.calculation.fullCalcOnLoad = True
+        wb.calculation.calcMode = "auto"
     except Exception:
         pass
 
-    return wb
+    return wb, formula_cached
 
 
 @app.get("/api/route-report")
@@ -904,14 +1260,32 @@ def api_route_report(
     modality: Optional[str] = Query(None),
 ):
     """Return combined route report data as JSON for on-screen table."""
+    rid = (route_id_site_id or "").strip()
+    warnings: List[str] = []
+
+    budget_rows = local_db.query_budget_by_site_id_all(rid)
+    if not budget_rows:
+        budget_rows = local_db.query_budget_by_route_id_insensitive(rid)
+    if not budget_rows:
+        warnings.append("No Budget data found for this route.")
+
+    po_row = local_db.query_po_by_site_id(rid)
+    if not po_row:
+        po_row = local_db.query_po_by_route_id_insensitive(rid)
+    if not po_row:
+        warnings.append("No PO data found for this route.")
+
+    dn_rows = local_db.get_dn_by_route_id_site_id(rid)
+    if not dn_rows:
+        dn_rows = local_db.get_dn_by_route_id_site_id_insensitive(rid)
+    if not dn_rows:
+        warnings.append("No DN data found for this route.")
+
     rows = _build_route_report_rows(route_id_site_id)
 
-    # Build workbook so UI can mirror the Excel "Summary" + "Projection" values.
-    # Note: we also compute formula results into JSON (Excel itself will still
-    # keep formulas in the downloaded file).
-    wb = _build_route_report_workbook(route_id_site_id, modality=modality)
+    wb, _formula_cached = _build_route_report_workbook(route_id_site_id, modality=modality)
     payload = _extract_route_report_summary_projection(wb)
-    return {"rows": rows, "modality": modality, **payload}
+    return {"rows": rows, "modality": modality, "warnings": warnings, **payload}
 
 
 @app.get("/api/route-report/xlsx")
@@ -922,11 +1296,13 @@ def api_route_report_xlsx(
     """Return downloadable Excel route report based on template."""
     import tempfile as _tempfile
 
-    wb = _build_route_report_workbook(route_id_site_id, modality=modality)
+    wb, formula_cached = _build_route_report_workbook(route_id_site_id, modality=modality)
     tmp = _tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
     wb.save(tmp.name)
     tmp.close()
-    filename = f"Route_Report_{route_id_site_id.strip() or 'route'}.xlsx"
+    _patch_xlsx_formula_cached_values(tmp.name, "data-sheet", formula_cached)
+    rid = (route_id_site_id or "").strip() or "route"
+    filename = f"{rid}.xlsx"
     return FileResponse(
         tmp.name,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -1104,6 +1480,59 @@ def _extract_route_report_summary_projection(wb: "Any") -> Dict[str, Any]:
                 else:
                     total += _eval_expression_to_number(arg, stack)
             return total
+
+        # COUNTA(...) — non-empty cells (formula cells count as non-empty, like Excel).
+        if body_u.startswith("COUNTA(") and body.endswith(")"):
+            inner = body[len("COUNTA(") : -1]
+            args = _split_excel_args(inner)
+            count = 0.0
+
+            def _counta_nonempty_raw(raw: Any) -> bool:
+                if raw is None:
+                    return False
+                if isinstance(raw, str) and raw.startswith("="):
+                    return True
+                return str(raw).strip() != ""
+
+            for arg in args:
+                arg = arg.strip()
+                m = _re.fullmatch(r"([A-Z]{1,3}[0-9]+):([A-Z]{1,3}[0-9]+)", arg.upper().replace("$", ""))
+                if m:
+                    m1 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", m.group(1))
+                    m2 = _re.fullmatch(r"([A-Z]{1,3})([0-9]+)", m.group(2))
+                    if not (m1 and m2):
+                        continue
+                    c1, r1 = m1.group(1), int(m1.group(2))
+                    c2, r2 = m2.group(1), int(m2.group(2))
+                    c1i, c2i = _col_to_idx(c1), _col_to_idx(c2)
+                    rmin, rmax = min(r1, r2), max(r1, r2)
+                    cmin, cmax = min(c1i, c2i), max(c1i, c2i)
+                    for rr in range(rmin, rmax + 1):
+                        for cc in range(cmin, cmax + 1):
+                            addr = _idx_to_col(cc) + str(rr)
+                            if _counta_nonempty_raw(ws_data[addr].value):
+                                count += 1.0
+                elif _re.fullmatch(r"[A-Z]{1,3}[0-9]+", arg.upper().replace("$", "")):
+                    addr = arg.upper().replace("$", "")
+                    if _counta_nonempty_raw(ws_data[addr].value):
+                        count += 1.0
+            return count
+
+        # IF(cond, true, false) — supports simple equality like D8=0 (template row 8 N8).
+        if body_u.startswith("IF(") and body.endswith(")"):
+            inner = body[len("IF(") : -1]
+            args = _split_excel_args(inner)
+            if len(args) >= 3:
+                cond_s = args[0].strip()
+                true_s = args[1].strip()
+                false_s = args[2].strip()
+                if "=" in cond_s:
+                    left_e, right_e = cond_s.split("=", 1)
+                    lv = _eval_expression_to_number(left_e.strip(), stack)
+                    rv = _eval_expression_to_number(right_e.strip(), stack)
+                    if abs(lv - rv) < 1e-12:
+                        return _eval_expression_to_number(true_s, stack)
+                    return _eval_expression_to_number(false_s, stack)
 
         # SUBTOTAL(3, ...)
         if body_u.startswith("SUBTOTAL(") and body.endswith(")"):
