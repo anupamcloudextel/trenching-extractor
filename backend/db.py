@@ -125,15 +125,41 @@ def init_tables(engine=None):
 
     planning_sql = """
     CREATE TABLE IF NOT EXISTS planning_tracker (
-        id SERIAL PRIMARY KEY,
-        route_id_site_id VARCHAR(255) UNIQUE,
-        planning_date VARCHAR(50),
-        strategic_type VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        route_id_site_id TEXT PRIMARY KEY,
+        planning_date TEXT,
+        strategic_type TEXT
     );
     """
     _run_sql(engine, planning_sql, fetch=False)
-    _run_sql(engine, "CREATE UNIQUE INDEX IF NOT EXISTS idx_planning_tracker_route_id_site_id ON planning_tracker(route_id_site_id)", fetch=False)
+
+    po_data_sql = """
+    CREATE TABLE IF NOT EXISTS po_data (
+        id TEXT PRIMARY KEY,
+        po_number TEXT,
+        route_id_site_id TEXT,
+        cust_route_id_site_id TEXT,
+        quantity TEXT,
+        uom TEXT,
+        unit_price TEXT,
+        line_total TEXT
+    );
+    """
+    _run_sql(engine, po_data_sql, fetch=False)
+    _run_sql(engine, "ALTER TABLE po_data ADD COLUMN IF NOT EXISTS cust_route_id_site_id TEXT", fetch=False)
+    _run_sql(
+        engine,
+        "UPDATE po_data SET cust_route_id_site_id = route_id_site_id "
+        "WHERE (cust_route_id_site_id IS NULL OR cust_route_id_site_id = '') "
+        "AND route_id_site_id IS NOT NULL",
+        fetch=False,
+    )
+    _run_sql(
+        engine,
+        "UPDATE po_data SET route_id_site_id = cust_route_id_site_id "
+        "WHERE (route_id_site_id IS NULL OR route_id_site_id = '') "
+        "AND cust_route_id_site_id IS NOT NULL",
+        fetch=False,
+    )
 
     logger.info("PostgreSQL tables initialized (dn_master, budget_master, po_master).")
 
@@ -316,3 +342,66 @@ def _serialize_row(row: Dict) -> Dict:
         else:
             out[k] = v
     return out
+
+
+# ---- PO extracted rows ----
+def make_po_data_id(po_number: Any, route_id_site_id: Any) -> str:
+    # Concatenate values directly (no literal '+' character stored).
+    return f"{str(po_number or '').strip()}{str(route_id_site_id or '').strip()}"
+
+
+def get_po_data_by_id(row_id: str) -> Optional[Dict[str, Any]]:
+    engine = get_engine()
+    rows = _run_sql(engine, "SELECT * FROM po_data WHERE id = :rid LIMIT 1", {"rid": row_id})
+    return rows[0] if rows else None
+
+
+def insert_po_data_if_new(row: Dict[str, Any]) -> bool:
+    """
+    Insert a po_data row if id does not exist.
+    Returns True when inserted, False when row already exists.
+    """
+    engine = get_engine()
+    params = {
+        "id": row.get("id"),
+        "po_number": row.get("po_number"),
+        "route_id_site_id": row.get("route_id_site_id"),
+        "cust_route_id_site_id": row.get("cust_route_id_site_id"),
+        "quantity": row.get("quantity"),
+        "uom": row.get("uom"),
+        "unit_price": row.get("unit_price"),
+        "line_total": row.get("line_total"),
+    }
+    if get_po_data_by_id(str(params["id"])) is not None:
+        return False
+
+    sql = """
+    INSERT INTO po_data (id, po_number, route_id_site_id, cust_route_id_site_id, quantity, uom, unit_price, line_total)
+    VALUES (:id, :po_number, :route_id_site_id, :cust_route_id_site_id, :quantity, :uom, :unit_price, :line_total)
+    ON CONFLICT(id) DO NOTHING
+    """
+    _run_sql(engine, sql, params, fetch=False)
+    return True
+
+
+def get_po_data_by_po_and_route(po_number: str, route_id_site_id: str) -> Optional[Dict[str, Any]]:
+    """
+    Lookup po_data row using strict match on:
+    po_number AND route_id_site_id.
+    """
+    engine = get_engine()
+    params = {
+        "po_number": str(po_number or "").strip(),
+        "route_id_site_id": str(route_id_site_id or "").strip(),
+    }
+    rows = _run_sql(
+        engine,
+        """
+        SELECT * FROM po_data
+        WHERE COALESCE(TRIM(po_number), '') = :po_number
+          AND COALESCE(TRIM(route_id_site_id), '') = :route_id_site_id
+        LIMIT 1
+        """,
+        params,
+    )
+    return rows[0] if rows else None

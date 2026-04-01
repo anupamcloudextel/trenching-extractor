@@ -18,6 +18,7 @@ import MasterTrackerSection from '@/components/budget-pages/MasterTracker';
 import RouteOverview from "@/components/budget-pages/route_overview";
 import RouteReport from "@/components/budget-pages/RouteReport";
 import PoPdfExtractor from "@/components/budget-pages/PoPdfExtractor";
+import DepositReturn from "@/components/budget-pages/DepositReturn";
 import DnManagementSection from "@/components/budget-pages/data_management";
 import ClientParserV2 from "@/components/budget-pages/ClientParserV2";
 
@@ -108,6 +109,7 @@ export default function Home() {
             activeAuthority === 'route-overview' ? 'Route Analysis' :
             activeAuthority === 'route-report' ? 'Route Report' :
             activeAuthority === 'po-pdf-extractor' ? 'PO PDF Extractor' :
+            activeAuthority === 'deposit-return' ? 'Deposit Refund' :
             activeAuthority === 'client-parser-v2' ? 'Client Parser V2' :
             "Master Dashboard"
           )} 
@@ -127,6 +129,8 @@ export default function Home() {
             <RouteReport />
           ) : activeAuthority === 'po-pdf-extractor' ? (
             <PoPdfExtractor />
+          ) : activeAuthority === 'deposit-return' ? (
+            <DepositReturn />
           ) : activeAuthority === 'client-parser-v2' ? (
             <ClientParserV2 />
           ) : (
