@@ -843,6 +843,51 @@ def _build_route_report_workbook(
             _set_cell_safe(4, 4, po_row.get("po_length_ip1"))
             _set_cell_safe(4, 15, po_row.get("po_no_ip1"))
 
+    # Fill P4 (line_total) from po_data where:
+    # po_number == O4 and route_id_site_id == B4.
+    try:
+        def _norm_join_key(v: Any) -> str:
+            """
+            Normalize Excel cell values used in DB joins.
+            Handles numeric-rendered IDs like 10004771.0 -> 10004771.
+            """
+            if v is None:
+                return ""
+            if isinstance(v, bool):
+                return str(v).strip()
+            if isinstance(v, (int, float)):
+                try:
+                    fv = float(v)
+                    if fv.is_integer():
+                        return str(int(fv))
+                except Exception:
+                    pass
+                return str(v).strip()
+            s = str(v).strip()
+            # Excel/text exports often carry trailing .0 for numeric identifiers.
+            if re.fullmatch(r"\d+\.0+", s):
+                return s.split(".", 1)[0]
+            return s
+
+        po_no_o4 = _norm_join_key(ws["O4"].value)
+        route_b4 = _norm_join_key(ws["B4"].value)
+        if po_no_o4 and route_b4:
+            po_data_row = local_db.get_po_data_by_po_and_route(po_no_o4, route_b4)
+            _set_cell_safe(4, 16, po_data_row.get("line_total") if po_data_row else None)  # P4
+            if not po_data_row:
+                _add_warn(
+                    f"po_data row not found for po_number '{po_no_o4}' and route_id_site_id '{route_b4}'."
+                )
+        else:
+            _set_cell_safe(4, 16, None)
+            if not po_no_o4:
+                _add_warn("po_data lookup skipped: O4 (po_number) is blank.")
+            if not route_b4:
+                _add_warn("po_data lookup skipped: B4 (route_id_site_id) is blank.")
+    except Exception as e:
+        _set_cell_safe(4, 16, None)
+        _add_warn(f"po_data lookup failed: {e}")
+
     e_val = None
     if budget_row and budget_row.get("ce_length_mtr") is not None:
         e_val = budget_row.get("ce_length_mtr")

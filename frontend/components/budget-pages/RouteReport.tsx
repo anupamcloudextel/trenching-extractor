@@ -131,7 +131,7 @@ export default function RouteReport() {
 
     return (
       <div className="w-full overflow-x-auto">
-        <table className="w-full text-xs bg-[#0f1626] rounded-lg overflow-hidden border-separate border-spacing-0">
+        <table className="w-full text-xs bg-[#0f1626] rounded-lg overflow-hidden border border-slate-700/60 border-separate border-spacing-0">
           <tbody>
             {grid.map((row, rIdx) => {
               return (
@@ -143,17 +143,29 @@ export default function RouteReport() {
                       const current = row?.[c] ?? "";
                       const currentStr = current === null || current === undefined ? "" : String(current);
 
-                      // Don't merge blanks.
+                      // Merge contiguous blank cells and avoid vertical borders on those runs.
+                      // This removes stray divider lines near the right side of merged sections.
                       if (currentStr.trim() === "") {
+                        let blankSpan = 1;
+                        while (c + blankSpan < colCount) {
+                          const next = row?.[c + blankSpan] ?? "";
+                          const nextStr = next === null || next === undefined ? "" : String(next);
+                          if (nextStr.trim() === "") {
+                            blankSpan += 1;
+                            continue;
+                          }
+                          break;
+                        }
                         cells.push(
                           <td
                             key={`${rIdx}-${c}`}
-                            className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
+                            colSpan={blankSpan}
+                            className="text-slate-200 font-sans text-sm px-2 py-2 text-center border-y border-slate-700/60"
                           >
                             {formatCellValue(currentStr, rIdx, c)}
                           </td>
                         );
-                        c += 1;
+                        c += blankSpan;
                         continue;
                       }
 
@@ -178,11 +190,22 @@ export default function RouteReport() {
                         }
                       }
 
+                      const onlyBlanksAfterSpan = (() => {
+                        for (let k = c + span; k < colCount; k += 1) {
+                          const tail = row?.[k] ?? "";
+                          const tailStr = tail === null || tail === undefined ? "" : String(tail);
+                          if (tailStr.trim() !== "") return false;
+                        }
+                        return true;
+                      })();
+
                       cells.push(
                         <td
                           key={`${rIdx}-${c}`}
                           colSpan={span}
-                          className="text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60"
+                          className={`text-slate-200 font-sans text-sm px-2 py-2 text-center border border-slate-700/60 ${
+                            onlyBlanksAfterSpan ? "border-r-0" : ""
+                          }`}
                         >
                           {formatCellValue(currentStr, rIdx, c)}
                         </td>

@@ -3,6 +3,7 @@ Local database layer - PostgreSQL only (replaces Supabase).
 Requires DATABASE_URL (postgresql://...) in environment.
 """
 import os
+import re
 import logging
 from typing import Any, Dict, List, Optional
 
@@ -386,20 +387,30 @@ def insert_po_data_if_new(row: Dict[str, Any]) -> bool:
 
 def get_po_data_by_po_and_route(po_number: str, route_id_site_id: str) -> Optional[Dict[str, Any]]:
     """
-    Lookup po_data row using strict match on:
-    po_number AND route_id_site_id.
+    Lookup po_data row by po_number + route_id_site_id.
+    Uses case-insensitive trimmed match.
     """
     engine = get_engine()
+    po_raw = str(po_number or "").strip()
+    route_raw = str(route_id_site_id or "").strip()
     params = {
-        "po_number": str(po_number or "").strip(),
-        "route_id_site_id": str(route_id_site_id or "").strip(),
+        "po_number": po_raw.lower(),
+        "route_id_site_id": route_raw.lower(),
+        "po_number_norm": re.sub(r"[^a-z0-9]", "", po_raw.lower()),
+        "route_id_site_id_norm": re.sub(r"[^a-z0-9]", "", route_raw.lower()),
     }
     rows = _run_sql(
         engine,
         """
         SELECT * FROM po_data
-        WHERE COALESCE(TRIM(po_number), '') = :po_number
-          AND COALESCE(TRIM(route_id_site_id), '') = :route_id_site_id
+        WHERE (
+            LOWER(COALESCE(TRIM(route_id_site_id), '')) = :route_id_site_id
+            OR REGEXP_REPLACE(LOWER(COALESCE(TRIM(route_id_site_id), '')), '[^a-z0-9]', '', 'g') = :route_id_site_id_norm
+        )
+          AND (
+            LOWER(COALESCE(TRIM(po_number), '')) = :po_number
+            OR REGEXP_REPLACE(LOWER(COALESCE(TRIM(po_number), '')), '[^a-z0-9]', '', 'g') = :po_number_norm
+          )
         LIMIT 1
         """,
         params,
