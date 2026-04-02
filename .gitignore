@@ -17,6 +17,8 @@ MasterDN.xlsx
 
 # Google Cloud credentials
 *.json
+# Allow committing frontend dependency manifest.
+!frontend/package.json
 cloudextel-dn-extraction-*.json
 
 # Python
